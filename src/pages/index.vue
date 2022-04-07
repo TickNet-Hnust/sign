@@ -2,63 +2,138 @@
 import { useUserStore } from '~/stores/user'
 
 const user = useUserStore()
-const name = $ref(user.savedName)
 
 const router = useRouter()
-const go = () => {
-  if (name)
-    router.push(`/hi/${encodeURIComponent(name)}`)
-}
 
-const { t } = useI18n()
+const jumpTargetPage = (targetPath: string) => {
+  router.push(targetPath)
+}
 </script>
 
 <template>
-  <div>
-    <div text-4xl>
-      <div i-carbon-campsite inline-block />
-    </div>
-    <p>
-      <a rel="noreferrer" href="https://github.com/antfu/vitesse" target="_blank">
-        Vitesse
-      </a>
-    </p>
-    <p>
-      <em text-sm opacity-75>{{ t('intro.desc') }}</em>
-    </p>
-
-    <div py-4 />
-
-    <input
-      id="input"
-      v-model="name"
-      :placeholder="t('intro.whats-your-name')"
-      :aria-label="t('intro.whats-your-name')"
-      type="text"
-      autocomplete="false"
-      p="x4 y2"
-      w="250px"
-      text="center"
-      bg="transparent"
-      border="~ rounded gray-200 dark:gray-700"
-      outline="none active:none"
-      @keydown.enter="go"
+  <div grid="~ cols-2">
+    <div
+      border="~ green-500"
+      rounded="lg"
+      w="30vw"
+      h="30vw"
+      mx="auto"
+      my="4"
+      shadow="~ md gray-300"
+      hover:bg="green-500/90"
+      hover:text="white"
+      flex="~ col"
+      justify="center"
     >
-    <label class="hidden" for="input">{{ t('intro.whats-your-name') }}</label>
+      <div h="12" text="center">
+        <div text="2xl" m="auto" class="i-carbon-plane" />
+      </div>
+      <div text="center">
+        发起签到
+      </div>
+    </div>
 
-    <div>
-      <button
-        btn m-3 text-sm
-        :disabled="!name"
-        @click="go"
-      >
-        {{ t('button.go') }}
-      </button>
+    <div
+      border="~ green-500"
+      rounded="lg"
+      w="30vw"
+      h="30vw"
+      mx="auto"
+      my="4"
+      shadow="~ md gray-300"
+      hover:bg="green-500/90"
+      hover:text="white"
+      flex="~ col"
+      justify="center"
+    >
+      <div h="12">
+        <div text="2xl" m="auto" class="i-carbon-plane" />
+      </div>
+      <div text="center">
+        我要签到
+      </div>
+    </div>
+
+    <div
+      border="~ green-500"
+      rounded="lg"
+      w="30vw"
+      h="30vw"
+      mx="auto"
+      my="4"
+      shadow="~ md gray-300"
+      hover:bg="green-500/90"
+      flex="~ col"
+      justify="center"
+      @click="jumpTargetPage('record')"
+    >
+      <div h="12" text="center">
+        <div text="2xl" m="auto" class="i-carbon-plane" />
+      </div>
+      <div text="center">
+        发起记录
+      </div>
+    </div>
+
+    <div
+      border="~ green-500"
+      rounded="lg"
+      w="30vw"
+      h="30vw"
+      mx="auto"
+      my="4"
+      shadow="~ md gray-300"
+      hover:bg="green-500/90"
+      flex="~ col"
+      justify="center"
+      @click="jumpTargetPage('join')"
+    >
+      <div h="12" text="center">
+        <div text="2xl" m="auto" class="i-carbon-plane" />
+      </div>
+      <div text="center">
+        我要参与
+      </div>
+    </div>
+
+    <div
+      border="~ green-500"
+      rounded="lg"
+      w="30vw"
+      h="30vw"
+      mx="auto"
+      my="4"
+      shadow="~ md gray-300"
+      hover:bg="green-500/90"
+      flex="~ col"
+      justify="center"
+    >
+      <div h="12" text="center">
+        <div text="2xl" m="auto" class="i-carbon-plane" />
+      </div>
+      <div text="center">
+        我的空间
+      </div>
+    </div>
+
+    <div
+      border="~ green-500"
+      rounded="lg"
+      w="30vw"
+      h="30vw"
+      mx="auto"
+      my="4"
+      shadow="~ md gray-300"
+      hover:bg="green-500/90"
+      flex="~ col"
+      justify="center"
+    >
+      <div h="12" text="center">
+        <div text="2xl" m="auto" class="i-carbon-plane" />
+      </div>
+      <div text="center">
+        在线帮助
+      </div>
     </div>
   </div>
 </template>
-
-<route lang="yaml">
-meta:
-  layout: home
-</route>
