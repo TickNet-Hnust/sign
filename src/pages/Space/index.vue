@@ -1,46 +1,57 @@
+<script setup lang="ts"></script>
 <template>
-  <div class="index_box text-center">
-    <div class="index_manage text-lg">
-      <span class="manage_icon">
-        <van-icon name="setting-o"> 我管理的 </van-icon>
-      </span>
+  <div
+    class="
+      flex-col
+      h-screen
+      w-full
+      bg-gray-100
+      overflow-hidden
+  "
+  >
+    <div
+      class="
+      m-2rem
+      w-250px
+      h-75px
+      flex
+      border-1
+      bg-white
+      text-green-500
+      items-center
+      border-hex-#41AA62
+      mx-auto
+      justify-center
+      rounded-lg
+      text-lg"
+    >
+      <div class="manage_icon">
+        <van-icon name="setting-o">
+          我管理的
+        </van-icon>
+      </div>
     </div>
-    <div class="index_involve text-lg">
-      <span class="involve_icon">
-        <van-icon name="friends-o"> 我参与的 </van-icon>
-      </span>
+    <div
+      class="
+      m-2rem
+      w-250px
+      h-75px
+      flex
+      border-1
+      bg-white
+      text-green-500
+      items-center
+      border-hex-#41AA62
+      mx-auto
+      justify-center
+      rounded-lg
+      text-lg"
+    >
+      <div class="involve_icon">
+        <van-icon name="friends-o">
+          我参与的
+        </van-icon>
+      </div>
     </div>
   </div>
 </template>
-
-<script setup lang="ts"></script>
-
-<style scoped>
-.index_box {
-  display: flex;
-  flex-direction: column;
-}
-
-.index_manage {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 250px;
-  height: 75px;
-  background: rgb(65, 177, 98);
-  border-radius: 6px;
-  color: #fff;
-  margin: 2em auto;
-}
-.index_involve {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 250px;
-  height: 75px;
-  border-radius: 6px;
-  color: rgb(65, 170, 98);
-  border: 1px solid rgb(65, 170, 98);
-  margin: 2em auto;
-}
-</style>
