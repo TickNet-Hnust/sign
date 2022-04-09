@@ -1,3 +1,58 @@
+<script setup lang="ts">
+const checked = ref(0)
+const data = ref({
+  question: '一天吃几顿饭',
+  optionNum: 3,
+
+  type: '单选',
+  createTime: '2022-01-03 17:34:38',
+  lastTime: '2022-01-17 01-17 12:23',
+  isVote: true,
+  color: '#4ade80',
+  text: '开始投票',
+  allNum: 6,
+  option: [
+    {
+      name: 1, // 自动生成id
+      value: '一顿',
+      num: 1,
+      width: '0',
+    },
+    {
+      name: 2,
+      value: '两顿',
+      num: 4,
+      width: '0',
+    },
+    {
+      name: 3,
+      value: '三顿',
+      num: 0,
+      width: '0',
+    },
+  ],
+})
+
+const isClick = (
+  item: { isVote: boolean; color: string; text: string },
+  checked: number,
+) => {
+  if (checked !== 0) {
+    data.value.option[checked - 1].num = data.value.option[checked - 1].num + 1
+    item.isVote = false
+    item.color = 'rgb(157,212,157)'
+    item.text = '已投票'
+    data.value.allNum = data.value.allNum + 1
+    console.warn(checked)
+    for (let i = 0; i < data.value.optionNum; i++) {
+      data.value.option[i].width = `${
+        (data.value.option[i].num * 100) / data.value.allNum
+      }%`
+    }
+  }
+}
+</script>
+
 <template>
   <div class="bg-true-gray-50 w-screen h-screen">
     <div class="sticky top-0">
@@ -123,7 +178,9 @@
           <div class="mt-5px">
             {{ "1.本次投票为" + data.type }}
           </div>
-          <div class="mt-5px">2.投票之后无法撤回</div>
+          <div class="mt-5px">
+            2.投票之后无法撤回
+          </div>
           <div class="mt-5px">
             {{ "3.请在" + data.lastTime + "之前完成" }}
           </div>
@@ -135,59 +192,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-const checked = ref(0);
-
-const data = ref({
-  question: "一天吃几顿饭",
-  optionNum: 3,
-
-  type: "单选",
-  createTime: "2022-01-03 17:34:38",
-  lastTime: "2022-01-17 01-17 12:23",
-  isVote: true,
-  color: "#4ade80",
-  text: "开始投票",
-  allNum: 6,
-  option: [
-    {
-      name: 1, // 自动生成id
-      value: "一顿",
-      num: 1,
-      width: "0",
-    },
-    {
-      name: 2,
-      value: "两顿",
-      num: 4,
-      width: "0",
-    },
-    {
-      name: 3,
-      value: "三顿",
-      num: 0,
-      width: "0",
-    },
-  ],
-});
-
-const isClick = (
-  item: { isVote: boolean; color: string; text: string },
-  checked: number
-) => {
-  if (checked !== 0) {
-    data.value.option[checked - 1].num = data.value.option[checked - 1].num + 1;
-    item.isVote = false;
-    item.color = "rgb(157,212,157)";
-    item.text = "已投票";
-    data.value.allNum = data.value.allNum + 1;
-    console.warn(checked);
-    for (let i = 0; i < data.value.optionNum; i++) {
-      data.value.option[i].width = `${
-        (data.value.option[i].num * 100) / data.value.allNum
-      }%`;
-    }
-  }
-};
-</script>
