@@ -1,10 +1,42 @@
 <template>
   <div class="bg-gray-500/8 p-3">
-    <div class="top mt-3">
-      <van-dropdown-menu>
-        <van-dropdown-item title="时间排序"> </van-dropdown-item>
-        <van-dropdown-item title="类型筛选"> </van-dropdown-item>
-      </van-dropdown-menu>
+    <div class="top mt-3 flex bg-white">
+      <span class="flex-2">
+       <van-field
+         v-model="value"
+         placeholder="请输入要搜索的记录"
+         left-icon="search"
+         />
+      </span>
+      <span 
+        class="
+          flex-1
+          text-13px
+          flex
+          items-center
+          text-hex-666
+          justify-center"
+      >时间<van-icon name="arrow-down" /></span>
+      <span
+        class="flex items-center text-13px text-hex-666 flex-1"
+        @click="()=>{isShow = true}"
+        id="showSelect"
+      >
+        类型筛选<van-icon name="filter-o" />
+      </span>
+      <van-popup
+        v-model:show="isShow"
+        position="bottom" 
+        :style="{ height: '50%'}"
+      >
+        <van-picker
+          title="筛选"
+          :columns="columns"
+          @confirm="onConfirm"
+          @cancel="onCancel"
+          @change="onChange"
+        />
+      </van-popup>
     </div>
     <div class="record_list mt-6">
       <van-list
@@ -16,7 +48,7 @@
         <ul
           v-for="item in list"
           :key="item"
-          class="mt-3 p-4"
+          class="mt-3 p-4 rounded"
           style="background-color: #fff; position: relative"
         >
           <div
@@ -65,7 +97,15 @@
     </div>
   </div>
 </template>
+<route lang="yaml">
+meta:
+  layout: default
+  title: 发起列表
+</route>
+
 <script setup lang="ts">
+const isShow = ref(false)
+const columns = ref(['全部','签到','投票','抽签'])
 const list = ref([
   {
     title: "冬奥会2022年什么时候举办",
@@ -115,6 +155,18 @@ const list = ref([
     unford_show: false,
     unford_icon: "arrow-down",
   },
+  {
+    title: "签到",
+    status: "已结束",
+    time: "2022-01-03 17:34:38",
+    user: "张智豪",
+    type: "签到",
+    ended: true,
+    color: "rgb(201,201,201)",
+    space: "班级会议",
+    unford_show: false,
+    unford_icon: "arrow-down",
+  }
 ]);
 const loading = ref(false);
 const finished = ref(false);
