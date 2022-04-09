@@ -1,34 +1,50 @@
 <script setup lang="ts">
-const checked = ref(0)
-const data = ref({
+<<<<<<< HEAD
+// 定义投票数据类型接口
+interface VoteData {
+  question: string
+  optionNum: number
+  type: string
+  lastTime: string
+  isVote: boolean
+  option: Array<OptionData>
+  allPollNum: number
+}
+// 定义投票选项数据类型接口
+interface OptionData{
+  name: number // id进项选项的识别
+  optionValue: string
+  poll: number
+  optionWidth: string // 确定选项染色的宽度
+}
+const optionChecked = ref(0)// 投票被选择选项的name|id
+const voteData:VoteData = reactive({
   question: '一天吃几顿饭',
   optionNum: 3,
-
   type: '单选',
-  createTime: '2022-01-03 17:34:38',
-  lastTime: '2022-01-17 01-17 12:23',
+  lastTime: '01-17 12:23',
   isVote: true,
   color: '#4ade80',
   text: '开始投票',
-  allNum: 6,
+  allPollNum: 6,
   option: [
     {
       name: 1, // 自动生成id
-      value: '一顿',
-      num: 1,
-      width: '0',
+      optionValue: '一顿',
+      poll: 1,
+      optionWidth: '0',
     },
     {
       name: 2,
-      value: '两顿',
-      num: 4,
-      width: '0',
+      optionValue: '两顿',
+      poll: 4,
+      optionWidth: '0',
     },
     {
       name: 3,
-      value: '三顿',
-      num: 0,
-      width: '0',
+      optionValue: '三顿',
+      poll: 0,
+      optionWidth: '0',
     },
   ],
 })
@@ -54,28 +70,28 @@ const isClick = (
 </script>
 
 <template>
-  <div class="bg-true-gray-50 w-screen h-screen">
-    <div class="sticky top-0">
-      <van-nav-bar title="我要投票" left-text="返回" left-arrow />
-    </div>
-    <div class="mx-20px">
-      <div class="border-gray-200 border px-10px py-10px mt-20px bg-white">
-        <div class="mb-10px">
+  <div class=" w-screen h-screen bg-true-gray-50">
+    <div class="p-6">
+      <div class="p-4 text-left border border-gray-200 bg-white  ">
+        <div class="mb-2">
           {{ data.question }}
         </div>
-        <van-tag round type="primary" color="#4ade80">
+        <van-tag type="primary" color="#28B648" size="medium">
           {{ data.type }}
         </van-tag>
       </div>
-      <div class="mt-20px">
+      <!-- 遍历选项 -->
+      <div>
         <van-radio-group
           v-for="item in data.option"
           :key="item.name"
-          v-model="checked"
+          v-model="optionChecked"
         >
+          <!-- 判断是否已经投票 -->
+          <!-- 未投票 -->
           <div
             v-if="data.isVote"
-            class="mt-20px border-gray-200 border p-10px bg-white"
+            class="mt-6 border-gray-200 border p-10px bg-white"
           >
             <van-radio
               :name="item.name"
@@ -85,13 +101,16 @@ const isClick = (
               {{ item.value }}
             </van-radio>
           </div>
+          <!-- 已投票 -->
           <div v-else>
+            <!-- 被选中的选项样式 -->
             <div
-              v-if="checked == item.name"
-              class="mt-20px border-green-800 border h-42px"
+              v-if="optionChecked == item.name"
+              class="mt-6 border h-42px"
+              style="border-color:#23A923"
             >
               <div
-                class="border-none h-40px leading-40px"
+                class="border-none h-40px leading-40px text-left flex"
                 :style="{ width: item.width }"
                 style="
                   white-space: nowrap;
@@ -104,7 +123,7 @@ const isClick = (
                   size="1.25em"
                   class="relative left-10px leading-40px"
                 />
-                <span class="text-dark-900 left-10px relative">{{
+                <span class="text-dark-900 left-3 relative flex">{{
                   item.value
                 }}</span>
                 <span
@@ -114,12 +133,13 @@ const isClick = (
                 </span>
               </div>
             </div>
+            <!-- 没有选上但是有票数的选项 -->
             <div
-              v-else-if="item.num > 0 && checked != item.name"
-              class="mt-20px border-true-gray-200 border"
+              v-else-if="item.num > 0 && optionChecked != item.name"
+              class="mt-6 border-true-gray-200 border"
             >
               <div
-                class="border-none h-40px bg-gray-300 leading-40px"
+                class="border-none h-40px bg-gray-300 leading-40px text-left"
                 :style="{ width: item.width }"
                 style="white-space: nowrap"
               >
@@ -136,11 +156,11 @@ const isClick = (
             </div>
             <div
               v-else-if="item.num == 0"
-              class="mt-20px border-true-gray-200 border h-42px p-10px text-dark-900"
+              class="mt-6 border-true-gray-200 border h-42px  text-dark-900 text-left"
             >
-              {{ item.value }}
+              <span class="leading-40px m-10px">{{ item.value }}</span>
               <span
-                class="absolute right-50px inline-block leading-20px text-sm text-cool-gray-400"
+                class="absolute right-50px leading-20px text-sm text-cool-gray-400 pt-10px"
               >
                 {{ item.num + "票" }}
               </span>
@@ -149,7 +169,7 @@ const isClick = (
         </van-radio-group>
       </div>
       <div class="text-cool-gray-500">
-        <div class="text-xs mt-15px">
+        <div class="text-xs mt-15px text-left">
           {{ "截止时间：" + data.lastTime }}
         </div>
         <van-button
@@ -158,7 +178,7 @@ const isClick = (
           size="large"
           :color="data.color"
           class="my-10px"
-          @click="isClick(data, checked)"
+          @click="isClick(data, optionChecked)"
         >
           {{ data.text }}
         </van-button>
@@ -169,10 +189,12 @@ const isClick = (
           size="large"
           :color="data.color"
           class="my-10px"
-          @click="isClick(data, checked)"
+          @click="isClick(data, optionChecked)"
         >
           {{ data.text }}
         </van-button>
+<<<<<<< HEAD
+=======
         <div class="text-xs">
           <div>投票规则</div>
           <div class="mt-5px">
@@ -188,7 +210,17 @@ const isClick = (
         <div class="text-center mt-10px">
           {{ data.createTime + " 发起" }}
         </div>
+>>>>>>> 7c35baa8e463b04ed4dc145ab1f908ba74564be0
       </div>
     </div>
   </div>
 </template>
+<<<<<<< HEAD
+
+<route lang="yaml">
+meta:
+  layout: default
+  title: 我要投票
+</route>
+=======
+>>>>>>> 7c35baa8e463b04ed4dc145ab1f908ba74564be0
