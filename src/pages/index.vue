@@ -17,7 +17,7 @@ const list = ref([
   {
     name: '我要签到',
     icon: 'i-carbon-flash',
-    link: '',
+    link: 'joinCheck',
   },
   {
     name: '发起记录',
