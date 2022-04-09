@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const router = useRouter()
 // 定义投票数据类型接口
 interface VoteData {
   question: string
@@ -50,6 +51,7 @@ const voteData: VoteData = reactive({
   ],
 })
 
+// 投票按钮
 const isClick = (
   item: { isVote: boolean; color: string; text: string },
   optionChecked: number,
@@ -68,6 +70,9 @@ const isClick = (
     }
   }
 }
+
+// 点击选择项进行查看投票纪录
+
 </script>
 
 <template>
@@ -109,6 +114,7 @@ const isClick = (
               v-if="optionChecked == item.name"
               class="mt-6 border h-42px"
               style="border-color:#23A923"
+              @click="router.push('/join/vote/detail')"
             >
               <div
                 class="border-none h-40px leading-40px text-left flex"
