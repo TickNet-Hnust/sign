@@ -17,43 +17,48 @@
           v-for="item in list"
           :key="item"
           class="mt-3 p-4"
-          style="background-color: #fff"
+          style="background-color: #fff; position: relative"
         >
+          <div
+            class="h-0 w-0"
+            style="
+               border: 11px solid transparent;
+               border-left-color: #41BD62;
+               border-top-color: #41BD62;
+               position: absolute;
+               top: 0;
+               left: 0"
+            v-if="!item.ended"
+          ></div>
+          <div
+            class="w-54px h-54px"
+            style="
+              position: absolute;
+              top: 0;
+              right: 84px;
+              background: url(../../../public/join.png);
+              background-size: 100%"></div>
+          <div
+            class="h-0 w-0"
+            style="
+               border: 11px solid transparent;
+               border-left-color: #C9C9C9;
+               border-top-color: #C9C9C9;
+               position: absolute;
+               top: 0;
+               left: 0"
+            v-if="item.ended"
+          ></div>
           <div style="display: flex; justify-content: space-between">
             <span class="text-base font-semibold">{{ item.title }}</span>
             <span class="text-xs">
-              <van-tag text-color="#666666" :color="item.color">{{
-                item.status
-              }}</van-tag>
+              <span class="bg-hex-41BD62 text-white px-2 py-1 rounded" v-if="!item.ended">{{item.type}}中</span>
+              <span class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded" v-if="item.ended">{{item.type}}中</span>
             </span>
           </div>
-          <div class="text-xs text-gray-500 text-left mt-2">
-            {{ item.time }}
-          </div>
-          <van-divider :style="{ borderColor: '#000' }"></van-divider>
-          <div style="display: flex; justify-content: space-between">
-            <div>
-              <span class="text-xs text-gray-500/66"
-                >{{ item.user }} 发起的
-              </span>
-              <span class="text-green-500 text-sm">{{ item.type }}</span>
-            </div>
-            <div id="unford" @click="unford(item)">
-              <van-icon :name="item.unford_icon" />
-            </div>
-          </div>
-          <div
-            style="display: flex; justify-content: space-between"
-            class="mt-3"
-            v-if="item.unford_show"
-          >
-            <div>
-              <span class="text-xs text-gray-500/66">所属空间：</span>
-              <span class="text-sm font-semibold">{{ item.space }}</span>
-            </div>
-            <div class="text-xs text-gray-500/66">
-              <van-icon name="cross" size="1.2em" /> 删除
-            </div>
+          <div class="text-xs text-gray-400 text-left mt-3">
+            所属空间：学习部
+            <span class="ml-3">{{ item.time }}</span>
           </div>
         </ul>
       </van-list>
@@ -118,16 +123,6 @@ const onload = () => {
   //     loading.value = false;
   // }, 1000);
 };
-// 下拉框图标转换
 
-const unford = (item) => {
-  if (item.unford_icon === "arrow-down") {
-    item.unford_icon = "arrow-up";
-    item.unford_show = true;
-  } else {
-    item.unford_icon = "arrow-down";
-    item.unford_show = false;
-  }
-};
 </script>
 <style scoped></style>
