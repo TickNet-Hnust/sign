@@ -1,4 +1,5 @@
 <script setup lang="ts">
+<<<<<<< HEAD
 // 定义投票数据类型接口
 interface VoteData {
   question: string
@@ -192,13 +193,34 @@ const isClick = (
         >
           {{ data.text }}
         </van-button>
+<<<<<<< HEAD
+=======
+        <div class="text-xs">
+          <div>投票规则</div>
+          <div class="mt-5px">
+            {{ "1.本次投票为" + data.type }}
+          </div>
+          <div class="mt-5px">
+            2.投票之后无法撤回
+          </div>
+          <div class="mt-5px">
+            {{ "3.请在" + data.lastTime + "之前完成" }}
+          </div>
+        </div>
+        <div class="text-center mt-10px">
+          {{ data.createTime + " 发起" }}
+        </div>
+>>>>>>> 7c35baa8e463b04ed4dc145ab1f908ba74564be0
       </div>
     </div>
   </div>
 </template>
+<<<<<<< HEAD
 
 <route lang="yaml">
 meta:
   layout: default
   title: 我要投票
 </route>
+=======
+>>>>>>> 7c35baa8e463b04ed4dc145ab1f908ba74564be0

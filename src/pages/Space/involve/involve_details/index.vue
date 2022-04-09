@@ -1,3 +1,17 @@
+<script setup lang="ts">
+const member_list = ref([
+  {
+    id: '1905040117',
+    name: '曹俊',
+    status: '管理员',
+  },
+  {
+    id: '1905040110',
+    name: '曹帅',
+    status: '',
+  },
+])
+</script>
 <template>
   <div bg="gray-100" p="2">
     <div bg="white" p="1" display="flex" class=" border  border-gray-300" rounded="default">
@@ -23,20 +37,3 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-const member_list = ref([
-  {
-    id: '1905040117',
-    name: '曹俊',
-    status: '管理员',
-  },
-  {
-    id: '1905040110',
-    name: '曹帅',
-    status: '',
-  },
-])
-</script>
-<style scoped>
-
-</style>

@@ -101,6 +101,7 @@ const onLoad = () => {
       </van-dropdown-menu>
     </div>
     <div class="attendanceList">
+<<<<<<< HEAD
       <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
         <div v-for="item in list" :key="item.id">
           <div class="m-10px bg-white p-10px">
@@ -110,6 +111,20 @@ const onLoad = () => {
                   item.title
                 }}
               </span>
+=======
+      <van-list
+        v-model:loading="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <div v-for="item in list" :key="item.id">
+          <div class="m-10px bg-white p-10px">
+            <div class="justify-between flex">
+              <span style="font-size: 16px; font-weight: 700">{{
+                item.title
+              }}</span>
+>>>>>>> 7c35baa8e463b04ed4dc145ab1f908ba74564be0
               <van-tag v-if="item.status == 1" color="#22d3ee">
                 {{ item.type + "中" }}
               </van-tag>
@@ -123,8 +138,17 @@ const onLoad = () => {
             <van-divider class="bg-cool-gray-900 my-0px" />
             <div class="justify-between flex">
               <div>
+<<<<<<< HEAD
                 <span class="text-xs text-gray-300 my-5px">{{ item.userName + " 发起的 " }}</span>
                 <span class="text-xs text-green-600 my-5px">{{ item.type }}</span>
+=======
+                <span class="text-xs text-gray-300 my-5px">
+                  {{ item.userName + " 发起的 " }}
+                </span>
+                <span class="text-xs text-green-600 my-5px">
+                  {{ item.type }}
+                </span>
+>>>>>>> 7c35baa8e463b04ed4dc145ab1f908ba74564be0
               </div>
               <div @click="isClick(item)">
                 <van-icon :name="item.iconName" />
@@ -133,11 +157,17 @@ const onLoad = () => {
             <div v-if="item.isShow == 1" class="justify-between flex">
               <div>
                 <span class="text-xs text-gray-300 my-5px">所属空间：</span>
+<<<<<<< HEAD
                 <span class="text-xs text-dark-900 my-5px">
                   {{
                     item.spaceName
                   }}
                 </span>
+=======
+                <span class="text-xs text-dark-900 my-5px">{{
+                  item.spaceName
+                }}</span>
+>>>>>>> 7c35baa8e463b04ed4dc145ab1f908ba74564be0
               </div>
               <div class="text-xs text-gray-300 my-5px">
                 <van-icon name="cross" />删除
