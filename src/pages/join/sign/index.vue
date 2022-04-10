@@ -1,20 +1,23 @@
 <script setup lang="ts">
-import { Dialog } from 'vant'
-
 interface SignData{
-  tittleText: string|undefined
   userName: string
   signCode: string // 用户输入的签到码
   code: string // 正确的签到码
   isCheckCode: boolean // 比较用户输入的签到码是否正确
+  buttonText: string // 按钮当中的文字
+  tittleText: string|undefined
 }
 
 const pattern = /^\d{4}$/ // 用户输入的签到码正则匹配规则
+const router = useRouter()
 const signData: SignData = reactive({
   userName: '秦豪远',
   signCode: '',
   code: '2000',
   isCheckCode: false,
+  buttonText: computed(() => {
+    return signData.isCheckCode ? '查看签到记录' : '确认签到'
+  }),
   tittleText: computed(() => {
     if (!pattern.test(signData.signCode))
       return '请输入4位有效的签到码*^_^*'
@@ -27,16 +30,7 @@ const signData: SignData = reactive({
 })
 
 const checkCode = function() {
-  if (signData.code === signData.signCode) {
-    signData.isCheckCode = true
-  }
-  else {
-    Dialog.alert({
-      message: '签到码错误，请重新输入！！！',
-    }).then(() => {
-      // on close
-    })
-  }
+  signData.isCheckCode = true
 }
 
 </script>
@@ -46,13 +40,16 @@ const checkCode = function() {
       {{ signData.tittleText }}
     </div>
     <div class="my-6 flex justify-center">
-      <van-cell-group inset class="border rounded-0.5 w-25" style="border-color:#999999">
+      <van-cell-group v-if="!signData.isCheckCode" inset class="border rounded-0.5 w-25" style="border-color:#999999">
         <van-field v-model="signData.signCode" placeholder="输入签到码" input-align="center" class="p-1" maxlength="4" />
       </van-cell-group>
+      <div v-else class="text-2xl">
+        {{ signData.code }}
+      </div>
     </div>
     <div class="flex justify-center">
-      <van-button plain type="primary" class="w-30 font-600" :color="pattern.test(signData.signCode) && signData.code === signData.signCode? '#41AA62':'#99CDAC'" @click="checkCode()">
-        确认签到
+      <van-button plain type="primary" class="w-30 font-600" :disabled="!(signData.code === signData.signCode)" color="green" @click="!signData.isCheckCode?checkCode():router.push('/join/sign/detail')">
+        {{ signData.buttonText }}
       </van-button>
     </div>
   </div>
@@ -90,6 +87,7 @@ const checkCode = function() {
     </van-button>
   </div>
 </template>
+
 <route lang="yaml">
 meta:
   layout: default
