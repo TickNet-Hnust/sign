@@ -169,7 +169,7 @@ const isClick = (
               <span
                 class="absolute right-50px leading-20px text-sm text-cool-gray-400 pt-10px"
               >
-                {{ item.optionValue + "票" }}
+                {{ item.poll + "票" }}
               </span>
             </div>
           </div>

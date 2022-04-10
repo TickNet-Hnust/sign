@@ -4,6 +4,7 @@ interface SignData{
   signCode: string // 用户输入的签到码
   code: string // 正确的签到码
   isCheckCode: boolean // 比较用户输入的签到码是否正确
+  isSign: boolean // 用户是否进行过签到
   buttonText: string // 按钮当中的文字
   tittleText: string|undefined
 }
@@ -15,6 +16,7 @@ const signData: SignData = reactive({
   signCode: '',
   code: '2000',
   isCheckCode: false,
+  isSign: false,
   buttonText: computed(() => {
     return signData.isCheckCode ? '查看签到记录' : '确认签到'
   }),

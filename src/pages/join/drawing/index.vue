@@ -1,3 +1,47 @@
+<script setup lang="ts">
+const checked = ref(0)
+
+const data = ref({
+  question: '冬奥会2022年什么时候举办?',
+  optionNum: 3,
+  status: '进行中',
+  drawingAllNum: '8',
+  createTime: '2022-01-03 17:34:38',
+  lastTime: '2022-01-17 01-17 12:23',
+  isDrawing: true,
+  color: '#1FA71F',
+  text: '开始抽签',
+  drawingAlreadyNum: 5,
+  option: [
+    {
+      name: 1, // 自动生成id
+      value: '2月3号',
+      num: 1,
+    },
+    {
+      name: 2,
+      value: '2月4号',
+      num: 4,
+    },
+    {
+      name: 3,
+      value: '2月5号',
+      num: 0,
+    },
+  ],
+})
+
+const isClick = (item: { isDrawing: boolean; color: string; text: string }) => {
+  checked.value = Math.floor(Math.random() * 3 + 1)
+  data.value.option[checked.value - 1].num
+    = data.value.option[checked.value - 1].num + 1
+  item.isDrawing = false
+  item.color = 'rgb(157,212,157)'
+  item.text = '已抽签'
+  data.value.drawingAlreadyNum = data.value.drawingAlreadyNum + 1
+  console.warn(checked)
+}
+</script>
 <template>
   <div class="bg-true-gray-50 w-screen h-screen">
     <div class="sticky top-0">
@@ -82,8 +126,12 @@
         </van-button>
         <div class="text-xs">
           <div>抽签规则</div>
-          <div class="mt-5px">1.仅发起人查看抽签结果</div>
-          <div class="mt-5px">2.每人最多可参与1次抽签</div>
+          <div class="mt-5px">
+            1.仅发起人查看抽签结果
+          </div>
+          <div class="mt-5px">
+            2.每人最多可参与1次抽签
+          </div>
           <div class="mt-5px">
             {{ "3.请在" + data.lastTime + "之前完成" }}
           </div>
@@ -95,48 +143,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-const checked = ref(0);
-
-const data = ref({
-  question: "冬奥会2022年什么时候举办?",
-  optionNum: 3,
-  status: "进行中",
-  drawingAllNum: "8",
-  createTime: "2022-01-03 17:34:38",
-  lastTime: "2022-01-17 01-17 12:23",
-  isDrawing: true,
-  color: "#1FA71F",
-  text: "开始抽签",
-  drawingAlreadyNum: 5,
-  option: [
-    {
-      name: 1, // 自动生成id
-      value: "2月3号",
-      num: 1,
-    },
-    {
-      name: 2,
-      value: "2月4号",
-      num: 4,
-    },
-    {
-      name: 3,
-      value: "2月5号",
-      num: 0,
-    },
-  ],
-});
-
-const isClick = (item: { isDrawing: boolean; color: string; text: string }) => {
-  checked.value = Math.floor(Math.random() * 3 + 1);
-  data.value.option[checked.value - 1].num =
-    data.value.option[checked.value - 1].num + 1;
-  item.isDrawing = false;
-  item.color = "rgb(157,212,157)";
-  item.text = "已抽签";
-  data.value.drawingAlreadyNum = data.value.drawingAlreadyNum + 1;
-  console.warn(checked);
-};
-</script>
