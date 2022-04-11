@@ -2,9 +2,10 @@
 
 // 定义投票数据类型接口
 interface VoteData {
+  type: string
   question: string
   optionNum: number
-  type: string // 多选或者单选
+  optionType: string // 多选或者单选
   lastTime: string
   color: string
   text: string // 按钮的文本
@@ -23,9 +24,10 @@ interface OptionData{
 }
 
 const voteData: VoteData = reactive({
+  type: '投票',
   question: '一天吃几顿饭',
   optionNum: 3,
-  type: '单选',
+  optionType: '单选',
   lastTime: '01-17 12:23',
   isVote: true, // true 表示为投票
   color: '#4ade80',
@@ -87,7 +89,7 @@ const isClick = (
           {{ voteData.question }}
         </div>
         <van-tag type="primary" color="#28B648" size="medium">
-          {{ voteData.type }}
+          {{ voteData.optionType }}
         </van-tag>
       </div>
       <!-- 遍历选项 -->
@@ -207,7 +209,7 @@ const isClick = (
       </div>
     </div>
   </div>
-  <vote-records :show="show" @show-change="showChange()" />
+  <records-list :show="show" :type="voteData.type" @show-change="showChange()" />
 </template>
 
 <route lang="yaml">
