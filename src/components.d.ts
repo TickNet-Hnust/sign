@@ -7,6 +7,7 @@ declare module 'vue' {
     Counter: typeof import('./components/Counter.vue')['default']
     Footer: typeof import('./components/Footer.vue')['default']
     README: typeof import('./components/README.md')['default']
+    VoteRecords: typeof import('./components/vote/VoteRecords.vue')['default']
   }
 }
 
