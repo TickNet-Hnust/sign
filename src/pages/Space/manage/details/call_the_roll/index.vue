@@ -90,7 +90,7 @@ const { pause, resume, isActive } = useIntervalFn(
     while(1) { 
       var flag = true;
       for(var i=0; i<checked_list.length; i++) {
-        if(checked_list[i] === name_list.value[r]){
+        if(checked_list[i].name === name_list.value[r]){
           flag = false;
           break;
         }
@@ -99,7 +99,7 @@ const { pause, resume, isActive } = useIntervalFn(
         break;
       }
       else {
-        r = Math.round(Math.random() * 9);
+        r = Math.round(Math.random() * (name_list.value.length-1));
       }
     }
     check_name.value = name_list.value[r];
