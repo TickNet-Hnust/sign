@@ -45,6 +45,7 @@
             <span style="color: rgb(0, 102, 255)">刷新</span>
             ）
             <img
+              class="px-10 py-5"
               src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ff26f5ed0d000c3413c9a4250f2c22bcb86a9494e2b2a-Gw0bYT_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1649495467&t=ce9ebbe0f7270b03850a7a05fa695c33"
             />
           </div>
