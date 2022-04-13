@@ -1,9 +1,10 @@
-<!-- 学生端 -->
+<!-- 老师端 -->
 
 <script setup lang="ts">
 const loading = ref(false)
 const fininshed = ref(true)
 const isShow = ref(false)
+const checked = ref('1')
 const space_list = reactive([
   {
     title: '班级会议',
@@ -20,6 +21,12 @@ const space_list = reactive([
 ])
 const changeShow = () => {
   isShow.value = !isShow.value
+}
+const classShow = ref(false)
+const choose = ref()
+const onConfirm = () => {
+  if (choose.value === 'no')
+    classShow.value = true
 }
 </script>
 
@@ -43,11 +50,35 @@ const changeShow = () => {
         ><van-icon class="font-700 w-6" name="plus" /></span>
       </span>
     </div>
-    <!-- 弹出框 -->
+    <!-- 一级弹出框 -->
     <van-dialog
-      v-model:show="isShow" title="面对面建空间" confirm-button-color="rgb(63,133,255)" show-cancel-button
+      v-model:show="isShow" title="设置" confirm-button-color="rgb(63,133,255)" show-cancel-button
+      @confirm="onConfirm"
     >
-      <van-field v-model="value" label="面对面空间码" placeholder="请输入四个相同的数字" type="digit" maxlength="4" />
+      <div class="mx-4 border-t border-b border-hex-aaa mt-3 flex justify-left">
+        <span class="p-2 mr-2">课堂空间</span>
+        <span class="flex p-2">
+          <van-radio-group v-model="choose" direction="horizontal">
+            <van-radio name="yes" class="px-2">
+              是
+            </van-radio>
+            <van-radio name="no" class="px-2">
+              否
+            </van-radio>
+          </van-radio-group>
+        </span>
+      </div>
+    </van-dialog>
+    <!-- 不创建课堂空间弹出框 -->
+    <van-dialog
+      v-model:show="classShow" title="面对面建空间" confirm-button-color="rgb(63,133,255)" show-cancel-button
+    >
+      <div class="mt-5 px-10">
+        <div class="text-14px text-hex-999">
+          和身边的朋友输入同样的四个数字，进入同一个空间
+        </div>
+        <van-field class="border-b border-hex-ccc mb-3" type="digit" />
+      </div>
     </van-dialog>
     <div class="mt-8 border-1 border-hex-DEDEDE bg-hex-fff rounded py-3 px-5">
       <van-tabs v-model:active="active" color="rgb(40,182,72)">
