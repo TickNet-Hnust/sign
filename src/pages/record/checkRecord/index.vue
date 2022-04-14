@@ -67,7 +67,7 @@
           @load="onLoad"
         >
           <ul class="flex py-2 border-b border-hex-E4E4E4 text-sm">
-            <span class="flex-1">学号/工号</span>
+            <span class="flex-1">学号/工号<van-icon name="sort" /></span>
             <span class="flex-1">姓名</span>
             <span class="flex-1">时间</span>
           </ul>
