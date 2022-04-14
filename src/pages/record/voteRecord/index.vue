@@ -122,7 +122,7 @@ const changeShow = (item) => {
               <div v-show="item.isShow" class="bg-white rounded border border-hex-ccc mt-3 px-5">
                 <van-list>
                   <ul class="flex justify-around border-b border-hex-ccc py-3 text-sm">
-                    <span class="flex-1">学号/工号</span>
+                    <span class="flex-1">学号/工号<van-icon name="sort" /></span>
                     <span class="flex-1">姓名</span>
                     <span class="flex-1">时间</span
                     >
@@ -148,7 +148,7 @@ const changeShow = (item) => {
           <div class="mt-4 bg-white rounded border border-hex-ccc px-5 py-2">
             <van-list>
               <ul class="flex justify-around border-b border-hex-ccc py-3 text-sm">
-                <span class="flex-1">学号/工号</span>
+                <span class="flex-1">学号/工号<van-icon name="sort" /></span>
                 <span class="flex-1">姓名</span>
                 <span class="flex-1" style="color: rgb(55, 65, 81)"
                   >状态</span
