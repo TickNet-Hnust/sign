@@ -47,7 +47,12 @@ const changeShow = () => {
     <van-dialog
       v-model:show="isShow" title="面对面建空间" confirm-button-color="rgb(63,133,255)" show-cancel-button
     >
-      <van-field v-model="value" label="面对面空间码" placeholder="请输入四个相同的数字" type="digit" maxlength="4" />
+      <div class="mt-5 px-10">
+        <div class="text-14px text-hex-999">
+          和身边的朋友输入同样的四个数字，进入同一个空间
+        </div>
+        <van-field class="border-b border-hex-ccc mb-3" type="digit" />
+      </div>
     </van-dialog>
     <div class="mt-8 border-1 border-hex-DEDEDE bg-hex-fff rounded py-3 px-5">
       <van-tabs v-model:active="active" color="rgb(40,182,72)">
