@@ -18,22 +18,22 @@
     <div
       class="bg-white border border-gray-300 flex justify-between text-left p-3 mt-5 text-sm"
     >
-      <span>2月3号</span>
-      <span style="color: rgb(128, 128, 128)">x4</span>
+      <span>选项一</span>
+      <span style="color: rgb(128, 128, 128)">x1</span>
     </div>
     <div
       class="bg-white border border-gray-300 flex justify-between text-left p-3 mt-5 text-sm"
     >
-      <span>2月4号</span>
-      <span style="color: rgb(128, 128, 128)">x4</span>
+      <span>选项二</span>
+      <span style="color: rgb(128, 128, 128)">x1</span>
+    </div>
+    <div class="text-xs mt-3 ml-1 text-left text-hex-7B7C7D">
+      截止时间：01-17 22:33
     </div>
     <div class="mt-5">
       <van-button color="rgb(31,167,31)" size="large">
         开始抽签
       </van-button>
-    </div>
-    <div class="text-xs mt-3 ml-1 text-left text-hex-7B7C7D">
-      截止时间：01-17 22:33
     </div>
     <div class="flex justify-left mt-5 text-sm">
       <span class="border border-gray-300 bg-white p-5">
@@ -42,7 +42,7 @@
       </span>
       <span class="border border-gray-300 bg-white p-5 ml-2">
         <div />
-        <div>修改部分设置</div>
+        <div>抽签管理</div>
       </span>
     </div>
     <div class="text-0.8em text-gray-500 text-left mt-3 p-3 leading-loose">

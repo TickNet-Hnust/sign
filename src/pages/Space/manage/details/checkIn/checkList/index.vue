@@ -1,3 +1,33 @@
+<script setup lang="ts">
+const look_checked = ref('1')
+const loading = ref(false)
+const finished = ref(false)
+const refreshing = ref(false)
+const clist = ref([])
+const router = useRouter()
+const jumpPage = () => {
+  router.push('/record/checkRecord/help')
+}
+const onLoad = () => {
+  // 后面会有异步请求，此处先用setTimeout()代替
+  setTimeout(() => {
+    if (refreshing.value) {
+      clist.value = []
+      refreshing.value = false
+    }
+    for (let i = 0; i < 5; i++) {
+      clist.value.push({
+        num: '2005010326',
+        name: '张三',
+        time: '11:40:43',
+      })
+    }
+    loading.value = false
+    if (clist.value.length >= 6)
+      finished.value = true
+  }, 1000)
+}
+</script>
 <template>
   <div class="bg-gray-500/8 p-3">
     <div class="bg-white border border-hex-D9DADB rounded">
@@ -8,7 +38,6 @@
           <span><van-icon name="setting" /></span>
           <span class="text-sm ml-2">基本配置</span>
         </span>
-        
       </div>
       <div
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
@@ -86,37 +115,3 @@ meta:
   layout: default
   title: 签到列表
 </route>
-
-<script setup lang="ts">
-const look_checked = ref("1");
-const loading = ref(false);
-const finished = ref(false);
-const refreshing = ref(false);
-const clist = ref([]);
-const router = useRouter()
-const jumpPage = () => {
-  router.push('/record/checkRecord/help')
-}
-const onLoad = () => { 
-  // 后面会有异步请求，此处先用setTimeout()代替
-  setTimeout(() => {
-    if (refreshing.value) {
-      clist.value = [];
-      refreshing.value = false;
-    }
-    for (let i = 0; i < 5; i++) {
-      clist.value.push({
-        num: "2005010326",
-        name: "张三",
-        time: "11:40:43",
-      });
-    }
-    loading.value = false;
-    if (clist.value.length >= 20) finished.value = true;
-  }, 1000);
-};
-</script>
-
-<style scoped>
-
-</style>
