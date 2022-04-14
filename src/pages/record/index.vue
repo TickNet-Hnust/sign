@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-500/8 p-3">
-    <div class="top mt-3 flex bg-white">
+    <div class="top flex bg-white rounded">
       <span class="flex-2">
        <van-field
          v-model="value"
@@ -18,27 +18,16 @@
           justify-center"
       >时间<van-icon name="arrow-down" /></span>
       <span
-        class="flex items-center text-13px text-hex-666 flex-1"
-        @click="()=>{isShow = true}"
+        class="flex items-center justify-end text-13px text-hex-666 flex-1 pr-3"
         id="showSelect"
       >
-        类型筛选<van-icon name="filter-o" />
+        <van-dropdown-menu active-color="#1989fa">
+          <van-dropdown-item v-model="choValue" :options="choOptions" />
+        </van-dropdown-menu> 
+        <!-- 类型筛选<van-icon name="filter-o" /> -->
       </span>
-      <van-popup
-        v-model:show="isShow"
-        position="bottom" 
-        :style="{ height: '50%'}"
-      >
-        <van-picker
-          title="筛选"
-          :columns="columns"
-          @confirm="onConfirm"
-          @cancel="onCancel"
-          @change="onChange"
-        />
-      </van-popup>
     </div>
-    <div class="record_list mt-6">
+    <div class="record_list mt-4">
       <van-list
         v-model:loading="loading"
         :finished="dinished"
@@ -106,6 +95,14 @@ meta:
 <script setup lang="ts">
 const isShow = ref(false)
 const columns = ref(['全部','签到','投票','抽签'])
+const choValue = ref('cho')
+const choOptions = ref([
+  { text: '类型筛选', value: 'cho' },
+  { text: '全部', value: 'all' },
+  { text: '签到', value: 'sign' },
+  { text: '投票', value: 'vote' },
+  { text: '抽签', value: 'roll' },
+])
 const list = ref([
   {
     title: "冬奥会2022年什么时候举办",
@@ -177,4 +174,15 @@ const onload = () => {
 };
 
 </script>
-<style scoped></style>
+<style>
+/* 修改组件库样式去掉scoped */
+:root {
+  --van-dropdown-menu-box-shadow: 0 0 0;
+  --van-dropdown-menu-title-font-size: 13px;
+  /* --van-dropdown-menu-title-padding: 1em; */
+}
+.van-dropdown-item {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+}
+</style>

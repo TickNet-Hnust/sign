@@ -1,14 +1,71 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  const pattern = /^\d{4}$/ // 用户输入的签到码正则匹配规则
+  const router = useRouter()
+  const inputValue = ref('')
+  const canCheck = ref(false) // 是否可以开始签到
+  const checkShow = ref(true)
+  import { Notify } from 'vant';
+  const titleText = ref(
+    computed( () => {
+      if(!pattern.test(inputValue.value)) {
+        return '请输入4位有效的签到码*^_^*'
+      } else {
+        // 判断附近是否有这个验证码
+        if(1) {
+          // 返回发起签到人的姓名
+          canCheck.value = true
+          return '秦豪远'
+        } else {
+          return '你附近好像没有该签到码哦'
+        }
+      }
+    })
+  )
+  const joinCheck = () => {
+    if(canCheck.value) {
+      // 判断是否为重复签到
+      if(0) {
+        Notify({
+          message: '签到成功',
+          color: '#fff',
+          background: 'rgba(0,0,0,.7)'
+        })
+      } else {
+        Notify({
+          message: '你已经签过到啦',
+          color: '#fff',
+          background: 'rgba(0,0,0,.7)'
+        })
+      }
+      checkShow.value = false
+    }
+  }
+</script>
 <template>
   <div class="p-3">
     <div class="bg-hex-F2EFF6 p-3">
-      <div class="text-sm p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB mt-3">请输入4位有效的签到码*^_^*</div>
-      <div class="w-133px mt-6 mx-auto">
-        <van-field v-model="value" placeholder="输入签到码" class="text-xl" />
+      <div class="text-sm p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB mt-3">{{ titleText }}</div>
+      <div v-show="checkShow">
+        <div class="w-133px mt-6 mx-auto">
+          <van-field v-model="inputValue" placeholder="输入签到码" class="text-xl" />
+        </div>
+        <div
+          class="my-6 border w-150px mx-auto py-3 text-xl rounded border-hex-4FC09C text-hex-4FC09C"
+          @click="joinCheck"
+        >
+          确认签到
+        </div>
       </div>
-      <div class="my-6 border w-150px mx-auto py-3 text-xl rounded border-hex-4FC09C text-hex-4FC09C">确认签到</div>
+      <div v-show="!checkShow">
+        <div class="text-3xl mt-5">{{ inputValue }}</div>
+        <div
+          class="my-6 border w-150px mx-auto py-3 text-xl rounded border-hex-4FC09C text-hex-4FC09C"
+        >
+          查看签到记录
+        </div>
+      </div>
     </div>
-    <div class="bg-hex-F7F7F7 mt-4 text-sm text-left p-4 leading-loose">
+    <div class="bg-hex-F7F7F7 mt-1 text-sm text-left p-4 leading-loose">
       <div class="color-hex-41AA62">怎么签到</div>
       <div class="bg-hex-f7f7f7 px-4">
         先打开WIFI（只需要打开，连不连接都可以），然后点击上方签到按钮

@@ -1,17 +1,46 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { Notify } from 'vant';
+const signShow = ref(true)
+const router = useRouter()
+const launchSign = () => {
+  signShow.value=!signShow.value
+  Notify({
+    message: '60分钟后自动结束签到',
+    color: '#fff',
+    background: 'rgba(0,0,0,.7)'
+  })
+}
+const jumpRecord = () => {
+  router.push('/record/checkRecord')
+}
+</script>
 <template>
   <div class="p-3">
     <div class="bg-hex-F2EFF6 py-3">
-      <div class="text-5em color-hex-41AA62">
-        <van-icon name="location-o" />
+      <div v-show="signShow">
+        <div class="text-5em color-hex-41AA62">
+          <van-icon name="location-o" />
+        </div>
+        <div class="text-center mb-5 mt-2">
+          <span
+            class="rounded text-hex-41AA62 border-1 p-3 px-7 text-xl"
+            @click="launchSign"
+          >
+            发起签到
+          </span>
+        </div>
       </div>
-      <div class="text-center mb-5">
-        <span class="
-          rounded
-          text-hex-41AA62
-          border-1
-          p-3
-          ">发起签到</span>
+      <div v-show="!signShow">
+        <div class="text-sm p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB mt-3 mx-5">张智豪</div>
+        <div class="text-3xl mt-5">2 0 0 0</div>
+        <div class="text-center mb-5 mt-8">
+          <span
+            class="rounded text-hex-41AA62 border-1 py-3 px-4 text-xl"
+            @click="jumpRecord"
+          >
+            查看签到记录
+          </span>
+        </div>
       </div>
     </div>
     <div class="bg-hex-F7F7F7 mt-4 text-sm text-left p-4 leading-loose">
