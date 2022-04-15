@@ -35,7 +35,7 @@ const showPopup = () => {
         "
       >
         <span class="text-sm mt-1">
-          <input type="text" placeholder="描述(选填)">
+          <input type="text" placeholder="描述 (选填)">
         </span>
       </div>
       <div
@@ -43,13 +43,14 @@ const showPopup = () => {
           flex
           justify-between
           items-center
+          h-3em
           border-b-1 border-hex-C9C9C9
-          p-2
+          py-2
         "
       >
-        <span class="p-1"><span><van-icon name="minus" color="red" size="1.5em" /></span></span>
-        <span class="choice text-sm">
-          <input type="text" placeholder="选项1">
+        <span>
+          <i class="bg-red-500 rounded-1/2 text-white text-xs py-0.7 px-1 mr-2"><van-icon name="minus" /></i>
+          <input placeholder="选项1">
         </span>
       </div>
       <div
@@ -57,13 +58,14 @@ const showPopup = () => {
           flex
           justify-between
           items-center
+          h-3em
           border-b-1 border-hex-C9C9C9
-          p-2
+          py-2
         "
       >
-        <span class="p-1"><span><van-icon name="minus" color="red" size="1.5em" /></span></span>
-        <span class="text-sm ml-1">
-          <input type="text" placeholder="选项2">
+        <span>
+          <i class="bg-red-500 rounded-1/2 text-white text-xs py-0.7 px-1 mr-2"><van-icon name="minus" /></i>
+          <input placeholder="选项2">
         </span>
       </div>
       <div
@@ -71,13 +73,14 @@ const showPopup = () => {
           flex
           justify-between
           items-center
+          h-3em
           border-b-1 border-hex-C9C9C9
-          p-2
+          py-2
         "
       >
-        <span class="p-1"><span><van-icon name="add" color="blue" size="1.5em" /></span></span>
-        <span class="text-md">
-          <input type="text" placeholder="添加选项">
+        <span>
+          <i class="bg-blue-700 rounded-1/2 text-white text-xs py-0.7 px-1 mr-2"><van-icon name="plus" /></i>
+          添加选项
         </span>
       </div>
     </div>
@@ -168,3 +171,8 @@ const showPopup = () => {
     </div>
   </div>
 </template>
+<route lang="yaml">
+meta:
+  layout: default
+  title: 发起投票
+</route>

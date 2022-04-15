@@ -55,4 +55,8 @@
     </div>
   </div>
 </template>
-<style scoped></style>
+<route lang="yaml">
+meta:
+  layout: default
+  title: 进行抽签
+</route>
