@@ -30,9 +30,9 @@ $ pnpm build
 
 The site is deployed to [Netlify](https://app.netlify.com/sites/cheery-kulfi-dbe7e2/overview)
 
-visit: <https://ticknet.netlify.com/>
-
 ```shell
-$ pnpm build  # Don't care about the error message
+$ pnpm build  # Don't care about the error message, then run:
 $ pnpm deploy
 ```
+
+visit: <https://ticknet-hnust.github.io/sign>
