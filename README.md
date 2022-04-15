@@ -28,7 +28,7 @@ $ pnpm build
 
 ## Deploy
 
-The site is deployed to [Netlify](https://app.netlify.com/sites/cheery-kulfi-dbe7e2/overview)
+The site is deployed to GitHub Pages
 
 ```shell
 $ pnpm build  # Don't care about the error message, then run:
