@@ -1,0 +1,1 @@
+import{_ as t}from"./plugin-vue_export-helper.21dcd24c.js";import{r,o,c,h as a}from"./app.235124e5.js";const n={},s={class:"h-100vh px-4 py-10 text-center text-gray-700 dark:text-gray-200",bg:"[#f6f7f9]"};function _(f,m){const e=r("router-view");return o(),c("div",s,[a(e)])}var d=t(n,[["render",_]]);export{d as default};
