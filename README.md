@@ -33,5 +33,6 @@ The site is deployed to [Netlify](https://app.netlify.com/sites/cheery-kulfi-dbe
 visit: <https://ticknet.netlify.com/>
 
 ```shell
-
+$ pnpm build  # Don't care about the error message
+$ pnpm deploy
 ```
