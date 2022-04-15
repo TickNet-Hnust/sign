@@ -1,3 +1,86 @@
+<script setup lang="ts">
+const isShow = ref(false)
+const columns = ref(['全部', '签到', '投票', '抽签'])
+const choValue = ref('cho')
+const choOptions = ref([
+  { text: '类型筛选', value: 'cho' },
+  { text: '全部', value: 'all' },
+  { text: '签到', value: 'sign' },
+  { text: '投票', value: 'vote' },
+  { text: '抽签', value: 'roll' },
+])
+const list = ref([
+  {
+    title: '冬奥会2022年什么时候举办',
+    status: '抽签中',
+    time: '2022-01-03 17:34:38',
+    user: '张智豪',
+    type: '抽签',
+    ended: false,
+    color: 'rgb(118,211,246)',
+    space: '班级会议',
+    unford_show: false,
+    unford_icon: 'arrow-down',
+  },
+  {
+    title: '冬奥会2022年什么时候举办',
+    status: '投票中',
+    time: '2022-01-03 17:34:38',
+    user: '张智豪',
+    type: '投票',
+    ended: false,
+    color: 'rgb(118,211,246)',
+    space: '班级会议',
+    unford_show: false,
+    unford_icon: 'arrow-down',
+  },
+  {
+    title: '签到',
+    status: '签到中',
+    time: '2022-01-03 17:34:38',
+    user: '张智豪',
+    type: '签到',
+    ended: false,
+    color: 'rgb(118,211,246)',
+    space: '班级会议',
+    unford_show: false,
+    unford_icon: 'arrow-down',
+  },
+  {
+    title: '签到',
+    status: '已结束',
+    time: '2022-01-03 17:34:38',
+    user: '张智豪',
+    type: '签到',
+    ended: true,
+    color: 'rgb(201,201,201)',
+    space: '班级会议',
+    unford_show: false,
+    unford_icon: 'arrow-down',
+  },
+  {
+    title: '签到',
+    status: '已结束',
+    time: '2022-01-03 17:34:38',
+    user: '张智豪',
+    type: '签到',
+    ended: true,
+    color: 'rgb(201,201,201)',
+    space: '班级会议',
+    unford_show: false,
+    unford_icon: 'arrow-down',
+  },
+])
+const loading = ref(false)
+const finished = ref(false)
+const onload = () => {
+  // setTimeout(() => {
+  //     loading.value = false;
+  // }, 1000);
+}
+
+</script>
+
 <template>
   <div class="bg-gray-500/8 p-3">
     <div class="top flex bg-white rounded">
@@ -87,94 +170,13 @@
     </div>
   </div>
 </template>
+
 <route lang="yaml">
 meta:
   layout: default
   title: 我要参与
 </route>
 
-<script setup lang="ts">
-const isShow = ref(false)
-const columns = ref(['全部', '签到', '投票', '抽签'])
-const choValue = ref('cho')
-const choOptions = ref([
-  { text: '类型筛选', value: 'cho' },
-  { text: '全部', value: 'all' },
-  { text: '签到', value: 'sign' },
-  { text: '投票', value: 'vote' },
-  { text: '抽签', value: 'roll' },
-])
-const list = ref([
-  {
-    title: '冬奥会2022年什么时候举办',
-    status: '抽签中',
-    time: '2022-01-03 17:34:38',
-    user: '张智豪',
-    type: '抽签',
-    ended: false,
-    color: 'rgb(118,211,246)',
-    space: '班级会议',
-    unford_show: false,
-    unford_icon: 'arrow-down',
-  },
-  {
-    title: '冬奥会2022年什么时候举办',
-    status: '投票中',
-    time: '2022-01-03 17:34:38',
-    user: '张智豪',
-    type: '投票',
-    ended: false,
-    color: 'rgb(118,211,246)',
-    space: '班级会议',
-    unford_show: false,
-    unford_icon: 'arrow-down',
-  },
-  {
-    title: '签到',
-    status: '签到中',
-    time: '2022-01-03 17:34:38',
-    user: '张智豪',
-    type: '签到',
-    ended: false,
-    color: 'rgb(118,211,246)',
-    space: '班级会议',
-    unford_show: false,
-    unford_icon: 'arrow-down',
-  },
-  {
-    title: '签到',
-    status: '已结束',
-    time: '2022-01-03 17:34:38',
-    user: '张智豪',
-    type: '签到',
-    ended: true,
-    color: 'rgb(201,201,201)',
-    space: '班级会议',
-    unford_show: false,
-    unford_icon: 'arrow-down',
-  },
-  {
-    title: '签到',
-    status: '已结束',
-    time: '2022-01-03 17:34:38',
-    user: '张智豪',
-    type: '签到',
-    ended: true,
-    color: 'rgb(201,201,201)',
-    space: '班级会议',
-    unford_show: false,
-    unford_icon: 'arrow-down',
-  },
-])
-const loading = ref(false)
-const finished = ref(false)
-const onload = () => {
-  // setTimeout(() => {
-  //     loading.value = false;
-  // }, 1000);
-}
-
-</script>
 <style>
 /* 修改组件库样式去掉scoped */
 :root {
