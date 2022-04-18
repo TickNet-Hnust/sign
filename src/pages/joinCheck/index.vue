@@ -8,6 +8,7 @@
   const titleText = ref(
     computed( () => {
       if(!pattern.test(inputValue.value)) {
+        canCheck.value = false
         return '请输入4位有效的签到码*^_^*'
       } else {
         // 判断附近是否有这个验证码
@@ -16,6 +17,7 @@
           canCheck.value = true
           return '秦豪远'
         } else {
+          canCheck.value = false
           return '你附近好像没有该签到码哦'
         }
       }
@@ -38,6 +40,13 @@
         })
       }
       checkShow.value = false
+    }
+    else {
+      Notify({
+        message: '请输入正确的签到码',
+        color: '#fff',
+        background: 'rgba(0,0,0,.7)'
+      })
     }
   }
 </script>
