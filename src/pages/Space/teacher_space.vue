@@ -5,6 +5,7 @@ const loading = ref(false)
 const fininshed = ref(true)
 const isShow = ref(false)
 const checked = ref('1')
+const class_checked = ref([])// 里面是空数组
 const space_list = reactive([
   {
     title: '班级会议',
@@ -23,11 +24,32 @@ const changeShow = () => {
   isShow.value = !isShow.value
 }
 const classShow = ref(false)
+const classSpaceshow = ref(false)
 const choose = ref()
 const onConfirm = () => {
   if (choose.value === 'no')
     classShow.value = true
+
+  else if (choose.value === 'yes')
+    classSpaceshow.value = true
 }
+const classList = reactive([
+  { class: '19计算机一班' },
+  { class: '19计算机二班' },
+  { class: '19计算机三班' },
+  { class: '19计算机四班' },
+  { class: '19计算机五班' },
+  { class: '19计算机六班' },
+  { class: '19计算机七班' },
+])
+const checkboxGroup = ref()
+const checkAll = () => {
+  checkboxGroup.value.toggleAll(true)
+}
+const toggleAll = () => {
+  checkboxGroup.value.toggleAll()
+}
+
 </script>
 
 <template>
@@ -78,6 +100,42 @@ const onConfirm = () => {
           和身边的朋友输入同样的四个数字，进入同一个空间
         </div>
         <van-field class="border-b border-hex-ccc mb-3" type="digit" />
+      </div>
+    </van-dialog>
+    <!-- 创建课堂空间弹出框 -->
+    <van-dialog
+      v-model:show="classSpaceshow" title="智能识别课堂" confirm-button-color="rgb(63,133,255)" show-cancel-button
+    >
+      <div class="mt-5 px-10">
+        <div>
+          老师：张三
+        </div>
+        <div class="p-2">
+          课程：高等数学(上)
+        </div>
+        <div class="text-sm p-1">
+          <div class="flex">
+            <van-button type="primary" plain size="small" @click="checkAll">
+              全选
+            </van-button>
+            <van-button type="primary" plain size="small" class="ml-1" @click="toggleAll">
+              反选
+            </van-button>
+          </div>
+
+          <van-checkbox-group ref="checkboxGroup" v-model="class_checked">
+            <van-checkbox
+              v-for="(item, index) in classList"
+              :key="index"
+              :name="item"
+              shape="square"
+            >
+              <div class="text-sm p-1">
+                班级：{{ item.class }}
+              </div>
+            </van-checkbox>
+          </van-checkbox-group>
+        </div>
       </div>
     </van-dialog>
     <div class="mt-8 border-1 border-hex-DEDEDE bg-hex-fff rounded py-3 px-5">
