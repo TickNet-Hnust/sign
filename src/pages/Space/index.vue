@@ -68,12 +68,12 @@ const changeShow = () => {
               <ul
                 v-for="item in space_list"
                 :key="item"
-                class="border-b border-b-hex-dedede mt-5"
+                class="border border-hex-dedede mt-3 p-3 rounded shadow-md"
               >
                 <div class="text-left font-bold">
                   {{ item.title }}
                 </div>
-                <div class="text-left text-xs mt-1 mb-1 color-hex-999">
+                <div class="text-left text-xs mt-1 color-hex-999">
                   {{ item.time }}
                 </div>
               </ul>
@@ -92,12 +92,12 @@ const changeShow = () => {
               <ul
                 v-for="item in space_list"
                 :key="item"
-                class="border-b border-b-hex-dedede mt-5"
+                class="border border-hex-dedede mt-3 p-3 rounded shadow-md"
               >
                 <div class="text-left font-bold">
                   {{ item.title }}
                 </div>
-                <div class="text-left text-xs mt-1 mb-1 color-hex-999">
+                <div class="text-left text-xs mt-1 color-hex-999">
                   {{ item.time }}
                 </div>
               </ul>
