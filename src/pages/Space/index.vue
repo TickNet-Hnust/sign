@@ -108,3 +108,8 @@ const changeShow = () => {
     </div>
   </div>
 </template>
+<route lang="yaml">
+meta:
+  layout: default
+  title: 我的空间
+</route>

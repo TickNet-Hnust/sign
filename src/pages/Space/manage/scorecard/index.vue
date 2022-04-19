@@ -134,7 +134,7 @@ const changeTab = () => {
         <van-tab title="抽签积分" name="roll" />
       </van-tabs>
     </div>
-    <ul class="bg-white mt-4 border border-t-2 border-hex-ccc border-t-hex-28B648 px-2">
+    <ul class="bg-white mx-3 mt-4 border border-t-2 border-hex-ccc border-t-hex-28B648 px-2">
       <li class="flex py-2">
         <span class="flex-1">学号/工号<van-icon name="sort" /></span>
         <span class="flex-1">姓名</span>
