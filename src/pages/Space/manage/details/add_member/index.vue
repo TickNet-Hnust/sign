@@ -16,6 +16,11 @@
     </div>
   </div>
 </template>
+<route lang="yaml">
+meta:
+  layout: default
+  title: 成员追加
+</route>
 <style scoped>
 
 </style>
