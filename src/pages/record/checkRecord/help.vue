@@ -54,3 +54,8 @@
     </div>
   </div>
 </template>
+<route lang="yaml">
+meta:
+  layout: default
+  title: 辅助签到
+</route>
