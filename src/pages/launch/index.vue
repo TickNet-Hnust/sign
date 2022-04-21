@@ -7,7 +7,9 @@ const launchSign = () => {
   Notify({
     message: '60分钟后自动结束签到',
     color: '#fff',
-    background: 'rgba(0,0,0,.7)'
+    background: 'rgba(0,0,0,.7)',
+    // 展示时长
+    duration: 700,
   })
 }
 const jumpRecord = () => {
