@@ -15,8 +15,8 @@ const student_list = reactive([
 
 </script>
 <template>
-  <div class="bg-hex-F6F7F9 p-2">
-    <div class="bg-hex-fff p-2 border-hex-C9C9C9 border rounded">
+  <div class="bg-gray-500/8 p-3">
+    <div class="bg-hex-fff py-3 border-hex-ccc border rounded">
       <div class="flex justify-around">
         <div class="row">
           <div class="text-sm">
@@ -34,7 +34,7 @@ const student_list = reactive([
       </div>
     </div>
     <div
-      class="bg-hex-fff mt-5"
+      class="bg-hex-fff mt-5 px-2 border-t-2 border-hex-41BD62"
     >
       <van-pull-refresh v-model="refreshing" @refresh="onRefreh">
         <van-list

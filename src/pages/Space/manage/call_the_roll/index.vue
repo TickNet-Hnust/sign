@@ -75,7 +75,7 @@ const { pause, resume, isActive } = useIntervalFn(
 )
 </script>
 <template>
-  <div class="bg-gray-100 p-7">
+  <div class="bg-gray-500/8 p-7">
     <div
       class="bg-hex-93CEA6 mx-auto my-1 text-3xl text-white w-6em h-6em leading-6em rounded-1/2"
     >

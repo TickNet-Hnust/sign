@@ -95,7 +95,7 @@ const changeTab = () => {
 </script>
 
 <template>
-  <div class="bg-gray-100 p-3">
+  <div class="bg-gray-500/8 p-3">
     <div class="bg-white mx-3 text-left p-4 pb-5 text-15px rounded">
       <li class="flex items-center">
         <div class="w-5.5em">

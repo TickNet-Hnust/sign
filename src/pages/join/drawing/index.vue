@@ -86,7 +86,7 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
 </script>
 
 <template>
-  <div class="bg-true-gray-50 w-screen h-screen p-6">
+  <div class="bg-gray-500/8 w-screen h-screen p-6">
     <div class="border-gray-200 border p-3 bg-white text-left">
       <div class="mb-3">
         {{ drawData.question }}

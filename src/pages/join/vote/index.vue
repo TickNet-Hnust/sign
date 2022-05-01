@@ -82,7 +82,7 @@ const isClick = (
 </script>
 
 <template>
-  <div class=" w-screen h-screen bg-true-gray-50">
+  <div class=" w-screen h-screen bg-gray-500/8">
     <div class="p-6">
       <div class="p-4 text-left border border-gray-200 bg-white  ">
         <div class="mb-2">

@@ -6,7 +6,7 @@ const showPopup = () => {
 }
 </script>
 <template>
-  <div class="bg-hex-F6F7F9 p-3">
+  <div class="bg-gray-500/8 p-3">
     <div class="bg-hex-fff rounded p-3">
       <div
         class="

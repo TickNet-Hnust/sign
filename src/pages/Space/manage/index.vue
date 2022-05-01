@@ -53,7 +53,7 @@ const jumpPage = (path) => {
 }
 </script>
 <template>
-  <div class="bg-hex-F6F7F9 p-3">
+  <div class="bg-gray-500/8 p-3">
     <div class="flex bg-hex-fff rounded justify-between px-5 pt-5">
       <div class="flex-col flex">
         <div>
