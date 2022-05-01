@@ -24,7 +24,7 @@ const changeShow = () => {
 </script>
 
 <template>
-  <div class="p-3 bg-gray-500/8">
+  <div class="p-3 bg-gray-500/8 h-screen">
     <div class="flex justify-between items-center">
       <span class="px-3 py-1 flex items-center bg-hex-fff rounded w-xs">
         <span class="mr-3 text-2xl" style="color: rgb(156, 163, 175)"><van-icon class="font-700" name="search" /></span>

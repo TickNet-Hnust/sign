@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-500/8 p-3">
+  <div class="bg-gray-500/8 p-3 h-screen">
     <div class="bg-white border border-hex-D9DADB rounded">
       <div
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"

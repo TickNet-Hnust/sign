@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-500/8 p-3">
+  <div class="bg-gray-500/8 p-3 h-screen">
     <div class="top flex bg-white rounded">
       <span class="flex-2">
        <van-field

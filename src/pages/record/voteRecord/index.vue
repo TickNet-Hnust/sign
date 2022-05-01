@@ -82,7 +82,7 @@ const changeShow = (item) => {
 </script>
 
 <template>
-  <div class="bg-gray-500/8 p-3">
+  <div class="bg-gray-500/8 p-3 h-screen">
     <div>
       <div class="text-left ml-3">
         <span class="text-sm">票数统计</span>

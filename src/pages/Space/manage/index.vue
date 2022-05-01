@@ -53,7 +53,7 @@ const jumpPage = (path) => {
 }
 </script>
 <template>
-  <div class="bg-gray-500/8 p-3">
+  <div class="bg-gray-500/8 p-3 h-screen">
     <div class="flex bg-hex-fff rounded justify-between px-5 pt-5">
       <div class="flex-col flex">
         <div>
@@ -70,11 +70,11 @@ const jumpPage = (path) => {
     </div>
     <van-tabs v-model:active="active" color="rgb(0,51,255)">
       <van-tab title="概况">
-        <div class="mt-3 rounded flex flex-wrap justify-around bg-white">
+        <div class="rounded flex flex-wrap justify-around">
           <div
             v-for="item in details_list"
             :key="item"
-            class="my-5 p-3 mx-5 inline-block border border-hex-41be62 text-hex-999 rounded w-25vw h-25vw"
+            class="mt-5 p-3 mx-5 inline-block border border-hex-41be62 text-hex-999 rounded w-25vw h-25vw bg-white"
             shadow="~ md gray-400/60"
             @click="jumpPage(item.link)"
           >

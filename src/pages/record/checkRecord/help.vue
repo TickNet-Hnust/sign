@@ -1,7 +1,7 @@
 <template>
   <div class="p-3">
     <div
-      class="p-3 text-xs text-left"
+      class="p-3 text-xs text-left rounded"
       style="
         background-color: rgb(224, 250, 251);
         color: rgb(0, 51, 153);
@@ -19,7 +19,7 @@
     <div class="m-t-4">
       <van-tabs color="rgb(0,51,255)" title-active-color="rgb(0,51,255)">
         <van-tab title="直接补录">
-          <div class="text-left mt-6 border-1 p-4 border-gray-500/50">
+          <div class="text-left mt-6 border-1 p-4 border-gray-500/50 rounded">
             <van-cell-group border="false">
               <van-field
                 v-model="stuNum"
@@ -40,7 +40,7 @@
           </div>
         </van-tab>
         <van-tab title="生成二维码">
-          <div class="mt-6 border-1 p-4 border-gray-500/50 font-semibold">
+          <div class="mt-6 border-1 p-4 border-gray-500/50 font-semibold rounded">
             辅助扫码签到（
             <span style="color: rgb(0, 102, 255)">刷新</span>
             ）

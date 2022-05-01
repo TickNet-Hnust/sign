@@ -17,7 +17,7 @@ const jumpRecord = () => {
 }
 </script>
 <template>
-  <div class="p-3">
+  <div class="p-3 h-screen">
     <div class="bg-hex-F2EFF6 py-3">
       <div v-show="signShow">
         <div class="text-5em color-hex-41AA62">

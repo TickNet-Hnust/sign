@@ -75,7 +75,7 @@ const { pause, resume, isActive } = useIntervalFn(
 )
 </script>
 <template>
-  <div class="bg-gray-500/8 p-7">
+  <div class="bg-gray-500/8 p-7 h-screen">
     <div
       class="bg-hex-93CEA6 mx-auto my-1 text-3xl text-white w-6em h-6em leading-6em rounded-1/2"
     >
@@ -96,13 +96,14 @@ const { pause, resume, isActive } = useIntervalFn(
       </div>
     </div>
     <div
-      class="h-14em border border-hex-41AA62 mt-6 rounded bg-white px-3 mx-3 text-14px"
+      class="max-h-15em border border-hex-41AA62 mt-6 rounded bg-white px-3 mx-3 text-14px"
       style="overflow: scroll"
     >
+      <div class="py-1">选中人名单</div>
       <div
         v-for="item in checked_list"
         :key="item"
-        class="flex justify-between py-1 border-b border-hex-ccc"
+        class="flex justify-between py-1 border-t border-hex-ccc"
       >
         <span>{{ item.name }}</span>
         <span>{{ item.time }}</span>
