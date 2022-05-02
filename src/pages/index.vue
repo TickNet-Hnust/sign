@@ -8,6 +8,11 @@ const router = useRouter()
 const jumpTargetPage = (targetPath: string) => {
   router.push(targetPath)
 }
+const login = () => {
+  // 测试登录接口
+  user.login()
+}
+login()
 const list = ref([
   {
     name: '发起签到',

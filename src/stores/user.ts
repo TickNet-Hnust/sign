@@ -1,4 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import { loginTest } from '~/api/system'
+import { setToken } from '~/utils/cookies'
 
 export const useUserStore = defineStore('user', () => {
   /**
@@ -9,6 +11,7 @@ export const useUserStore = defineStore('user', () => {
 
   const usedNames = computed(() => Array.from(previousNames.value))
   const otherNames = computed(() => usedNames.value.filter(name => name !== savedName.value))
+
 
   /**
    * Changes the current name of the user and saves the one that was used
@@ -23,10 +26,34 @@ export const useUserStore = defineStore('user', () => {
     savedName.value = name
   }
 
+  /**
+   * 用户登录及token设置
+   */
+  const token = ref('')
+
+  function login ()  {
+    return new Promise((resolve, reject) => {
+      loginTest().then((res: any) => {
+        if(res.code == 200) {
+          token.value = res.data.access_token
+          // 将token存储到cookie中
+          setToken(token.value)
+        }
+        else {
+          // 弹出出错信息
+        }
+        resolve(res)
+      }).catch((error) => {
+        reject(error)
+      })
+    })
+  }
   return {
     setNewName,
     otherNames,
     savedName,
+    login,
+    token
   }
 })
 
