@@ -1,5 +1,15 @@
 <script setup lang="ts">
+import { getVoteDeatil,getAllVote } from '~/api/vote';
 
+const id = '3013'
+getVoteDeatil(id).then(res=>{
+  console.log(res)
+})
+console.log('***********')
+const testId = 3013
+getAllVote(testId).then(res=>{
+  console.log(res)
+})
 // 定义投票数据类型接口
 interface VoteData {
   type: string
