@@ -1,22 +1,31 @@
 <script setup lang="ts">
-import { getVoteDeatil,getAllVote } from '~/api/vote';
-
-const id = '3013'
-getVoteDeatil(id).then(res=>{
-  console.log(res)
-})
-console.log('***********')
-const testId = 3013
-getAllVote(testId).then(res=>{
-  console.log(res)
-})
 // 定义投票数据类型接口
+import axios from 'axios'
+import { onMounted } from 'vue'
+import { voteRecord } from '~/api/myJoin/record'
+
+onMounted(() => {
+  const id = 3013
+  voteRecord(id).then((res) => {
+    console.warn('得到数据')
+    console.warn(res)
+  })
+
+  console.warn('***************')
+  axios({
+    url: `http://127.0.0.1:4523/mock/706464/signff/voteRecord/${id}`,
+    method: 'get',
+  }).then((res) => {
+    console.warn(res)
+  })
+})
+
 interface VoteData {
-  type: string
+  type: string // 活动类型
   question: string
   optionNum: number
   optionType: string // 多选或者单选
-  lastTime: string
+  endTime: string
   color: string
   text: string // 按钮的文本
   optionChecked: number // 被选择的选项id
@@ -38,7 +47,7 @@ const voteData: VoteData = reactive({
   question: '一天吃几顿饭',
   optionNum: 3,
   optionType: '单选',
-  lastTime: '01-17 12:23',
+  endTime: '01-17 12:23',
   isVote: true, // true 表示为投票
   color: '#4ade80',
   text: '开始投票',
@@ -88,7 +97,6 @@ const isClick = (
     voteData.allPollNum = voteData.allPollNum + 1
   }
 }
-
 </script>
 
 <template>
@@ -193,7 +201,7 @@ const isClick = (
       </div>
       <div class="text-cool-gray-500">
         <div class="text-xs mt-15px text-left">
-          {{ "截止时间：" + voteData.lastTime }}
+          {{ "截止时间：" + voteData.endTime }}
         </div>
         <van-button
           v-if="voteData.isVote"
@@ -227,3 +235,7 @@ meta:
   layout: default
   title: 我要投票
 </route>
+
+function mounted() {
+  throw new Error('Function not implemented.')
+}
