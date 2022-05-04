@@ -70,17 +70,14 @@ const voteList = () => {
     pageNum: pageCnt,
     pageSize: 10
   }).then((res: any) => {
+    const rows = res.data.rows
     if(res.code === 200) {
       if( pageCnt === 1 ) {
-        list.value = res.rows
+        list.value = rows
       } else {
-        list.value = list.value.concat(res.rows)
+        list.value = list.value.concat(rows)
       }
-      if(res.rows === null || res.rows.length === 0) {
-        console.log('数据加载完毕')
-        finished.value = true
-      }
-      else if(res.rows.length < 10) {
+      if(rows.length < 10) {
         console.log('数据加载完毕')
         finished.value = true
       }
@@ -91,9 +88,11 @@ const voteList = () => {
 }
 const onload = () => {
   if(!finished.value) {
-    voteList()
-    loading.value = false
-    pageCnt++;
+    setTimeout(() => {
+      voteList()
+      loading.value = false
+      pageCnt++;
+    }, 1000)
   }
 }
 const router = useRouter()
