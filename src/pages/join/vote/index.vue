@@ -1,25 +1,9 @@
 <script setup lang="ts">
 // 定义投票数据类型接口
-import axios from 'axios'
 import { onMounted } from 'vue'
 import { voteRecord } from '~/api/myJoin/record'
 
-onMounted(() => {
-  const id = 3013
-  voteRecord(id).then((res) => {
-    console.warn('得到数据')
-    console.warn(res)
-  })
-
-  console.warn('***************')
-  axios({
-    url: `http://127.0.0.1:4523/mock/706464/signff/voteRecord/${id}`,
-    method: 'get',
-  }).then((res) => {
-    console.warn(res)
-  })
-})
-
+// 定义投票页面数据接口
 interface VoteData {
   type: string // 活动类型
   question: string
@@ -37,39 +21,23 @@ interface VoteData {
 
 // 定义投票选项数据类型接口
 interface OptionData{
-  name: number // id进项选项的识别
+  id: number // id进项选项的识别
   optionValue: string
   poll: number
 }
 
 const voteData: VoteData = reactive({
   type: '投票',
-  question: '一天吃几顿饭',
-  optionNum: 3,
-  optionType: '单选',
-  endTime: '01-17 12:23',
-  isVote: true, // true 表示为投票
+  question: '',
+  optionNum: -1,
+  optionType: '',
+  endTime: '',
+  isVote: true, // true 表示没有投票
   color: '#4ade80',
   text: '开始投票',
-  optionChecked: 0,
-  allPollNum: 6,
-  option: [
-    {
-      name: 1, // 自动生成id
-      optionValue: '一顿',
-      poll: 1,
-    },
-    {
-      name: 2,
-      optionValue: '两顿',
-      poll: 4,
-    },
-    {
-      name: 3,
-      optionValue: '三顿',
-      poll: 0,
-    },
-  ],
+  optionChecked: -1,
+  allPollNum: -1,
+  option: [],
   optionWidth: computed(() => {
     const arr: Array<string> = []
     voteData.option.forEach((item) => {
@@ -79,11 +47,21 @@ const voteData: VoteData = reactive({
   }),
 })
 
+onMounted(() => {
+  const id = 3019
+  voteRecord(id).then((res) => {
+    console.warn(res.data)
+    voteData.question = res.data.voteName
+    voteData.endTime = res.data
+  })
+})
+
 // 是否显示投票详细数据
 const show = ref(false)
 const showChange = function() {
   show.value = !show
 }
+
 // 投票按钮
 const isClick = (
   item: { isVote: boolean; color: string; text: string },
@@ -114,7 +92,7 @@ const isClick = (
       <div>
         <van-radio-group
           v-for="item in voteData.option"
-          :key="item.name"
+          :key="item.id"
           v-model="voteData.optionChecked"
         >
           <!-- 判断是否已经投票 -->
@@ -124,7 +102,7 @@ const isClick = (
             class="mt-6 border-gray-200 border p-10px bg-white"
           >
             <van-radio
-              :name="item.name"
+              :name="item.id"
               checked-color="#dde1e3"
               icon-size="16px"
             >
@@ -135,14 +113,14 @@ const isClick = (
           <div v-else>
             <!-- 被选中的选项样式 -->
             <div
-              v-if="voteData.optionChecked == item.name"
+              v-if="voteData.optionChecked == item.id"
               class="mt-6 border h-42px"
               style="border-color:#23A923"
               @click="show = true"
             >
               <div
                 class="border-none h-40px leading-40px text-left flex"
-                :style="{ width: voteData.optionWidth[item.name-1] }"
+                :style="{ width: voteData.optionWidth[item.id-1] }"
                 style="
                   white-space: nowrap;
                   background-color: rgb(157, 212, 157);
@@ -166,12 +144,12 @@ const isClick = (
             </div>
             <!-- 没有选上但是有票数的选项 -->
             <div
-              v-else-if="item.poll > 0 && voteData.optionChecked != item.name"
+              v-else-if="item.poll > 0 && voteData.optionChecked != item.id"
               class="mt-6 border-true-gray-200 border"
             >
               <div
                 class="border-none h-40px bg-gray-300 leading-40px text-left"
-                :style="{ width: voteData.optionWidth[item.name-1] }"
+                :style="{ width: voteData.optionWidth[item.id-1] }"
                 style="white-space: nowrap"
               >
                 <!-- <van-icon name="checked" color="green" size="1.25em" class="relative left-10px  leading-40px" /> -->
