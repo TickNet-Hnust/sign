@@ -69,9 +69,9 @@
           <span class="flex-1">姓名</span>
           <span class="flex-1">时间</span>
         </ul>
-        <ul v-for="item in clist" :key="item" class="flex py-2 border-b border-hex-E4E4E4 text-sm">
-          <span class="flex-1">{{ item.userId }}</span>
-          <span class="flex-1">{{ item.userName }}</span>
+        <ul v-for="item in clist" :key="item" class="flex items-center py-2 border-b border-hex-E4E4E4 text-sm">
+          <span class="flex-1">{{ item.createUserId }}</span>
+          <span class="flex-1">{{ item.createUserName }}</span>
           <span class="flex-1">{{ item.createTime }}</span>
         </ul>
       </van-list>
@@ -107,11 +107,10 @@ const getStuList = () => {
   }).then((res: any) => {
     if(res.code === 200) {
       const rows = res.rows
-      if(rows === null || rows === [] || rows.length < 10) {
+      if(rows.length < 10) {
         console.log('数据加载完毕')
         finished.value = true
       }
-      totalRecord.value = totalRecord.value + res.total
       if(pageNum.value === 1) {
         clist.value = rows
       } else {

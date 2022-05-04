@@ -71,18 +71,13 @@ const signList = () => {
   }).then((res: any) => {
     console.log(res)
     if(res.code === 200) {
+      if(res.rows.length < 10) {
+        finished.value = true
+      }
       if( pageCnt === 1 ) {
         list.value = res.rows
       } else {
         list.value = list.value.concat(res.rows)
-      }
-      if(res.rows === null || res.rows.length === 0) {
-        console.log('数据加载完毕')
-        finished.value = true
-      }
-      else if(res.rows.length < 10) {
-        console.log('数据加载完毕')
-        finished.value = true
       }
     }
   }).catch((err) => {
@@ -91,9 +86,12 @@ const signList = () => {
 }
 const onload = () => {
   if(!finished.value) {
-    signList()
-    loading.value = false
-    pageCnt++;
+    setTimeout(() => {
+      signList()
+      loading.value = false
+      pageCnt++
+    }, 1000)
   }
+  
 }
 </script>

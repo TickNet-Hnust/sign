@@ -77,11 +77,7 @@ const signList = () => {
       } else {
         list.value = list.value.concat(res.rows)
       }
-      if(res.rows === null || res.rows.length === 0) {
-        console.log('数据加载完毕')
-        finished.value = true
-      }
-      else if(res.rows.length < 10) {
+      if(res.rows.length < 10) {
         console.log('数据加载完毕')
         finished.value = true
       }
@@ -92,9 +88,11 @@ const signList = () => {
 }
 const onload = () => {
   if(!finished.value) {
-    signList()
-    loading.value = false
-    pageCnt++
+    setTimeout(() => {
+      signList()
+      loading.value = false
+      pageCnt++
+    }, 1000)
   }
 }
 const router = useRouter()
