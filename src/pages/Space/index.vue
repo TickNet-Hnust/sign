@@ -5,6 +5,7 @@ import { Toast } from 'vant'
 import { get } from 'vant/lib/utils'
 import { signSpaceList } from '~/api/mySpace/index'
 const isShow = ref(false)
+const router = useRouter()
 const searchdata = reactive({
 
 })
@@ -26,7 +27,8 @@ const getsignSpaceList = () => {
   request.value.status = active.value
   signSpaceList(request.value).then((res) => {
     if (res.code === 200)
-      spaceList.value = res.rows
+      console.log(res)
+    spaceList.value = res.rows
   }).catch((err) => {
     console.log(err)
   })
@@ -41,6 +43,14 @@ const tabChange = () => {
 }
 const clear = () => {
   getsignSpaceList()
+}
+const goSpace = (item: any) => {
+  router.push({
+    path: '/Space/manage',
+    query: {
+      id: item.id,
+    },
+  })
 }
 
 // sss
@@ -227,6 +237,7 @@ const clear = () => {
           v-for="item in spaceList"
           :key="item"
           class="border border-hex-dedede mt-3 p-3 rounded shadow-md"
+          @click="goSpace(item)"
         >
           <div class="text-left font-bold">
             {{ item.spaceName }}
