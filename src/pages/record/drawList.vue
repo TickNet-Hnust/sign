@@ -1,5 +1,6 @@
 <template>
   <van-list
+    :immediate-check="false"
     v-model:loading="loading"
     :finished="finished"
     loading-text="————下拉加载更多————"
@@ -11,6 +12,7 @@
       :key="item"
       class="mt-3 p-4 rounded"
       style="background-color: #fff; position: relative"
+      @click="jumpDetail(item)"
     >
       <div
         class="h-0 w-0"
@@ -63,35 +65,41 @@ import { getDrawList } from '~/api/record/drawRecord'
 const list = ref([]);
 const loading = ref(false);
 const finished = ref(false);
-var pageCnt = 1;
-const signList = () => {
-  getDrawList({
-    pageNum: pageCnt,
+let pageCnt = ref(1);
+const request = reactive({
+    pageNum: 1,
     pageSize: 10
-  }).then((res: any) => {
-    console.log(res)
-    if(res.code === 200) {
-      if(res.rows.length < 10) {
-        finished.value = true
-      }
-      if( pageCnt === 1 ) {
-        list.value = res.rows
-      } else {
+})
+const getList = () => {
+  request.pageNum = pageCnt.value
+  getDrawList(request).then((res: any) => {
+      if(res.code === 200) {
         list.value = list.value.concat(res.rows)
+        pageCnt.value++;
+        loading.value = false
+        if(list.value.length >= res.total) {
+          console.log('数据加载完毕')
+          finished.value = true
+        }
       }
-    }
-  }).catch((err) => {
+  }).catch(err => {
     console.log(err)
   })
 }
+getList()
 const onload = () => {
-  if(!finished.value) {
-    setTimeout(() => {
-      signList()
-      loading.value = false
-      pageCnt++
-    }, 1000)
-  }
-  
+  setTimeout(() => {
+    getList()
+  }, 1000)
+}
+const router = useRouter()
+const jumpDetail = (item: any) => {
+  // 应该是跳转到空间里面的抽签
+  router.push({
+    path: "/join/drawing",
+    query: {
+      id:  item.id
+    }
+  })
 }
 </script>

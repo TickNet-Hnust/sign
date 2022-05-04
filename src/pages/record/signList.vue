@@ -1,5 +1,6 @@
 <template>
   <van-list
+    :immediate-check="false"
     v-model:loading="loading"
     :finished="finished"
     loading-text="————下拉加载更多————"
@@ -64,36 +65,33 @@ import { getSignList } from '~/api/record/signRecord'
 const list = ref([]);
 const loading = ref(false);
 const finished = ref(false);
-var pageCnt = 1;
-const signList = () => {
-  getSignList({
-    pageNum: pageCnt,
+let pageCnt = ref(1);
+const request = reactive({
+    pageNum: 1,
     pageSize: 10,
     signName: ''
-  }).then((res: any) => {
+})
+const getList = () => {
+  request.pageNum = pageCnt.value
+  getSignList(request).then((res: any) => {
     if(res.code === 200) {
-      if( pageCnt === 1 ) {
-        list.value = res.rows
-      } else {
-        list.value = list.value.concat(res.rows)
-      }
-      if(res.rows.length < 10) {
+      list.value = list.value.concat(res.rows)
+      pageCnt.value++;
+      loading.value = false
+      if(list.value.length >= res.total) {
         console.log('数据加载完毕')
         finished.value = true
       }
     }
-  }).catch((err) => {
+  }).catch(err => {
     console.log(err)
   })
 }
+getList()
 const onload = () => {
-  if(!finished.value) {
-    setTimeout(() => {
-      signList()
-      loading.value = false
-      pageCnt++
-    }, 1000)
-  }
+  setTimeout(() => {
+    getList()
+  }, 1000)
 }
 const router = useRouter()
 const jumpDetail = (item: any) => {

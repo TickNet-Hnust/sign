@@ -1,5 +1,6 @@
 <template>
   <van-list
+    :immediate-check="false"
     v-model:loading="loading"
     :finished="finished"
     loading-text="————下拉加载更多————"
@@ -64,36 +65,34 @@ import { getVoteList } from '~/api/record/voteRecord'
 const list = ref([]);
 const loading = ref(false);
 const finished = ref(false);
-var pageCnt = 1;
-const voteList = () => {
-  getVoteList({
-    pageNum: pageCnt,
-    pageSize: 10
-  }).then((res: any) => {
-    const rows = res.data.rows
-    if(res.code === 200) {
-      if( pageCnt === 1 ) {
-        list.value = rows
-      } else {
-        list.value = list.value.concat(rows)
-      }
-      if(rows.length < 10) {
+let pageCnt = ref(1);
+const request = reactive({
+    pageNum: 1,
+    pageSize: 10,
+    signName: ''
+})
+const getList = () => {
+  request.pageNum = pageCnt.value
+  getVoteList(request).then((res: any) => {
+    if(res.code === 200){
+      const rows = res.data.rows
+      list.value = list.value.concat(rows)
+      pageCnt.value++;
+      loading.value = false
+      if(list.value.length >= res.data.total) {
         console.log('数据加载完毕')
         finished.value = true
       }
     }
-  }).catch((err) => {
+  }).catch(err => {
     console.log(err)
   })
 }
+getList()
 const onload = () => {
-  if(!finished.value) {
-    setTimeout(() => {
-      voteList()
-      loading.value = false
-      pageCnt++;
-    }, 1000)
-  }
+  setTimeout(() => {
+    getList()
+  }, 1000)
 }
 const router = useRouter()
 const jumpDetail = (item: any) => {
