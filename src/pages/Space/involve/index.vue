@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const loading = ref(false)
-const finished = ref(false)
-const refreshing = ref(false)
+const finished = ref(true)
 const student_list = reactive([
   { num: '2005010326', name: '张三' },
   { num: '2005010327', name: '李四' },
@@ -36,16 +35,15 @@ const student_list = reactive([
     <div
       class="bg-hex-fff mt-5 px-2 border-t-2 border-hex-41BD62"
     >
-      <van-pull-refresh v-model="refreshing" @refresh="onRefreh">
-        <van-list
-          v-model:loading="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          loading-text="——下拉加载更多——"
-          @load="onLoad"
-        >
-          <ul
-            class="
+      <van-list
+        v-model:loading="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        loading-text="——下拉加载更多——"
+        @load="onLoad"
+      >
+        <ul
+          class="
       flex
       justify-around
       h-3em
@@ -54,14 +52,14 @@ const student_list = reactive([
       text-sm
       list_top
       "
-          >
-            <span class="inline-block w-6em">学号/工号</span>
-            <span class="inline-block w-4em">姓名</span>
-          </ul>
-          <ul
-            v-for="item in student_list"
-            :key="item"
-            class="
+        >
+          <span class="inline-block w-6em">学号/工号</span>
+          <span class="inline-block w-4em">姓名</span>
+        </ul>
+        <ul
+          v-for="item in student_list"
+          :key="item"
+          class="
                   flex
                   justify-around
                   h-3em
@@ -69,12 +67,11 @@ const student_list = reactive([
                   border-b border-b-hex-E4E4E4
                   text-sm
                 "
-          >
-            <span class="inline-block w-6em">{{ item.num }}</span>
-            <span class="inline-block w-4em">{{ item.name }}</span>
-          </ul>
-        </van-list>
-      </van-pull-refresh>
+        >
+          <span class="inline-block w-6em">{{ item.num }}</span>
+          <span class="inline-block w-4em">{{ item.name }}</span>
+        </ul>
+      </van-list>
     </div>
   </div>
 </template>
