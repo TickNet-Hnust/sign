@@ -10,4 +10,10 @@ export function voteRecord(voteId: number) {
   })
 }
 
-//
+// 查询抽签记录
+export function getDraw(drwaId: number) {
+  return request({
+    method: 'get',
+    url: `/signff/draw/${drwaId}`,
+  })
+}
