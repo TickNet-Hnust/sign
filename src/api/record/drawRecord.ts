@@ -8,3 +8,10 @@ export function getDrawList(data: any) {
     params: data
   })
 }
+// 获取单条抽签记录详情
+export function getDetailDraw(id: any) {
+  return request({
+    method: 'get',
+    url: `/signff/draw/${id}`
+  })
+}
