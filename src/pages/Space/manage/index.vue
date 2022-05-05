@@ -1,5 +1,8 @@
 <script setup leng="ts">
+import { onMounted } from 'vue'
 import src from '~/assets/1.png'
+import { getSignSpace } from '~/api/mySpace/index'
+const route = useRoute()
 const active = ref(0)
 const number = ref(8)
 const loading = ref(false)
@@ -8,32 +11,32 @@ const details_list = reactive([
   {
     title: '发起签到',
     icon: 'i-carbon-3d-cursor-alt',
-    link: 'checkIn'
+    link: 'checkIn',
   },
   {
     title: '发起投票',
     icon: 'i-carbon-receipt',
-    link: 'vote'
+    link: 'vote',
   },
   {
     title: '发起抽签',
     icon: 'i-carbon-align-box-middle-center',
-    link: 'draw'
+    link: 'draw',
   },
   {
     title: '发起点名',
     icon: 'i-carbon-user-certification',
-    link: 'call_the_roll'
+    link: 'call_the_roll',
   },
   {
     title: '成员追加',
     icon: 'i-carbon-user-follow',
-    link: 'add_member'
+    link: 'add_member',
   },
   {
     title: '积分',
     icon: 'i-carbon-report',
-    link: 'scorecard'
+    link: 'scorecard',
   },
 ])
 const member_list = reactive([
@@ -49,18 +52,31 @@ const member_list = reactive([
 const router = useRouter()
 const finished = ref(true)
 const jumpPage = (path) => {
-  router.push('manage/'+path)
+  router.push(`manage/${path}`)
 }
+const spaceList = reactive({
+  id: '',
+  spaceName: '',
+  count: '',
+  createTime: '',
+})
+const id = ref(route.query.id)
+getSignSpace(id.value).then((res) => {
+  spaceList.id = res.data.id
+  spaceList.createTime = res.data.createTime
+  spaceList.spaceName = res.data.spaceName
+  spaceList.count = res.data.count
+})
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 h-screen">
     <div class="flex bg-hex-fff rounded justify-between px-5 pt-5">
       <div class="flex-col flex">
         <div>
-          <span class="mt-6 mr-4 text-md">班级会议</span>
+          <span class="mt-6 mr-4 text-md">{{ spaceList.spaceName }}</span>
           <span><van-icon name="edit" /></span>
         </div>
-        <span class="mt-3 text-xs text-left">成员：{{ number }}</span>
+        <span class="mt-3 text-xs text-left">成员：{{ spaceList.count }}</span>
       </div>
       <div class="rounded">
         <van-button type="danger" class="rounded" size="small">

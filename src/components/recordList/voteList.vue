@@ -1,5 +1,79 @@
+<script setup lang="ts">
+import { getVoteList } from '~/api/record/voteRecord'
+interface RecordList{ // 定义记录列表
+  id: Number, // 活动id
+  attend: Number, // 用户是否参与过该活动
+  status: Number, // 活动是否以及结束
+  voteName: String, //活动名称
+  createTime: String, //开始时间
+  endTime: String, //结束时间,
+  spaceName: String, // 所属空间名称
+  signCode: String, // 签到码
+  voteNums: String,
+  voteType: Number
+}
+const list = ref([]);
+const loading = ref(false);
+const finished = ref(false);
+let pageCnt = ref(1);
+const props = defineProps({
+  admin: Number
+})
+const request = reactive({
+    pageNum: 1,
+    pageSize: 10,
+    admin: props.admin,
+    voteName: ''
+})
+const getList = () => {
+  request.pageNum = pageCnt.value
+  getVoteList(request).then((res: any) => {
+    if(res.code === 200){
+      const rows = res.data.rows
+      list.value = list.value.concat(rows)
+      pageCnt.value++;
+      loading.value = false
+      if(list.value.length >= res.data.total) {
+        console.log('数据加载完毕')
+        finished.value = true
+      }
+    }
+  }).catch(err => {
+    console.log(err)
+  })
+}
+getList()
+const onload = () => {
+  setTimeout(() => {
+    getList()
+  }, 1000)
+}
+const router = useRouter()
+const jumpDetail = (item: any) => {
+  /**
+   * 判断admin的值
+   * 为1：跳转到空间内发起人进行投票
+   * 为0：跳转到我要参与的投票
+   */
+  if(props.admin == 1) {
+
+  } else {
+    router.push({
+      path: "/join/vote",
+      query: {
+        id:  item.id,
+        voteType: item.voteType,
+        endTime: item.endTime
+      }
+    })
+  }
+  
+}
+</script>
+
 <template>
   <van-list
+    :immediate-check="false"
     v-model:loading="loading"
     :finished="finished"
     loading-text="————下拉加载更多————"
@@ -59,52 +133,3 @@
     </ul>
   </van-list>
 </template>
-<script setup lang="ts">
-import { getVoteList } from '~/api/record/voteRecord'
-const list = ref([]);
-const loading = ref(false);
-const finished = ref(false);
-var pageCnt = 1;
-const voteList = () => {
-  getVoteList({
-    pageNum: pageCnt,
-    pageSize: 10
-  }).then((res: any) => {
-    const rows = res.data.rows
-    if(res.code === 200) {
-      if( pageCnt === 1 ) {
-        list.value = rows
-      } else {
-        list.value = list.value.concat(rows)
-      }
-      if(rows.length < 10) {
-        console.log('数据加载完毕')
-        finished.value = true
-      }
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
-}
-const onload = () => {
-  if(!finished.value) {
-    setTimeout(() => {
-      voteList()
-      loading.value = false
-      pageCnt++;
-    }, 1000)
-  }
-}
-const router = useRouter()
-const jumpDetail = (item: any) => {
-  // 应该是跳转到空间里面的投票
-  router.push({
-    path: "/join/vote",
-    query: {
-      id:  item.id,
-      voteType: item.voteType,
-      endTime: item.endTime
-    }
-  })
-}
-</script>

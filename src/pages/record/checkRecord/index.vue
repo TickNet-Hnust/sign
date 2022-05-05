@@ -1,3 +1,48 @@
+
+<script setup lang="ts">
+import { detailSignRecord } from '~/api/record/signRecord'
+const look_checked = ref("1");
+const loading = ref(false);
+const finished = ref(false);
+const clist = ref([]);
+const router = useRouter()
+const route = useRoute()
+const fQuery = route.query
+const totalRecord = ref(0)
+const jumpPage = () => {
+  router.push('checkRecord/help')
+}
+const pageNum = ref(1)
+const request = reactive({
+  signId: fQuery.id,
+  isSignIned: fQuery.attend,
+  pageNum: pageNum.value,
+  pageSize: 10
+})
+const getStuList = () => {
+  detailSignRecord(request).then((res: any) => {
+    if(res.code === 200) {
+      totalRecord.value = res.total
+      const rows = res.rows
+      clist.value = clist.value.concat(rows)
+      pageNum.value++;
+        loading.value = false
+        if(clist.value.length >= res.total) {
+          console.log('数据加载完毕')
+          finished.value = true
+        }
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+getStuList()
+const onLoad = () => {
+  setTimeout(() => {
+    getStuList()
+  }, 500);
+};
+</script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100ch">
     <div class="bg-white border border-hex-D9DADB rounded">
@@ -54,10 +99,11 @@
       </div>
     </div>
     <div class="text-left bg-hex-E1FBE3 border border-hex-8FC798 rounded mt-5 p-4">
-      <span>共成功签到了8次</span>
+      <span>共成功签到了{{totalRecord}}次</span>
     </div>
     <div class="bg-white border border-hex-D9DADB rounded mt-5 p-3">
       <van-list
+        :immediate-check="false"
         v-model:loading="loading"
         :finished="finished"
         finished-text="没有更多了"
@@ -84,54 +130,6 @@ meta:
   title: 签到列表
 </route>
 
-<script setup lang="ts">
-import { detailSignRecord } from '~/api/record/signRecord'
-const look_checked = ref("1");
-const loading = ref(false);
-const finished = ref(false);
-const clist = ref([]);
-const router = useRouter()
-const route = useRoute()
-const fQuery = route.query
-const totalRecord = ref(0)
-const jumpPage = () => {
-  router.push('checkRecord/help')
-}
-const pageNum = ref(1)
-const getStuList = () => {
-  detailSignRecord({
-    signId: fQuery.id,
-    isSidnIned: fQuery.attend,
-    pageNum: pageNum.value,
-    pageSize: 10
-  }).then((res: any) => {
-    if(res.code === 200) {
-      const rows = res.rows
-      if(rows.length < 10) {
-        console.log('数据加载完毕')
-        finished.value = true
-      }
-      if(pageNum.value === 1) {
-        clist.value = rows
-      } else {
-        clist.value = clist.value.concat(rows)
-      }
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
-}
-const onLoad = () => { 
-  // 后面会有异步请求，此处先用setTimeout()代替
-  if(!finished.value) {
-    setTimeout(() => {
-      getStuList()
-      loading.value = false
-      pageNum.value = pageNum.value + 1
-    }, 1000);
-  }
-};
-</script>
 
 <style scoped>
 

@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import signList from '~/components/recordList/signList.vue'
+import drawList from '~/components/recordList/drawList.vue'
+import voteList from '~/components/recordList/voteList.vue'
+
+</script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100vh">
     <div class="top flex bg-white rounded justify-between">
@@ -21,13 +27,13 @@
     <div class="record_list mt-2">
       <van-tabs color="rgb(40,182,72)">
         <van-tab title="签到" name="sign">
-          <sign-list></sign-list>
+          <sign-list admin="1"></sign-list>
         </van-tab>
         <van-tab title="投票" name="vote">
-          <vote-list></vote-list>
+          <vote-list admin="1"></vote-list>
         </van-tab>
         <van-tab title="抽签" name="draw">
-          <draw-list></draw-list>
+          <draw-list admin="1"></draw-list>
         </van-tab>
       </van-tabs>
     </div>
@@ -39,21 +45,5 @@ meta:
   title: 发起列表
 </route>
 
-<script setup lang="ts">
-import signList from './signList.vue'
-import drawList from './drawList.vue'
-import voteList from './voteList.vue'
 
-</script>
-<style>
-/* 修改组件库样式去掉scoped */
-:root {
-  --van-dropdown-menu-box-shadow: 0 0 0;
-  --van-dropdown-menu-title-font-size: 13px;
-  /* --van-dropdown-menu-title-padding: 1em; */
-}
-.van-dropdown-item {
-  margin-left: 0.75rem;
-  margin-right: 0.75rem;
-}
-</style>
+
