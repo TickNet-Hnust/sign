@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getDetailDraw } from '~/api/record/drawRecord'
 const no_list = reactive([
   {
     num: "1905020118",
@@ -79,6 +80,23 @@ const changeShow = (item) => {
     item.isShow = false;
   }
 }
+const detailRecord = reactive({
+  title: '',
+  optionsList: [],
+  optionsNum: []
+})
+const initData = () => {
+  getDetailDraw(10020).then((res: any) => {
+    if(res.code === 200) {
+      detailRecord.title = res.data.drawName
+      detailRecord.optionsList = res.data.optionContent
+      detailRecord.optionsNum = res.data.optionNum
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+initData()
 </script>
 
 <template>
@@ -89,9 +107,10 @@ const changeShow = (item) => {
         <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 ml-2">1 票</span>
       </div>
       <div class="text-left mt-2 p-5 text-sm bg-white rounded border-t-2 border-hex-30B648">
-        <div class="text-16px font-700">抽签标题：冬奥会2022年什么时候举办</div>
-        <div class="mt-3">1. 2月3号（0票）</div>
-        <div class="mt-3">2. 2月4号（1票）</div>
+        <div class="text-16px font-700">抽签标题：{{detailRecord.title}}</div>
+        <div class="mt-2" v-for="(item ,index) in detailRecord.optionsList" :key="item">
+          {{index+1}}. {{item}} （{{detailRecord.optionsNum[index]}} 票）
+        </div>
       </div>
     </div>
     <div class="mt-3">
