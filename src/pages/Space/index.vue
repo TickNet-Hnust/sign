@@ -6,51 +6,68 @@ import { get } from 'vant/lib/utils'
 import { signSpaceList } from '~/api/mySpace/index'
 const isShow = ref(false)
 const router = useRouter()
-const searchdata = reactive({
 
-})
 // 点击加号创建空间
 const changeShow = () => {
   isShow.value = !isShow.value
 }
 // sss
-const active = ref(0)// 控制tab切换
+const active = ref(0)// 控制tab切换 0：我参与的 1：我管理的
 const spaceList = ref([])
 const request = ref({
-  status: active.value,
+  memberRank: active.value,
   spaceName: '',
   pageNum: 1,
-  pageSize: 15,
-  userId: 1905040121,
+  pageSize: 10,
 })
 const getsignSpaceList = () => {
-  request.value.status = active.value
-  signSpaceList(request.value).then((res) => {
+  request.value.memberRank = active.value
+  signSpaceList(request.value).then((res: any) => {
     if (res.code === 200)
-      console.log(res)
-    spaceList.value = res.rows
+      spaceList.value = spaceList.value.concat(res.rows)
+
+    if (spaceList.value.length < res.total) {
+      request.value.pageNum++
+      getsignSpaceList()
+    }
   }).catch((err) => {
     console.log(err)
   })
 }
-// getsignSpaceList()
+getsignSpaceList()// 进入页面获取空间列表
+// 搜索空间的方法
 const searchList = () => {
+  spaceList.value = []
   getsignSpaceList()
 }
 const tabChange = () => {
-  console.log(active.value)
+  spaceList.value = []
+  request.value.pageNum = 1
   getsignSpaceList()
+  console.log(spaceList.value)
 }
+// 点击清除重新加载数据
 const clear = () => {
   getsignSpaceList()
 }
+// 跳转指定空间
 const goSpace = (item: any) => {
-  router.push({
-    path: '/Space/manage',
-    query: {
-      id: item.id,
-    },
-  })
+  if (active.value === 0) {
+    router.push({
+      path: '/Space/involve',
+      query: {
+        id: item.id,
+      },
+    })
+  }
+  else {
+    router.push({
+      path: '/Space/manage',
+      query: {
+        id: item.id,
+      },
+    })
+  }
 }
 
 </script>
@@ -103,10 +120,9 @@ const goSpace = (item: any) => {
         v-model:active="active"
         color="rgb(40,182,72)"
         @change="tabChange"
-        @rendered="getsignSpaceList()"
       >
-        <van-tab title="我管理的" />
         <van-tab title="我参与的" />
+        <van-tab title="我管理的" />
       </van-tabs>
       <van-list>
         <ul

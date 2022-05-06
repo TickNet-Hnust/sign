@@ -7,3 +7,11 @@ export function getTotalRecord() {
     url: '/sign/record/total'
   })
 }
+// 辅助签到
+export function assistSignIn(data: any) {
+  return request({
+    method: 'post',
+    url: '/signff/sign/assistSignIn',
+    data: data
+  })
+}
