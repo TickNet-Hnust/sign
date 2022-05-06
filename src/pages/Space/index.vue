@@ -20,7 +20,7 @@ const request = ref({
   status: active.value,
   spaceName: '',
   pageNum: 1,
-  pageSize: 10,
+  pageSize: 15,
   userId: 1905040121,
 })
 const getsignSpaceList = () => {
@@ -52,130 +52,6 @@ const goSpace = (item: any) => {
     },
   })
 }
-
-// sss
-// const searchList = () => {
-//   if (active.value === 0) {
-//     searchdata = searchManagedata.spaceName
-//     searchManageList()
-//   }
-//   else {
-//     searchdata = searchJoindata.spaceName
-//     searchJoinList()
-//   }
-// }
-// // 实现搜索功能
-
-// // 搜索我管理的空间需要的参数
-// const searchManagedata = reactive({
-//   status: 0,
-//   spaceName: '',
-//   pageNum: 1,
-//   pageSize: 10,
-//   userId: 1905040121,
-// })
-
-// const searchManageList = async() => {
-//   await signSpaceList(searchManagedata).then((res: any) => {
-//     console.log(res, '1111111111111')
-//     manage_space_list.value = res.rows
-//     Toast(`在我管理的空间中共搜索到 ${res.total} 条数据`)
-//   })
-// }
-// // 搜索我管理的空间需要的参数
-// const searchJoindata = reactive({
-//   status: 1,
-//   spaceName: '',
-//   pageNum: 1,
-//   pageSize: 10,
-//   userId: 1905040121,
-// })
-
-// const searchJoinList = async() => {
-//   await signSpaceList(searchJoindata).then((res: any) => {
-//     console.log(res, '1111111111111')
-//     join_space_list.value = res.rows
-//     Toast(`在我参与的空间中共搜索到 ${res.total} 条数据`)
-//   })
-// }
-
-// // 监听搜索的数据的变化
-// //
-// // 将获取的接口数据放到列表里
-// const manage_space_list = ref({
-//   createTime: '',
-//   spaceName: '',
-// })
-// // 我管理的总数据
-// const manage_space_list_total = ref({
-//   total: 0,
-// })
-
-// // 查询我管理的空间接口请求数据
-// const getManageSpacedata = reactive({
-//   status: 0, // 0:我管理的 1:我参与的 2:我创建的  这里是因为0没有数据，就弄了1
-//   spaceName: '',
-//   pageNum: 1,
-//   pageSize: 10,
-//   userId: 1905040121,
-// })
-// const showManage = ref(false)
-// // 请求函数
-
-// const getManageSpace = async() => {
-//   // console.log(getManageSpacedata, '发送请求时的数据')
-//   await signSpaceList(getManageSpacedata).then((res) => {
-//     // console.log(res, '条件查询空间传来的数据')
-//     manage_space_list.value = res.rows
-//     manage_space_list_total.value = res.total
-//     // console.log(res)
-//     // 如果没有数据
-//     if (manage_space_list_total.value === 0)
-//       showManage.value = true
-//   })
-// }
-
-// // 我参与的
-
-// // 将获取的接口数据放到列表里
-// const join_space_list = ref({
-//   createTime: '',
-//   spaceName: '',
-// })
-// // 我参与的总数据
-// const join_space_list_total = ref({
-//   total: 0,
-// })
-// // 查询我参与的空间接口请求数据
-// const getJoinSpaceData = reactive({
-//   status: 1,
-//   spaceName: '',
-//   pageNum: 1,
-//   pageSize: 10,
-//   userId: 1905040121,
-// })
-// // 请求函数
-// const showJoin = ref(false)
-// const getJoinSpace = async() => {
-//   await signSpaceList(getJoinSpaceData).then((res) => {
-//     // console.log(res, '条件查询空间传来的数据')
-//     join_space_list.value = res.rows
-//     join_space_list_total.value = res.total
-//     // 如果没有数据
-//     if (join_space_list_total.value === 0)
-//       showJoin.value = true
-//   })
-// }
-// getJoinSpace()
-
-// // 点击清除按钮重新请求数据
-// const clear = () => {
-//   if (active.value === 0)
-//     getManageSpace()
-
-//   else if (active.value === 1)
-//     getJoinSpace()
-// }
 
 </script>
 
