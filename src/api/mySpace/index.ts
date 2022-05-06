@@ -16,3 +16,21 @@ export function getSignSpace(spaceId: number) {
     url: `/sign/space/${spaceId}`,
   })
 }
+
+// 修改空间名称
+export function updateSignSpace(data: any) {
+  return request({
+    method: 'put',
+    url: '/sign/space',
+    data,
+  })
+}
+
+// 删除空间
+export function deleteSignSpace(spaceId: number) {
+  return request({
+    method: 'delete',
+    url: '/sign/space',
+    data: spaceId,
+  })
+}
