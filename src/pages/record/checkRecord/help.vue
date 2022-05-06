@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import { assistSignIn } from '~/api/record/index'
+const stuMsg = ref({
+  stuNum: '',
+  stuName: ''
+})
+const helpSign = () => {
+  assistSignIn(stuMsg.value).then((res) => {
+    console.log(res)
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+</script>
 <template>
   <div class="p-3">
     <div
@@ -22,13 +36,13 @@
           <div class="text-left mt-6 border-1 p-4 border-gray-500/50 rounded">
             <van-cell-group border="false">
               <van-field
-                v-model="stuNum"
+                v-model="stuMsg.stuNum"
                 label-width="3em"
                 label="学号："
                 placeholder="请输入需要补录学生的学号"
               />
               <van-field
-                v-model="stuName"
+                v-model="stuMsg.stuName"
                 label-width="3em"
                 label="姓名："
                 placeholder="请输入需要补录学生的姓名"
@@ -36,7 +50,7 @@
             </van-cell-group>
           </div>
           <div class="mt-8">
-            <van-button type="success" size="large">补录</van-button>
+            <van-button type="success" size="large" @click="helpSign()">补录</van-button>
           </div>
         </van-tab>
         <van-tab title="生成二维码">

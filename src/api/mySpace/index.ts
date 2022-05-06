@@ -8,3 +8,11 @@ export function signSpaceList(data: any) {
     params: data,
   })
 }
+
+// 根据空间id查询空间详情
+export function getSignSpace(spaceId: number) {
+  return request({
+    method: 'get',
+    url: `/sign/space/${spaceId}`,
+  })
+}

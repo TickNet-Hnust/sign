@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import src from '~/assets/1.png'
 import { getSignSpace } from '~/api/mySpace/index'
+import { getSpaceMemberList } from '~/api/mySpace/spaceMember'
 const route = useRoute()
 const active = ref(0)
 const number = ref(8)
@@ -40,14 +41,7 @@ const details_list = reactive([
   },
 ])
 const member_list = reactive([
-  {
-    user_id: 1905040117,
-    member: '曹帅哥',
-  },
-  {
-    user_id: '1234567890',
-    member: '曹shuaige',
-  },
+
 ])
 const router = useRouter()
 const finished = ref(true)
@@ -67,6 +61,13 @@ getSignSpace(id.value).then((res) => {
   spaceList.spaceName = res.data.spaceName
   spaceList.count = res.data.count
 })
+getSpaceMemberList(id.value).then((res) => {
+  member_list.push(...res.rows)
+  console.log(member_list)
+})
+// const changeRank = (member_list.memberRank) => {
+
+// }
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 h-screen">
@@ -110,9 +111,9 @@ getSignSpace(id.value).then((res) => {
             @load="onLoad"
           >
             <div v-for="item in member_list" :key="item" class="flex text-sm py-2 border-b border-hex-ddd">
-              <span class="flex-1">{{ item.user_id }}</span>
-              <span class="flex-1">{{ item.member }}</span>
-              <span class="flex-1">:</span>
+              <span class="flex-1">{{ item.userId }}</span>
+              <span class="flex-1">{{ item.name }}</span>
+              <span class="flex-1" @click="changeRank">:</span>
             </div>
           </van-list>
         </div>
