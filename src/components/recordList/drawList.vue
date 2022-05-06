@@ -11,6 +11,7 @@ interface RecordList{ // 定义记录列表
   optionNum: Array<Number> // 每个选项签数
   visible: Number
   spaceName: String // 所属空间
+  createUserName: String //发起人
 }
 let list: Array<RecordList> = reactive([])
 const loading = ref(false)
@@ -140,7 +141,14 @@ const jumpDetail = (item: any) => {
           </span>
         </div>
         <div class="text-xs text-gray-400 text-left mt-3">
-          <span>所属空间：{{ item.spaceName }}</span>
+          <span v-if="Number(props.admin) === 1">
+            所属空间：{{ item.spaceName }}
+            <span v-if="item.spaceName === '' "> --- </span>
+          </span>
+          <span v-if="Number(props.admin) !== 1">
+            发起人：{{ item.createUserName }}
+            <span v-if="item.createUserName === '' "> --- </span>
+          </span>
           <span class="ml-3">{{ item.createTime }}</span>
         </div>
       </ul>
