@@ -77,6 +77,7 @@ getSignSpace(id.value).then((res) => {
 })
 getSpaceMemberList(id.value).then((res) => {
   member_list.push(...res.rows)
+  console.log(member_list)
 })
 // const changeRank = (member_list.memberRank) => {
 // 修改空间名称
@@ -120,7 +121,7 @@ const isShow = ref(false)
             />
           </div>
         </van-dialog>
-        <span class="mt-3 text-xs text-left">成员：{{ member_list.length }}</span>
+        <span class="mt-3 text-xs text-left">成员：{{ spaceList.count }}</span>
       </div>
       <div class="rounded">
         <van-button type="danger" class="rounded" size="small" @click="deleteSpace()">

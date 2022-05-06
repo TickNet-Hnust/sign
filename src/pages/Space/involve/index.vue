@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { getSignSpace } from '~/api/mySpace/index'
+import { Notify } from 'vant'
+import { getSignSpace, quitSignSpace } from '~/api/mySpace/index'
 import { getSpaceMemberList } from '~/api/mySpace/spaceMember'
 const loading = ref(false)
 const finished = ref(true)
 const route = useRoute()
 const router = useRouter()
+// 初始化成员列表
 const member_list = reactive([
 
 ])
+// 初始化一个空间列表
 const spaceList = reactive({
   id: '',
   spaceName: '',
@@ -15,15 +18,31 @@ const spaceList = reactive({
   createTime: '',
 })
 const id = ref(route.query.id)
+// 退出空间的参数
+const quitData = reactive({
+  userId: '1905040121',
+  spaceId: 0,
+})
 getSignSpace(id.value).then((res) => {
   spaceList.id = res.data.id
   spaceList.createTime = res.data.createTime
   spaceList.spaceName = res.data.spaceName
   spaceList.count = res.data.count
+  quitData.spaceId = res.data.id
+  console.log(spaceList)
 })
 getSpaceMemberList(id.value).then((res) => {
   member_list.push(...res.rows)
 })
+
+const quitSpace = () => {
+  quitSignSpace(quitData).then((res) => {
+    if (res.code === 200) {
+      Notify({ type: 'primary', message: '退出成功' })
+      router.push('/Space')
+    }
+  })
+}
 
 </script>
 <template>
@@ -39,7 +58,7 @@ getSpaceMemberList(id.value).then((res) => {
           </div>
         </div>
         <div class="rounded items-center flex">
-          <van-button type="danger" class="rounded" size="small">
+          <van-button type="danger" class="rounded" size="small" @click="quitSpace()">
             退出空间
           </van-button>
         </div>

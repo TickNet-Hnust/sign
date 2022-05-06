@@ -1,9 +1,9 @@
 <!-- 学生端 -->
 
 <script setup lang="ts">
-import { Toast } from 'vant'
+import { Notify, Toast } from 'vant'
 import { get } from 'vant/lib/utils'
-import { signSpaceList } from '~/api/mySpace/index'
+import { addAFTFSpace, signSpaceList } from '~/api/mySpace/index'
 const isShow = ref(false)
 const router = useRouter()
 
@@ -12,6 +12,7 @@ const changeShow = () => {
   isShow.value = !isShow.value
 }
 // sss
+
 const active = ref(0)// 控制tab切换 0：我参与的 1：我管理的
 const spaceList = ref([])
 const request = ref({
@@ -69,6 +70,25 @@ const goSpace = (item: any) => {
     })
   }
 }
+// 面对面建群的参数
+const addAFTFSpaceData = reactive({
+  code: '',
+  longitude: 116.397128,
+  latitude: 39.916527,
+})
+// 面对面建群的方法
+const addFTFSpace = () => {
+  addAFTFSpace(addAFTFSpaceData).then((res) => {
+    if (res.code === 200) {
+      Notify({ type: 'success', message: '创建成功' })
+      router.push('/Space')
+      active.value = 1
+      spaceList.value = []
+      request.value.pageNum = 1
+      getsignSpaceList()
+    }
+  })
+}
 
 </script>
 
@@ -107,12 +127,13 @@ const goSpace = (item: any) => {
       title="面对面建空间"
       confirm-button-color="rgb(63,133,255)"
       show-cancel-button
+      @confirm="addFTFSpace()"
     >
       <div class="mt-5 px-10">
         <div class="text-14px text-hex-999">
           和身边的朋友输入同样的四个数字，进入同一个空间
         </div>
-        <van-field class="border-b border-hex-ccc mb-3" type="digit" />
+        <van-field v-model="addAFTFSpaceData.code" class="border-b border-hex-ccc mb-3" type="digit" maxlength="4" />
       </div>
     </van-dialog>
     <div class="mt-8 border-1 border-hex-DEDEDE bg-hex-fff rounded py-3 px-5">
