@@ -12,7 +12,7 @@ interface DrawData {
   endTime: string
   optionChecked: number // 被选择的选项id
   status: number // 当前抽签进行状态,进行状态(0未结束，1已结束)
-  isDrawing: number // 是否投票，true表示没有投票(1已参与，0未参与)
+  isDrawing: number // 是否投票(1已参与，0未参与)
   isVisible: number // 是否可见(0不可见，1可见)
   option: Array<OptionData> // 选项具体数据
   text: string // 按钮的文本

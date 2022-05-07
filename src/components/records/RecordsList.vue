@@ -46,6 +46,17 @@ const onLoad = () => {
         pageNum.value = pageNum.value + 1
       loading.value = false
     })
+  }else{
+    if (props.type === '投票') {
+    getDrawRecordList(Number(props.drawId), pageNum.value, pageSize, String(props.optionCheckedValue)).then((res: any) => {
+      recordList.push(...res.rows)
+      if (res.rows.length < pageSize)
+        finished.value = true
+      else
+        pageNum.value = pageNum.value + 1
+      loading.value = false
+    })
+  }
   }
 }
 
