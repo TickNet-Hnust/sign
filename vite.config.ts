@@ -18,6 +18,9 @@ const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 
 export default defineConfig({
   base: '/sign/',
+  // server: {
+  //   https: true
+  // },
   resolve: {
     alias: {
       '~/': `${path.resolve(__dirname, 'src')}/`,

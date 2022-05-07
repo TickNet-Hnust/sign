@@ -24,13 +24,13 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (response) => {
         const res = response.data;
-        if (res.code !== 200) {
-            // Message.error(res.heaser.msg || "Error") 
-            return Promise.reject(new Error(res.msg||"Error"))
-                          .catch((error) => {
-                            console.log(error)
-                          })
-        }
+        // if (res.code !== 200) {
+        //     // Message.error(res.heaser.msg || "Error") 
+        //     return Promise.reject(new Error(res.msg||"Error"))
+        //                   .catch((error) => {
+        //                     console.log(error)
+        //                   })
+        // }
         return res;
     },
     (error) => {

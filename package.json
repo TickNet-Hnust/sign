@@ -16,6 +16,7 @@
   "dependencies": {
     "@vueuse/core": "^8.2.6",
     "@vueuse/head": "^0.7.6",
+    "js-cookie": "^3.0.1",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.13",
     "prism-theme-vars": "^0.2.2",

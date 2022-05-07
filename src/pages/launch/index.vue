@@ -1,9 +1,90 @@
+<!--
+ * @Description: 
+ * @Autor: 张津瑞
+ * @Date: 2022-04-20 16:18:10
+ * @LastEditors: 张津瑞
+ * @LastEditTime: 2022-05-06 21:54:02
+-->
 <script setup lang="ts">
 import { Notify } from 'vant';
-const signShow = ref(true)
+import {sign} from '~/api/launchSign/index'
 const router = useRouter()
-const launchSign = () => {
-  signShow.value=!signShow.value
+
+//百度地图获取定位方法
+//经度
+let longitude =ref(0)
+//纬度
+let latitude = ref(0)
+let locationLoading = ref(true)
+const getLocationByBaidumap = function(){
+  let geolocation = new BMapGL.Geolocation();
+  geolocation.getCurrentPosition(function(r){
+      if(this.getStatus() == BMAP_STATUS_SUCCESS){
+          //为啥总是112.95046418 27.83570223(湘潭市政府的位置)
+          //破防了，chrome如果不使用https定位就不精确，看来到时候开发环境下只能用火狐测试定位了
+          //正确的位置为 112.92667632467,27.905932201717(科大逸夫楼)
+          longitude.value = r.point.lng
+          latitude.value = r.point.lat
+          locationLoading.value = false
+      }
+      else {
+          alert('failed' + this.getStatus());
+      }        
+  },
+  function(err:any){
+    console.warn('ERROR(' + err.code + '): ' + err.message);
+  },
+  {
+    enableHighAccuracy: true,
+  } 
+  );
+}
+getLocationByBaidumap()
+
+
+//点击签到功能
+const signShow = ref(true)
+//发起签到请求数据初始值
+const signRequestData = reactive({
+    longitude:0,
+    latitude:0,
+    //目前是随机名字
+    signName:`signName${parseInt(Math.random()*1000 as any)}`,
+    //下面的数据都是默认写好
+    os:'windows10',
+    browser:'chrome',
+    ip:'127.0.0.1',
+    duration:1,
+    visible:1,
+    spaceId:0
+})
+//签到请求返回数据
+let signResponseData = reactive({
+  attend:null,
+  createTime:'',
+  id:0,
+  signCode:'',
+  signName:'',
+  spaceName:null,
+  status:null
+})
+//发起签到方法
+const  launchSign = function(){
+  //赋值经纬度
+  signRequestData.longitude = longitude.value
+  signRequestData.latitude = latitude.value
+  console.log(signRequestData,'发起签到接口请求的数据')
+  sign(signRequestData).then(res=>{
+    signResponseData.attend = res.data.attend
+    signResponseData.createTime = res.data.createTime
+    signResponseData.id = res.data.id
+    signResponseData.signCode = res.data.signCode
+    signResponseData.signName = res.data.signName
+    signResponseData.spaceName = res.data.spaceName
+    signResponseData.status = res.data.status
+    console.log(signResponseData,'发起签到接口返回的数据')
+    signShow.value=!signShow.value
+  })
   Notify({
     message: '60分钟后自动结束签到',
     color: '#fff',
@@ -12,9 +93,17 @@ const launchSign = () => {
     duration: 700,
   })
 }
-const jumpRecord = () => {
-  router.push('/record/checkRecord')
+
+
+//跳转到签到记录
+//跳转时通过query参数带上相关数据
+const jumpRecord = function() {
+  router.push({ path: `/record/checkRecord`,query: { 
+    id:signResponseData.id,
+    } 
+  })
 }
+
 </script>
 <template>
   <div class="p-3 h-screen">
@@ -25,7 +114,14 @@ const jumpRecord = () => {
         </div>
         <div class="text-center mb-5 mt-2">
           <span
+            class="rounded text-hex-41AA62 border-1 p-3 px-7 text-lg"
+            v-if="locationLoading"
+          >
+            正在获取位置信息……
+          </span>
+          <span
             class="rounded text-hex-41AA62 border-1 p-3 px-7 text-xl"
+            v-else
             @click="launchSign"
           >
             发起签到
@@ -33,8 +129,8 @@ const jumpRecord = () => {
         </div>
       </div>
       <div v-show="!signShow">
-        <div class="text-sm p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB mt-3 mx-5">张智豪</div>
-        <div class="text-3xl mt-5">2 0 0 0</div>
+        <div class="text-sm p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB mt-3 mx-5">{{signResponseData.signName}}</div>
+        <div class="text-3xl mt-5">{{signResponseData.signCode}}</div>
         <div class="text-center mb-5 mt-8">
           <span
             class="rounded text-hex-41AA62 border-1 py-3 px-4 text-xl"
