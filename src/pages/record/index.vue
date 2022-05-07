@@ -8,13 +8,13 @@ import voteList from '~/components/recordList/voteList.vue'
   <div class="bg-gray-500/8 p-3 min-h-100vh">
     <div class="top flex bg-white rounded justify-between">
       <span>
-       <van-field
-         v-model="value"
-         placeholder="请输入要搜索的记录"
-         left-icon="search"
-         />
+        <van-field
+          v-model="value"
+          placeholder="请输入要搜索的记录"
+          left-icon="search"
+        />
       </span>
-      <span 
+      <span
         class="
           text-13px
           flex
@@ -27,13 +27,13 @@ import voteList from '~/components/recordList/voteList.vue'
     <div class="record_list mt-2">
       <van-tabs color="rgb(40,182,72)">
         <van-tab title="签到" name="sign">
-          <sign-list admin="1"></sign-list>
+          <sign-list admin="1" />
         </van-tab>
         <van-tab title="投票" name="vote">
-          <vote-list admin="1"></vote-list>
+          <vote-list admin="1" />
         </van-tab>
         <van-tab title="抽签" name="draw">
-          <draw-list admin="1"></draw-list>
+          <draw-list admin="1" />
         </van-tab>
       </van-tabs>
     </div>
@@ -44,6 +44,3 @@ meta:
   layout: default
   title: 发起列表
 </route>
-
-
-

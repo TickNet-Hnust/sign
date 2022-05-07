@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { getVoteList } from '~/api/record/voteRecord'
 interface RecordList{ // 定义记录列表
-  id: Number, // 活动id
-  attend: Number, // 用户是否参与过该活动
-  status: Number, // 活动是否以及结束
-  voteName: String, //活动名称
-  createTime: String, //开始时间
-  endTime: String, //结束时间,
-  spaceName: String, // 所属空间名称
-  signCode: String, // 签到码
-  voteNums: String,
+  id: Number // 活动id
+  attend: Number // 用户是否参与过该活动
+  status: Number // 活动是否以及结束
+  voteName: String //活动名称
+  createTime: String //开始时间
+  endTime: String //结束时间
+  spaceName: String // 所属空间名称
+  signCode: String // 签到码
+  voteNums: String
   voteType: Number
+  createUserName: String //发起人
 }
-const list = ref([]);
+const list: Array<RecordList> = reactive([]);
 const loading = ref(false);
 const finished = ref(false);
 let pageCnt = ref(1);
@@ -30,10 +31,10 @@ const getList = () => {
   getVoteList(request).then((res: any) => {
     if(res.code === 200){
       const rows = res.data.rows
-      list.value = list.value.concat(rows)
+      list.push(...rows)
       pageCnt.value++;
       loading.value = false
-      if(list.value.length >= res.data.total) {
+      if(list.length >= res.data.total) {
         console.log('数据加载完毕')
         finished.value = true
       }
@@ -96,7 +97,7 @@ const jumpDetail = (item: any) => {
            position: absolute;
            top: 0;
            left: 0"
-        v-if="item.status"
+        v-if="!item.status"
       ></div>
       <div
         class="w-54px h-54px"
@@ -106,7 +107,7 @@ const jumpDetail = (item: any) => {
           right: 84px;
           background: url(../../../public/join.png);
           background-size: 100%"
-        v-if="item.attend"
+        v-if="!item.attend"
       ></div>
       <div
         class="h-0 w-0"
@@ -117,17 +118,24 @@ const jumpDetail = (item: any) => {
            position: absolute;
            top: 0;
            left: 0"
-        v-if="!item.status"
+        v-if="item.status"
       ></div>
       <div style="display: flex; justify-content: space-between">
         <span class="text-base font-semibold">{{ item.voteName }}</span>
         <span class="text-xs">
-          <span class="bg-hex-41BD62 text-white px-2 py-1 rounded" v-if="item.status">投票中</span>
-          <span class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded" v-if="!item.status">已结束</span>
+          <span class="bg-hex-41BD62 text-white px-2 py-1 rounded" v-if="!item.status">投票中</span>
+          <span class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded" v-if="item.status">已结束</span>
         </span>
       </div>
       <div class="text-xs text-gray-400 text-left mt-3">
-        <span>所属空间：{{item.spaceName}}</span>
+        <span v-if="Number(props.admin) === 1">
+          所属空间：{{ item.spaceName }}
+          <span v-if="item.spaceName === '' "> --- </span>
+        </span>
+        <span v-if="Number(props.admin) !== 1">
+          发起人：{{ item.createUserName }}
+          <span v-if="item.createUserName === '' "> --- </span>
+        </span>
         <span class="ml-3">{{ item.createTime }}</span>
       </div>
     </ul>

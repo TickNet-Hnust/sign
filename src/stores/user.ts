@@ -12,7 +12,6 @@ export const useUserStore = defineStore('user', () => {
   const usedNames = computed(() => Array.from(previousNames.value))
   const otherNames = computed(() => usedNames.value.filter(name => name !== savedName.value))
 
-
   /**
    * Changes the current name of the user and saves the one that was used
    * before.
@@ -31,10 +30,10 @@ export const useUserStore = defineStore('user', () => {
    */
   const token = ref('')
 
-  function login ()  {
+  function login() {
     return new Promise((resolve, reject) => {
       loginTest().then((res: any) => {
-        if(res.code == 200) {
+        if (res.code == 200) {
           token.value = res.data.access_token
           // 将token存储到cookie中
           setToken(token.value)
@@ -53,7 +52,7 @@ export const useUserStore = defineStore('user', () => {
     otherNames,
     savedName,
     login,
-    token
+    token,
   }
 })
 
