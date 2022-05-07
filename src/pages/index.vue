@@ -55,7 +55,7 @@ user.login()
       v-for="(item, index) in list"
       :key="index"
       class="mainBox"
-      border="~ green-500"
+      border="~ border green-500"
       rounded="lg"
       w="34vw"
       h="34vw"

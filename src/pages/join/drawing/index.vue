@@ -1,76 +1,110 @@
 <script setup lang="ts">
 import { Dialog } from 'vant'
+import { addDrawRecord, getDrawNum } from '~/api/myJoin/draw'
+import { getDraw } from '~/api/myJoin/record'
+const route = useRoute()
 // 定义投票数据类型接口
 interface DrawData {
   type: string // 抽签或者投票
   question: string
-  optionNum: number // 选项总个数
-  status: string // 当前抽签进行状态
   allPollNum: number // 总票数
   drawingAlreadyNum: number // 已经抽签票数
-  lastTime: string
+  endTime: string
   optionChecked: number // 被选择的选项id
-  isDrawing: boolean // 是否投票，true表示没有投票
-  permissions: boolean // 是否所有人可见权限
+  status: number // 当前抽签进行状态,进行状态(0未结束，1已结束)
+  isDrawing: number // 是否投票(1已参与，0未参与)
+  isVisible: number // 是否可见(0不可见，1可见)
   option: Array<OptionData> // 选项具体数据
   text: string // 按钮的文本
 }
 
 // 定义投票选项数据类型接口
 interface OptionData{
-  name: number // id进项选项的识别
+  optionId: number // 选项的识别
   optionValue: string
-  poll: number
+  allPoll: number // 所有票数集合
+  lastPoll: number // 剩余的票数
 }
+
+// 根据路由获得抽签活动的id
+const drawId = Number(route.query.id)
 
 const drawData: DrawData = reactive({
   type: '抽签',
-  question: '冬奥会2022年什么时候举办?',
-  optionNum: 3,
-  status: '进行中',
-  allPollNum: 8,
-  drawingAlreadyNum: 5,
-  lastTime: '01-17 12:23',
+  question: '',
+  status: 0,
+  allPollNum: computed(() => {
+    let result = 0
+    drawData.option.forEach((item) => {
+      result = result + item.allPoll
+    })
+    return result
+  }),
+  drawingAlreadyNum: computed(() => {
+    let result = 0
+    drawData.option.forEach((item) => {
+      result = result + item.lastPoll
+    })
+    return drawData.allPollNum - result
+  }),
+  endTime: '',
   optionChecked: 0,
-  isDrawing: false,
-  permissions: true,
-  option: [
-    {
-      name: 1, // 自动生成id
-      optionValue: '2月3号',
-      poll: 1,
-    },
-    {
-      name: 2,
-      optionValue: '2月4号',
-      poll: 4,
-    },
-    {
-      name: 3,
-      optionValue: '2月5号',
-      poll: 0,
-    },
-  ],
+  isDrawing: 0,
+  isVisible: 1,
+  option: [{
+    optionId: 0,
+    optionValue: '',
+    allPoll: 0,
+    lastPoll: 0,
+  }],
   text: computed(() => {
-    return drawData.isDrawing ? '开始抽签' : '已抽签'
+    return drawData.isDrawing ? '已抽签' : '开始抽签'
   }),
 })
 
-// 参数数据
-// const params = reactive({
-//   type: drawData.type,
-//   show: false,
-// })
+onMounted(() => {
+  console.warn('发送axios请求')
+  getDraw(drawId).then((res) => {
+    console.warn('获取数据')
+    console.warn(res)
+    drawData.question = res.data.drawName
+    drawData.endTime = res.data.endTime
+    drawData.status = res.data.status
+    drawData.isVisible = res.data.visible
+    drawData.isDrawing = res.data.attend
+    drawData.option.pop()
+    for (let i = 0; i < res.data.optionContent.length; i++) {
+      const item = {
+        optionId: i + 1,
+        optionValue: res.data.optionContent[i],
+        allPoll: res.data.optionNum[i],
+        lastPoll: 0,
+      }
+      drawData.option.push(item)
+    }
+    getDrawNum(drawId).then((res) => {
+      for (let i = 0; i < res.data.length; i++)
+        drawData.option[i].lastPoll = res.data[i]
+    })
+  })
+  console.warn(drawData.option)
+})
+
 const show = ref(false)
 const showChange = function() {
   show.value = !show.value
 }
 
+drawData.optionChecked = 1
 const isClick = () => {
-  drawData.optionChecked = Math.floor(Math.random() * 3 + 1)
-  drawData.option[drawData.optionChecked - 1].poll = drawData.option[drawData.optionChecked - 1].poll + 1
-  drawData.isDrawing = true
-  drawData.drawingAlreadyNum = drawData.drawingAlreadyNum + 1
+  getDrawNum(drawId).then((res) => {
+    for (let i = 0; i < res.data.length; i++) {
+      drawData.option[i].lastPoll = res.data[i]
+      addDrawRecord(drawId).then((res) => {
+        console.warn(res)
+      })
+    }
+  })
   Dialog.alert({
     title: '抽取结果',
     message: drawData.option[drawData.optionChecked - 1].optionValue,
@@ -92,33 +126,37 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
         {{ drawData.question }}
       </div>
       <van-tag size="large" type="primary" color="#66ccff" class="mr-3">
-        {{ drawData.status }}
+        {{ drawData.status?'已结束':'进行中' }}
       </van-tag>
       <van-tag size="large" type="primary" color="#28b648">
         {{ "已抽" + drawData.drawingAlreadyNum + " / " + drawData.allPollNum }}
       </van-tag>
     </div>
     <div>
-      <div v-for="item in drawData.option" :key="item.name">
-        <div class="mt-5 text-left border p-2 text-base" :name="item.name" :style="drawData.isDrawing&&item.name===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.name===drawData.optionChecked?show = true:''">
-          <div>
+      <div v-for="item in drawData.option" :key="item.optionId">
+        <div class="mt-5 text-left border p-2 text-base" :name="item.optionId" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.optionId===drawData.optionChecked?show = true:''">
+          <div v-if="drawData.optionChecked !== item.optionId && drawData">
             <span>{{ item.optionValue }}</span>
-            <span class="float-right text-gray-500">&times;1</span>
+            <span class="float-right text-gray-500">&times;{{ item.lastPoll }}</span>
+          </div>
+          <div v-else>
+            <span>{{ item.optionValue }}</span>
+            <span class="float-right text-gray-500">已抽中该项</span>
           </div>
         </div>
       </div>
     </div>
     <div class="text-cool-gray-500">
       <div class="text-xs my-3 text-left px-2">
-        {{ "截止时间：" + drawData.lastTime }}
+        {{ "截止时间：" + drawData.endTime }}
       </div>
       <div class="flex justify-center">
-        <van-button type="primary" size="large" class="font-400" :disabled="drawData.isDrawing" :color="drawData.isDrawing?'#9DD49D':'#1FA71F'" @click="isClick()">
+        <van-button type="primary" size="large" class="font-400" :disabled="drawData.isDrawing===1" :color="drawData.isDrawing?'#9DD49D':'#1FA71F'" @click="isClick()">
           {{ drawData.text }}
         </van-button>
       </div>
     </div>
-    <records-list :show="show" :type="drawData.type" @show-change="showChange()" />
+    <records-list :show="show" :type="drawData.type" :draw-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
   </div>
 </template>
 

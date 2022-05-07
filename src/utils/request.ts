@@ -1,24 +1,25 @@
 // 封装axios
 import axios from 'axios'
 // import { Message } from 'element-ui';
-import { getToken, removeToken, removeRoles, removeName, removeAvatar } from './cookies'
+import { getToken, removeAvatar, removeName, removeRoles, removeToken } from './cookies'
 // 创建axios实例
 const service = axios.create({
-    // 请求路由
-    baseURL: 'http://112.74.96.217:8282',
-    // 请求超时时间
-    timeout: 5000,
-});
+  // 请求路由
+  baseURL: 'http://112.74.96.217:8282',
+  // 请求超时时间
+  timeout: 5000,
+})
 // 请求拦截器
 service.interceptors.request.use(
-    (config: any) => {
-        const token = getToken()
-        if(token) config.headers["Authorization"] = token
-        return config
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
+  (config: any) => {
+    const token = getToken()
+    if (token)
+      config.headers.Authorization = token
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
 )
 // 响应拦截器
 service.interceptors.response.use(
@@ -48,4 +49,4 @@ service.interceptors.response.use(
     }
 )
 
-export default service;
+export default service

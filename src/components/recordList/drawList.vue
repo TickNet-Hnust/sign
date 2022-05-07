@@ -1,0 +1,166 @@
+<script setup lang="ts">
+import { getDrawList } from '~/api/record/drawRecord'
+interface RecordList{ // 定义记录列表
+  id: Number// 活动id
+  attend: Number// 用户是否参与过该活动
+  status: Number // 活动是否以及结束
+  activityName: String // 活动名称
+  createTime: String // 开始时间
+  endTime: String // 结束时间
+  optionContent: Array<String> // 抽签选项数组
+  optionNum: Array<Number> // 每个选项签数
+  visible: Number
+  spaceName: String // 所属空间
+  createUserName: String //发起人
+}
+let list: Array<RecordList> = reactive([])
+const loading = ref(false)
+const finished = ref(false)
+const refreshing = ref(false)
+const pageCnt = ref(1)
+// 通过父组件传值判断是查询用户发起的还是参与的
+const props = defineProps({
+  admin: Number,
+})
+const request = reactive({
+  pageNum: 1,
+  pageSize: 10,
+  admin: props.admin,
+  drawName: ''
+})
+const getList = () => {
+  request.pageNum = pageCnt.value
+  getDrawList(request).then((res: any) => {
+    if (res.code === 200) {
+      list.push(...res.rows)
+      pageCnt.value++
+      loading.value = false
+      if (list.length >= res.total) {
+        console.warn('数据加载完毕')
+        finished.value = true
+      }
+    }
+  }).catch((err) => {
+    console.warn(err)
+  })
+}
+getList()
+const onload = () => {
+  setTimeout(() => {
+    getList()
+  }, 1000)
+}
+const onRefresh = () => {
+  console.warn('下拉刷新')
+  pageCnt.value = 1
+  list.length = 0
+  finished.value = false
+  loading.value = true
+  getList()
+  refreshing.value = false
+}
+const search = (drawName: any) => {
+  request.drawName = drawName
+  list.length = 0
+  pageCnt.value = 1
+  getList()
+}
+
+defineExpose({search})
+const router = useRouter()
+const jumpDetail = (item: any) => {
+  /**
+   * 判断admin的值
+   * 为1：跳转到空间内发起人进行抽签
+   * 为0：跳转到我要参与的抽签
+   */
+  if (Number(props.admin) === 1) {
+    router.push({
+      path: '/space/manage/draw/owner_draw',
+      query: {
+        id: item.id,
+      },
+    })
+  }
+  else {
+    console.warn(typeof props.admin)
+    router.push({
+      path: '/join/drawing',
+      query: {
+        id: item.id,
+      },
+    })
+  }
+}
+</script>
+<template>
+  <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+    <van-list
+      v-model:loading="loading"
+      :immediate-check="false"
+      :finished="finished"
+      loading-text="————下拉加载更多————"
+      finished-text="没有更多了"
+      @load="onload"
+    >
+      <ul
+        v-for="item in list"
+        :key="item"
+        class="mt-3 p-4 rounded"
+        style="background-color: #fff; position: relative"
+        @click="jumpDetail(item)"
+      >
+        <div
+          v-if="!item.status"
+          class="h-0 w-0"
+          style="
+             border: 11px solid transparent;
+             border-left-color: #41BD62;
+             border-top-color: #41BD62;
+             position: absolute;
+             top: 0;
+             left: 0"
+        />
+        <div
+          v-if="item.attend"
+          class="w-54px h-54px"
+          style="
+            position: absolute;
+            top: 0;
+            right: 84px;
+            background: url(../../../public/join.png);
+            background-size: 100%"
+        />
+        <div
+          v-if="item.status"
+          class="h-0 w-0"
+          style="
+             border: 11px solid transparent;
+             border-left-color: #C9C9C9;
+             border-top-color: #C9C9C9;
+             position: absolute;
+             top: 0;
+             left: 0"
+        />
+        <div style="display: flex; justify-content: space-between">
+          <span class="text-base font-semibold">{{ item.activityName }}</span>
+          <span class="text-xs">
+            <span v-if="!item.status" class="bg-hex-41BD62 text-white px-2 py-1 rounded">抽签中</span>
+            <span v-if="item.status" class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded">已结束</span>
+          </span>
+        </div>
+        <div class="text-xs text-gray-400 text-left mt-3">
+          <span v-if="Number(props.admin) === 1">
+            所属空间：{{ item.spaceName }}
+            <span v-if="item.spaceName === '' "> --- </span>
+          </span>
+          <span v-if="Number(props.admin) !== 1">
+            发起人：{{ item.createUserName }}
+            <span v-if="item.createUserName === '' "> --- </span>
+          </span>
+          <span class="ml-3">{{ item.createTime }}</span>
+        </div>
+      </ul>
+    </van-list>
+  </van-pull-refresh>
+</template>
