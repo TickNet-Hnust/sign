@@ -31,10 +31,10 @@ getSignSpace(id.value).then((res) => {
   quitData.spaceId = res.data.id
   console.log(spaceList)
 })
-getSpaceMemberList(id.value).then((res) => {
+getSpaceMemberList(id.value).then((res: any) => {
   member_list.push(...res.rows)
 })
-
+// 退出空间的方法
 const quitSpace = () => {
   quitSignSpace(quitData).then((res) => {
     if (res.code === 200) {
@@ -43,6 +43,7 @@ const quitSpace = () => {
     }
   })
 }
+const showQuit = ref(false)// 是否显示退出空间的弹窗
 
 </script>
 <template>
@@ -58,9 +59,16 @@ const quitSpace = () => {
           </div>
         </div>
         <div class="rounded items-center flex">
-          <van-button type="danger" class="rounded" size="small" @click="quitSpace()">
+          <van-button type="danger" class="rounded" size="small" @click="showQuit = true">
             退出空间
           </van-button>
+          <van-dialog
+            v-model:show="showQuit"
+            title="是否删除空间"
+            confirm-button-color="rgb(63,133,255)"
+            show-cancel-button
+            @confirm="quitSpace()"
+          />
         </div>
       </div>
     </div>
