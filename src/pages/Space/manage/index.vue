@@ -2,10 +2,9 @@
 import { Notify, Picker, Toast } from 'vant'
 import src from '~/assets/1.png'
 import { deleteSignSpace, getSignSpace, updateSignSpace } from '~/api/mySpace/index'
-import { getSpaceMemberList, updateSpaceMember } from '~/api/mySpace/spaceMember'
+import { deleteSpaceMember, getSpaceMemberList, updateSpaceMember } from '~/api/mySpace/spaceMember'
 const route = useRoute()
 const active = ref(0)
-const number = ref(8)
 const loading = ref(false)
 const fininshed = ref(true)
 const details_list = reactive([
@@ -132,10 +131,15 @@ const onConfirmAdmin = (index, value) => {
         member_list.value = res.rows
         showAdminChange.value = false
       })
-    }).catch((err) => {
-      console.log(err)
-    },
-    )
+    })
+  }
+  else if (value === 1) {
+    deleteSpaceMember(changeAdminData).then((res) => {
+      getSpaceMemberList(id.value).then((res) => {
+        member_list.value = res.rows
+        showAdminChange.value = false
+      })
+    })
   }
 }
 // 操作普通成员列表
@@ -156,10 +160,15 @@ const onConfirmStu = (index, value) => {
         member_list.value = res.rows
         showStuChange.value = false
       })
-    }).catch((err) => {
-      console.log(err)
-    },
-    )
+    })
+  }
+  else if (value === 1) {
+    deleteSpaceMember(changeStuData).then((res) => {
+      getSpaceMemberList(id.value).then((res) => {
+        member_list.value = res.rows
+        showStuChange.value = false
+      })
+    })
   }
 }
 

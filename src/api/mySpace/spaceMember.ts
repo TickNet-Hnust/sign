@@ -19,3 +19,12 @@ export function updateSpaceMember(data: any) {
     data,
   })
 }
+
+// 删除成员
+export function deleteSpaceMember(data: any) {
+  return request({
+    method: 'delete',
+    url: '/sign/space/member',
+    data,
+  })
+}
