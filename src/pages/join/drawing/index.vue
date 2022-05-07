@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Dialog } from 'vant'
-import { getDrawNum } from '~/api/myJoin/draw'
+import { addDrawRecord, getDrawNum } from '~/api/myJoin/draw'
 import { getDraw } from '~/api/myJoin/record'
 const route = useRoute()
 // 定义投票数据类型接口
@@ -12,7 +12,7 @@ interface DrawData {
   endTime: string
   optionChecked: number // 被选择的选项id
   status: number // 当前抽签进行状态,进行状态(0未结束，1已结束)
-  isDrawing: number // 是否投票，true表示没有投票(1已参与，0未参与)
+  isDrawing: number // 是否投票(1已参与，0未参与)
   isVisible: number // 是否可见(0不可见，1可见)
   option: Array<OptionData> // 选项具体数据
   text: string // 按钮的文本
@@ -25,6 +25,9 @@ interface OptionData{
   allPoll: number // 所有票数集合
   lastPoll: number // 剩余的票数
 }
+
+// 根据路由获得抽签活动的id
+const drawId = Number(route.query.id)
 
 const drawData: DrawData = reactive({
   type: '抽签',
@@ -48,7 +51,12 @@ const drawData: DrawData = reactive({
   optionChecked: 0,
   isDrawing: 0,
   isVisible: 1,
-  option: [],
+  option: [{
+    optionId: 0,
+    optionValue: '',
+    allPoll: 0,
+    lastPoll: 0,
+  }],
   text: computed(() => {
     return drawData.isDrawing ? '已抽签' : '开始抽签'
   }),
@@ -56,7 +64,6 @@ const drawData: DrawData = reactive({
 
 onMounted(() => {
   console.warn('发送axios请求')
-  const drawId = Number(route.params.id)
   getDraw(drawId).then((res) => {
     console.warn('获取数据')
     console.warn(res)
@@ -65,6 +72,7 @@ onMounted(() => {
     drawData.status = res.data.status
     drawData.isVisible = res.data.visible
     drawData.isDrawing = res.data.attend
+    drawData.option.pop()
     for (let i = 0; i < res.data.optionContent.length; i++) {
       const item = {
         optionId: i + 1,
@@ -75,10 +83,8 @@ onMounted(() => {
       drawData.option.push(item)
     }
     getDrawNum(drawId).then((res) => {
-      for (let i = 0; i < res.data.length; i++) {
+      for (let i = 0; i < res.data.length; i++)
         drawData.option[i].lastPoll = res.data[i]
-        console.warn('****')
-      }
     })
   })
   console.warn(drawData.option)
@@ -89,16 +95,16 @@ const showChange = function() {
   show.value = !show.value
 }
 
+drawData.optionChecked = 1
 const isClick = () => {
   getDrawNum(drawId).then((res) => {
     for (let i = 0; i < res.data.length; i++) {
       drawData.option[i].lastPoll = res.data[i]
-      console.warn('****')
+      addDrawRecord(drawId).then((res) => {
+        console.warn(res)
+      })
     }
   })
-  drawData.optionChecked = Math.floor(Math.random() * 3 + 1)
-  drawData.option[drawData.optionChecked - 1].lastPoll = drawData.option[drawData.optionChecked - 1].lastPoll - 1
-  drawData.isDrawing = 1
   Dialog.alert({
     title: '抽取结果',
     message: drawData.option[drawData.optionChecked - 1].optionValue,
@@ -150,7 +156,7 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
         </van-button>
       </div>
     </div>
-    <records-list :show="show" :type="drawData.type" @show-change="showChange()" />
+    <records-list :show="show" :type="drawData.type" :draw-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
   </div>
 </template>
 

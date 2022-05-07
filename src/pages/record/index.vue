@@ -63,6 +63,3 @@ meta:
   layout: default
   title: 发起列表
 </route>
-
-
-

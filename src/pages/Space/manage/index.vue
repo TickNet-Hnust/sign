@@ -1,11 +1,10 @@
 <script setup leng="ts">
-import { onMounted } from 'vue'
+import { Notify, Picker, Toast } from 'vant'
 import src from '~/assets/1.png'
-import { getSignSpace } from '~/api/mySpace/index'
-import { getSpaceMemberList } from '~/api/mySpace/spaceMember'
+import { deleteSignSpace, getSignSpace, updateSignSpace } from '~/api/mySpace/index'
+import { deleteSpaceMember, getSpaceMemberList, updateSpaceMember } from '~/api/mySpace/spaceMember'
 const route = useRoute()
 const active = ref(0)
-const number = ref(8)
 const loading = ref(false)
 const fininshed = ref(true)
 const details_list = reactive([
@@ -40,34 +39,139 @@ const details_list = reactive([
     link: 'scorecard',
   },
 ])
-const member_list = reactive([
+// 成员列表
+const member_list = ref([])
 
-])
 const router = useRouter()
 const finished = ref(true)
 const jumpPage = (path) => {
   router.push(`manage/${path}`)
 }
+// 初始化一个空间列表
 const spaceList = reactive({
   id: '',
   spaceName: '',
   count: '',
   createTime: '',
 })
+// 修改空间名称请求的数据
+const updateData = reactive({
+  spaceName: '',
+  spaceId: 0,
+})
+// 删除空间请求的数据
+const deleteData = reactive({ spaceId: 0 })
+
+// 改变管理员权限的数据
+const changeAdminData = reactive({
+  userId: '',
+  spaceId: 0,
+})
+
+// 改变学生权限的数据
+const changeStuData = reactive({
+  userId: '',
+  spaceId: 0,
+})
+
+// 查询空间列表的参数
 const id = ref(route.query.id)
 getSignSpace(id.value).then((res) => {
   spaceList.id = res.data.id
   spaceList.createTime = res.data.createTime
   spaceList.spaceName = res.data.spaceName
   spaceList.count = res.data.count
+  updateData.spaceName = res.data.spaceName
+  updateData.spaceId = res.data.id
+  deleteData.spaceId = res.data.id
+  console.log(spaceList)
 })
 getSpaceMemberList(id.value).then((res) => {
-  member_list.push(...res.rows)
-  console.log(member_list)
+  member_list.value = res.rows
 })
-// const changeRank = (member_list.memberRank) => {
 
-// }
+// 修改空间名称
+const updateSpaceName = () => {
+  updateSignSpace(updateData).then((res) => {
+    if (res.code === 200)
+      spaceList.spaceName = updateData.spaceName
+  })
+}
+// 删除空间
+const deleteSpace = () => {
+  deleteSignSpace(deleteData).then((res) => {
+    if (res.code === 200)
+      Notify({ type: 'primary', message: '删除成功' })
+    router.push('/Space')
+  })
+}
+const showUpdate = ref(false)// 是否显示修改空间名称的弹窗
+const showDelete = ref(false)// 是否显示删除空间的弹窗
+const showAdminChange = ref(false)// 是否显示操作管理员权限的弹出层
+const showStuChange = ref(false)// 是否显示操作学生权限的弹出层
+// 点击管理员的方法
+const changeAdmin = (item) => {
+  showAdminChange.value = true
+  changeAdminData.userId = item.userId
+  changeAdminData.spaceId = id
+}
+// 点击学生的方法
+const changeStu = (item) => {
+  showStuChange.value = true
+  changeStuData.userId = item.userId
+  changeStuData.spaceId = id
+}
+// 操作管理员列表
+const columnsAdmin = ['取消管理员资格', '删除成员']
+// 操作管理员的方法
+const onConfirmAdmin = (index, value) => {
+  if (value === 0) {
+    updateSpaceMember(changeAdminData).then((res) => {
+      getSpaceMemberList(id.value).then((res) => {
+        member_list.value = res.rows
+        showAdminChange.value = false
+      })
+    })
+  }
+  else if (value === 1) {
+    deleteSpaceMember(changeAdminData).then((res) => {
+      getSpaceMemberList(id.value).then((res) => {
+        member_list.value = res.rows
+        showAdminChange.value = false
+      })
+    })
+  }
+}
+// 操作普通成员列表
+const columnsStu = ['设为管理员', '删除成员']
+// 点击取消,关闭弹窗
+const onCancel = () => {
+  showAdminChange.value = false
+  showStuChange.value = false
+  Toast('取消')
+}
+
+// 将成员设为管理员
+const onConfirmStu = (index, value) => {
+  if (value === 0) {
+    updateSpaceMember(changeStuData).then((res) => {
+      getSpaceMemberList(id.value).then((res) => {
+        console.log(res, '成员列表')
+        member_list.value = res.rows
+        showStuChange.value = false
+      })
+    })
+  }
+  else if (value === 1) {
+    deleteSpaceMember(changeStuData).then((res) => {
+      getSpaceMemberList(id.value).then((res) => {
+        member_list.value = res.rows
+        showStuChange.value = false
+      })
+    })
+  }
+}
+
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 h-screen">
@@ -75,15 +179,38 @@ getSpaceMemberList(id.value).then((res) => {
       <div class="flex-col flex">
         <div>
           <span class="mt-6 mr-4 text-md">{{ spaceList.spaceName }}</span>
-          <span><van-icon name="edit" /></span>
+          <span @click="showUpdate = true"><van-icon name="edit" /></span>
         </div>
+        <van-dialog
+          v-model:show="showUpdate"
+          title="修改空间名称"
+          confirm-button-color="rgb(63,133,255)"
+          show-cancel-button
+          @confirm="updateSpaceName()"
+        >
+          <div class="mt-5 px-10">
+            <van-field
+              v-model="updateData.spaceName"
+              class="border-b border-hex-ccc mb-3"
+              placeholder="请输入新的空间名称"
+              :rules="[{ required: true, message: '请输入新名称' }]"
+            />
+          </div>
+        </van-dialog>
         <span class="mt-3 text-xs text-left">成员：{{ spaceList.count }}</span>
       </div>
       <div class="rounded">
-        <van-button type="danger" class="rounded" size="small">
+        <van-button type="danger" class="rounded" size="small" @click="showDelete = true">
           删除空间
         </van-button>
       </div>
+      <van-dialog
+        v-model:show="showDelete"
+        title="是否删除空间"
+        confirm-button-color="rgb(63,133,255)"
+        show-cancel-button
+        @confirm="deleteSpace()"
+      />
     </div>
     <van-tabs v-model:active="active" color="rgb(0,51,255)">
       <van-tab title="概况">
@@ -103,21 +230,71 @@ getSpaceMemberList(id.value).then((res) => {
         </div>
       </van-tab>
       <van-tab title="成员">
-        <div class="bg-white px-2">
+        <div class="bg-white px-2  items-center">
           <van-list
             v-model:loading="loading"
             :finished="finished"
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <div v-for="item in member_list" :key="item" class="flex text-sm py-2 border-b border-hex-ddd">
-              <span class="flex-1">{{ item.userId }}</span>
-              <span class="flex-1">{{ item.name }}</span>
-              <span class="flex-1" @click="changeRank">:</span>
+            <div
+              v-for="item in member_list" :key="item" class="flex text-sm py-2 border-b border-hex-ddd mt-2 "
+            >
+              <div class="flex-1 font-sans">
+                {{ item.userId }}
+              </div>
+              <div class="flex-1">
+                {{ item.name }}
+              </div>
+              <div class="flex-1">
+                <span v-if="item.memberRank == 2"><van-tag size="large" color="#7232dd" class="text-xs">负责人</van-tag></span>
+                <span v-if="item.memberRank == 1" class="text-xs" @click="changeAdmin(item)"><van-button
+                  class="rounded"
+                  size="mini"
+                  icon="arrow"
+                  type="success"
+                >
+                  管理员
+                </van-button></span>
+                <span v-if="item.memberRank == 0" class="text-xs" @click="changeStu(item)"><van-button
+                  class="rounded"
+                  size="mini"
+                  icon="arrow"
+                  type="primary"
+                >
+                  成员
+                </van-button></span>
+              </div>
             </div>
           </van-list>
         </div>
       </van-tab>
+      <van-popup
+        v-model:show="showAdminChange"
+        position="bottom"
+        :style="{ height: '50%' }"
+      >
+        <van-picker
+          class="mt-10"
+          title="请选择操作"
+          :columns="columnsAdmin"
+          @confirm="onConfirmAdmin"
+          @cancel="onCancel"
+        />
+      </van-popup>
+      <van-popup
+        v-model:show="showStuChange"
+        position="bottom"
+        :style="{ height: '50%' }"
+      >
+        <van-picker
+          class="mt-10"
+          title="请选择操作"
+          :columns="columnsStu"
+          @confirm="onConfirmStu"
+          @cancel="onCancel"
+        />
+      </van-popup>
     </van-tabs>
   </div>
 </template>

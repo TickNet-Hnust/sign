@@ -10,3 +10,21 @@ export function getSpaceMemberList(spaceId: number) {
     },
   })
 }
+
+// 改变成员权限
+export function updateSpaceMember(data: any) {
+  return request({
+    method: 'put',
+    url: '/sign/space/member',
+    data,
+  })
+}
+
+// 删除成员
+export function deleteSpaceMember(data: any) {
+  return request({
+    method: 'delete',
+    url: '/sign/space/member',
+    data,
+  })
+}

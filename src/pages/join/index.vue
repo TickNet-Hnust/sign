@@ -34,7 +34,7 @@ const changeTab = () => {
          @search="search"
          />
       </span>
-      <span 
+      <span
         class="
           text-13px
           flex
@@ -64,4 +64,3 @@ meta:
   layout: default
   title: 参与列表
 </route>
-
