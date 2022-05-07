@@ -4,7 +4,7 @@ interface RecordList{ // 定义记录列表
   id: Number // 活动id
   attend: Number // 用户是否参与过该活动
   status: Number // 活动是否以及结束
-  signName: String //活动名称
+  activityName: String //活动名称
   createTime: String //开始时间
   endTime: String //结束时间,
   spaceName: String // 所属空间名称
@@ -47,31 +47,43 @@ const onload = () => {
     getList()
   }, 1000)
 }
+const search = (signName: any) => {
+  request.signName = signName
+  list.length = 0
+  pageCnt.value = 1
+  getList()
+}
+defineExpose({search})
 const router = useRouter()
 const jumpDetail = (item: any) => {
   /**
-   * 如果用户已经参与过该活动，则跳转到签到记录页面，
-   * 如果是用户发起的活动，也跳转到签到记录页面
-   * 否则跳转到签到页面
-   * 跳转逻辑还要改
+   * 首先判断用户身份
+   * 如果是发起者，则跳转到发起记录的签到记录页面
+   * 如果是参与者，则判断用户是否已经参与过该活动
+   *   如果没有参与过，则跳转到我要参与下的我要签到
+   *   如果已经参与了，则跳转到我要参与下的签到记录
    */
-  if( item.attend || Number(props.admin) === 1) {
+  if( Number(props.admin) === 1 ) {
     router.push({
       path: "/record/checkRecord",
       query: {
         id:  item.id,
-        signName: item.signName,
-        signCode: item.signCode,
-        createTime: item.createTime,
-        attend: item.attend
       }
     })
   } else {
-    router.push({
-      path: '/join/sign'
+    if( item.attend ) {
+      router.push({
+      path: "/join/sign/detail",
+      query: {
+        id:  item.id,
+      }
     })
+    } else {
+      router.push({
+      path: "/join/sign",
+    })
+    }
   }
-  
 }
 
 </script>
@@ -125,7 +137,7 @@ const jumpDetail = (item: any) => {
         v-if="item.status"
       ></div>
       <div style="display: flex; justify-content: space-between">
-        <span class="text-base font-semibold">{{ item.signName }}</span>
+        <span class="text-base font-semibold">{{ item.activityName }}</span>
         <span class="text-xs">
           <span class="bg-hex-41BD62 text-white px-2 py-1 rounded" v-if="!item.status">签到中</span>
           <span class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded" v-if="item.status">已结束</span>

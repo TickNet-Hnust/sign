@@ -1,15 +1,41 @@
 <script setup lang="ts">
-import { assistSignIn } from '~/api/record/index'
+import { assistSignIn, signQRCode } from '~/api/record/index'
 const stuMsg = ref({
   stuNum: '',
   stuName: ''
 })
+const route = useRoute()
+const signId = route.query.id
+const QRUrl = ref('')
 const helpSign = () => {
-  assistSignIn(stuMsg.value).then((res) => {
+  assistSignIn(stuMsg.value).then((res: any) => {
     console.log(res)
   }).catch((err) => {
     console.log(err)
   })
+}
+const QRRequest = reactive({
+  signId: signId,
+  path: 'http://localhost:3333/sign/record/checkRecord/helpJumpPage'
+})
+const getQRCode = () => {
+  signQRCode(QRRequest).then((res: any) => {
+    QRUrl.value = res.msg
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+const refresh = () => {
+  getQRCode()
+}
+const activeTab = ref('byName')
+const changeTab = () => {
+  if(activeTab.value === 'byCode') {
+    refresh()
+  } else {
+    stuMsg.value.stuNum = ''
+    stuMsg.value.stuName = ''
+  }
 }
 </script>
 <template>
@@ -31,8 +57,8 @@ const helpSign = () => {
       </div>
     </div>
     <div class="m-t-4">
-      <van-tabs color="rgb(0,51,255)" title-active-color="rgb(0,51,255)">
-        <van-tab title="直接补录">
+      <van-tabs color="rgb(0,51,255)" title-active-color="rgb(0,51,255)" @change="changeTab()" v-model:active="activeTab">
+        <van-tab title="直接补录" name="byName">
           <div class="text-left mt-6 border-1 p-4 border-gray-500/50 rounded">
             <van-cell-group border="false">
               <van-field
@@ -53,14 +79,14 @@ const helpSign = () => {
             <van-button type="success" size="large" @click="helpSign()">补录</van-button>
           </div>
         </van-tab>
-        <van-tab title="生成二维码">
+        <van-tab title="生成二维码" name="byCode">
           <div class="mt-6 border-1 p-4 border-gray-500/50 font-semibold rounded">
             辅助扫码签到（
-            <span style="color: rgb(0, 102, 255)">刷新</span>
+            <span style="color: rgb(0, 102, 255)" @click="refresh()">刷新</span>
             ）
             <img
               class="px-10 py-5"
-              src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ff26f5ed0d000c3413c9a4250f2c22bcb86a9494e2b2a-Gw0bYT_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1649495467&t=ce9ebbe0f7270b03850a7a05fa695c33"
+              :src="QRUrl"
             />
           </div>
         </van-tab>

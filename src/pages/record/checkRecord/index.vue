@@ -1,51 +1,87 @@
 
 <script setup lang="ts">
-import { detailSignRecord } from '~/api/record/signRecord'
-const look_checked = ref("1");
+import { signStuList, detailSignRecord, changeSignMsg } from '~/api/record/signRecord'
 const loading = ref(false);
 const finished = ref(false);
 const clist = ref([]);
 const router = useRouter()
 const route = useRoute()
-const fQuery = route.query
-const totalRecord = ref(0)
+const signId = route.query.id
+const detailMsg = ref({
+  signName: ''
+})
+const isShow = ref('yes')
 const jumpPage = () => {
-  router.push('checkRecord/help')
+  router.push({
+    path: 'checkRecord/help',
+    query: {
+      id: signId
+    }
+  })
+}
+const changeRequest = ref({
+  id: signId,
+  signName: '',
+  duration: 2,
+  visible: 1
+})
+const changeShow = () => {
+  if(isShow.value === 'yes') {
+    changeRequest.value.visible = 1
+  } else {
+    changeRequest.value.visible = 0
+  }
+  changeRequest.value.signName = detailMsg.value.signName
+  changeSignMsg(changeRequest.value).then((res: any) => {
+    console.log(res)
+  }).catch((err: any) => {
+    console.log(err)
+  })
 }
 const pageNum = ref(1)
 const request = reactive({
-  signId: fQuery.id,
-  isSignIned: fQuery.attend,
+  signId: signId,
   pageNum: pageNum.value,
   pageSize: 10
 })
 const getStuList = () => {
-  detailSignRecord(request).then((res: any) => {
+  signStuList(request).then((res: any) => {
     if(res.code === 200) {
-      totalRecord.value = res.total
       const rows = res.rows
       clist.value = clist.value.concat(rows)
       pageNum.value++;
-        loading.value = false
-        if(clist.value.length >= res.total) {
-          console.log('数据加载完毕')
-          finished.value = true
-        }
+      loading.value = false
+      if(clist.value.length >= res.total) {
+        console.log('数据加载完毕')
+        finished.value = true
+      }
     }
   }).catch((err) => {
     console.log(err)
   })
 }
-getStuList()
 const onLoad = () => {
   setTimeout(() => {
     getStuList()
   }, 500);
 };
+const initData = () => {
+  detailSignRecord(signId).then((res: any) => {
+    if(res.code === 200) {
+      detailMsg.value = res.data
+      if(res.data.visible === 1) isShow.value = 'yes'
+      else isShow.value = 'no'
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
+  getStuList()
+}
+initData()
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100ch">
-    <div class="bg-white border border-hex-D9DADB rounded">
+    <div class="bg-white border border-t-2 border-hex-D9DADB border-t-hex-41B062 rounded">
       <div
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
       >
@@ -59,7 +95,7 @@ const onLoad = () => {
       >
         <span>
           <span class="text-sm w-5em text-left inline-block">签到码</span>
-          <span class="text-sm ml-10">{{fQuery.signCode}}</span>
+          <span class="text-sm ml-10">{{detailMsg.signCode}}</span>
         </span>
         <span
           class="text-xl bg-hex-10AA62 text-white rounded-15px px-1 mr-3"
@@ -73,7 +109,7 @@ const onLoad = () => {
       >
         <span>
           <span class="text-sm w-5em text-left inline-block">日期</span>
-          <span class="text-sm ml-10">{{fQuery.createTime}}</span>
+          <span class="text-sm ml-10">{{detailMsg.createTime}}</span>
         </span>
       </div>
       <div
@@ -81,7 +117,7 @@ const onLoad = () => {
       >
         <span>
           <span class="text-sm w-5em text-left inline-block">名称</span>
-          <span class="text-sm ml-10">{{fQuery.signName}}</span>
+          <span class="text-sm ml-10">{{detailMsg.signName}}</span>
         </span>
       </div>
       <div
@@ -90,9 +126,9 @@ const onLoad = () => {
         <span style="display: flex; justify-content: space-around">
           <span class="text-sm w-5em text-left inline-block">用户可见</span>
           <span class="ml-10">
-            <van-radio-group v-model="look_checked" direction="horizontal">
-              <van-radio name="1">可见</van-radio>
-              <van-radio name="2">不可见</van-radio>
+            <van-radio-group @change="changeShow()" v-model="isShow" direction="horizontal">
+              <van-radio name="yes">可见</van-radio>
+              <van-radio name="no">不可见</van-radio>
             </van-radio-group>
           </span>
         </span>
@@ -129,8 +165,6 @@ meta:
   layout: default
   title: 签到列表
 </route>
-
-
 <style scoped>
 
 </style>

@@ -15,3 +15,21 @@ export function assistSignIn(data: any) {
     data: data
   })
 }
+
+// 获取辅助签到二维码
+export function signQRCode(data: any) {
+  return request({
+    method: 'get',
+    url: '/signff/sign/QRCode',
+    params: data
+  })
+}
+
+// 签到
+export function sign(data: any) {
+  return request({
+    method: 'post',
+    url: '/signff/signRecord',
+    data: data
+  })
+}

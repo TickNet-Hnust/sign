@@ -4,7 +4,7 @@ interface RecordList{ // 定义记录列表
   id: Number // 活动id
   attend: Number // 用户是否参与过该活动
   status: Number // 活动是否以及结束
-  voteName: String //活动名称
+  activityName: String //活动名称
   createTime: String //开始时间
   endTime: String //结束时间
   spaceName: String // 所属空间名称
@@ -30,11 +30,10 @@ const getList = () => {
   request.pageNum = pageCnt.value
   getVoteList(request).then((res: any) => {
     if(res.code === 200){
-      const rows = res.data.rows
-      list.push(...rows)
+      list.push(...res.rows)
       pageCnt.value++;
       loading.value = false
-      if(list.length >= res.data.total) {
+      if(list.length >= res.total) {
         console.log('数据加载完毕')
         finished.value = true
       }
@@ -49,6 +48,13 @@ const onload = () => {
     getList()
   }, 1000)
 }
+const search = (voteName: any) => {
+  request.voteName = voteName
+  list.length = 0
+  pageCnt.value = 1
+  getList()
+}
+defineExpose({search})
 const router = useRouter()
 const jumpDetail = (item: any) => {
   /**
@@ -121,7 +127,7 @@ const jumpDetail = (item: any) => {
         v-if="item.status"
       ></div>
       <div style="display: flex; justify-content: space-between">
-        <span class="text-base font-semibold">{{ item.voteName }}</span>
+        <span class="text-base font-semibold">{{ item.activityName }}</span>
         <span class="text-xs">
           <span class="bg-hex-41BD62 text-white px-2 py-1 rounded" v-if="!item.status">投票中</span>
           <span class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded" v-if="item.status">已结束</span>

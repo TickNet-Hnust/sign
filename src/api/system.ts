@@ -4,6 +4,6 @@ import request from '~/utils/request'
 export function loginTest() {
   return request({
     method: 'get',
-    url: '/login/test'
+    url: '/login/test1'
   })
 }

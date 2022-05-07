@@ -4,7 +4,7 @@ interface RecordList{ // 定义记录列表
   id: Number// 活动id
   attend: Number// 用户是否参与过该活动
   status: Number // 活动是否以及结束
-  drawName: String // 活动名称
+  activityName: String // 活动名称
   createTime: String // 开始时间
   endTime: String // 结束时间
   optionContent: Array<String> // 抽签选项数组
@@ -26,6 +26,7 @@ const request = reactive({
   pageNum: 1,
   pageSize: 10,
   admin: props.admin,
+  drawName: ''
 })
 const getList = () => {
   request.pageNum = pageCnt.value
@@ -52,12 +53,20 @@ const onload = () => {
 const onRefresh = () => {
   console.warn('下拉刷新')
   pageCnt.value = 1
-  list = []
+  list.length = 0
   finished.value = false
   loading.value = true
   getList()
   refreshing.value = false
 }
+const search = (drawName: any) => {
+  request.drawName = drawName
+  list.length = 0
+  pageCnt.value = 1
+  getList()
+}
+
+defineExpose({search})
 const router = useRouter()
 const jumpDetail = (item: any) => {
   /**
@@ -134,7 +143,7 @@ const jumpDetail = (item: any) => {
              left: 0"
         />
         <div style="display: flex; justify-content: space-between">
-          <span class="text-base font-semibold">{{ item.drawName }}</span>
+          <span class="text-base font-semibold">{{ item.activityName }}</span>
           <span class="text-xs">
             <span v-if="!item.status" class="bg-hex-41BD62 text-white px-2 py-1 rounded">抽签中</span>
             <span v-if="item.status" class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded">已结束</span>
