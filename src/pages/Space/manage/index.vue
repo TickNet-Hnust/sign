@@ -107,6 +107,8 @@ const deleteSpace = () => {
 }
 const showUpdate = ref(false)// 是否显示修改空间名称的弹窗
 const showDelete = ref(false)// 是否显示删除空间的弹窗
+const showDeleteAdmin = ref(false)// 是否显示删除管理员的弹窗
+const showDeleteStu = ref(false)// 是否显示删除学生的弹窗
 const showAdminChange = ref(false)// 是否显示操作管理员权限的弹出层
 const showStuChange = ref(false)// 是否显示操作学生权限的弹出层
 // 点击管理员的方法
@@ -122,6 +124,7 @@ const changeStu = (item) => {
   changeStuData.spaceId = id
 }
 // 操作管理员列表
+// const columnsAdmin = ['取消管理员资格', '删除成员']
 const columnsAdmin = ['取消管理员资格', '删除成员']
 // 操作管理员的方法
 const onConfirmAdmin = (index, value) => {
@@ -134,13 +137,25 @@ const onConfirmAdmin = (index, value) => {
     })
   }
   else if (value === 1) {
-    deleteSpaceMember(changeAdminData).then((res) => {
-      getSpaceMemberList(id.value).then((res) => {
-        member_list.value = res.rows
-        showAdminChange.value = false
-      })
-    })
+    showDeleteAdmin.value = true
   }
+}
+// 确认删除管理员
+const onConfirmDeleteAdmin = () => {
+  deleteSpaceMember(changeAdminData).then((res) => {
+    getSpaceMemberList(id.value).then((res) => {
+      member_list.value = res.rows
+      showAdminChange.value = false
+    })
+  })
+}
+const onConfirmDeleteStu = () => {
+  deleteSpaceMember(changeStuData).then((res) => {
+    getSpaceMemberList(id.value).then((res) => {
+      member_list.value = res.rows
+      showStuChange.value = false
+    })
+  })
 }
 // 操作普通成员列表
 const columnsStu = ['设为管理员', '删除成员']
@@ -163,12 +178,7 @@ const onConfirmStu = (index, value) => {
     })
   }
   else if (value === 1) {
-    deleteSpaceMember(changeStuData).then((res) => {
-      getSpaceMemberList(id.value).then((res) => {
-        member_list.value = res.rows
-        showStuChange.value = false
-      })
-    })
+    showDeleteStu.value = true
   }
 }
 
@@ -197,7 +207,7 @@ const onConfirmStu = (index, value) => {
             />
           </div>
         </van-dialog>
-        <span class="mt-3 text-xs text-left">成员：{{ spaceList.count }}</span>
+        <span class="mt-3 text-xs text-left">成员：{{ member_list.length }}</span>
       </div>
       <div class="rounded">
         <van-button type="danger" class="rounded" size="small" @click="showDelete = true">
@@ -206,10 +216,24 @@ const onConfirmStu = (index, value) => {
       </div>
       <van-dialog
         v-model:show="showDelete"
-        title="是否删除空间"
+        title="是否删除此空间"
         confirm-button-color="rgb(63,133,255)"
         show-cancel-button
         @confirm="deleteSpace()"
+      />
+      <van-dialog
+        v-model:show="showDeleteAdmin"
+        title="是否删除此成员"
+        confirm-button-color="rgb(63,133,255)"
+        show-cancel-button
+        @confirm="onConfirmDeleteAdmin()"
+      />
+      <van-dialog
+        v-model:show="showDeleteStu"
+        title="是否删除此成员"
+        confirm-button-color="rgb(63,133,255)"
+        show-cancel-button
+        @confirm="onConfirmDeleteStu()"
       />
     </div>
     <van-tabs v-model:active="active" color="rgb(0,51,255)">
