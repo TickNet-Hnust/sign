@@ -11,6 +11,7 @@ interface DrawData {
   drawingAlreadyNum: number // 已经抽签票数
   endTime: string
   optionChecked: number // 被选择的选项id
+  optionCheckedValue: string
   status: number // 当前抽签进行状态,进行状态(0未结束，1已结束)
   isDrawing: number // 是否投票(1已参与，0未参与)
   isVisible: number // 是否可见(0不可见，1可见)
@@ -49,6 +50,7 @@ const drawData: DrawData = reactive({
   }),
   endTime: '',
   optionChecked: 0,
+  optionCheckedValue: '',
   isDrawing: 0,
   isVisible: 1,
   option: [{
@@ -72,6 +74,7 @@ onMounted(() => {
     drawData.status = res.data.status
     drawData.isVisible = res.data.visible
     drawData.isDrawing = res.data.attend
+    drawData.optionCheckedValue = res.data.optionId
     drawData.option.pop()
     for (let i = 0; i < res.data.optionContent.length; i++) {
       const item = {
@@ -81,6 +84,10 @@ onMounted(() => {
         lastPoll: 0,
       }
       drawData.option.push(item)
+    }
+    for (let i = 0; i < res.data.optionContent.length; i++) {
+      if (drawData.option[i].optionValue === res.data.optionId)
+        drawData.optionChecked = drawData.option[i].optionId
     }
     getDrawNum(drawId).then((res) => {
       for (let i = 0; i < res.data.length; i++)
@@ -95,7 +102,6 @@ const showChange = function() {
   show.value = !show.value
 }
 
-drawData.optionChecked = 1
 const isClick = () => {
   getDrawNum(drawId).then((res) => {
     for (let i = 0; i < res.data.length; i++) {
@@ -156,7 +162,7 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
         </van-button>
       </div>
     </div>
-    <records-list :show="show" :type="drawData.type" :draw-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
+    <records-list :show="show" :type="drawData.type" :active-id="drawId" :option-checked-value="drawData.optionCheckedValue" @show-change="showChange()" />
   </div>
 </template>
 

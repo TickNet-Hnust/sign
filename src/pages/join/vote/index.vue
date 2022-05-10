@@ -2,21 +2,22 @@
 // 定义投票数据类型接口
 import { onMounted } from 'vue'
 import { getVote } from '~/api/myJoin/record'
+import { addVoteRecord } from '~/api/myJoin/vote'
+
+const route = useRoute()
+const voteId = Number(route.query.id)
 
 // 定义投票页面数据接口
 interface VoteData {
   type: string // 活动类型
-  question: string
-  optionNum: number
-  optionType: string // 多选或者单选
-  endTime: string
-  color: string
-  text: string // 按钮的文本
-  optionChecked: number // 被选择的选项id
-  isVote: boolean // 是否投票，true表示没有投票
+  question: string // 投票问题
+  voteNumLimit: number // 选择票数的数量
+  endTime: string // 投票结束时间
+  optionChecked: Array<number> // 被选择的选项id
+  isVote: number // 是否投票，1表示已参与，0表示未参与
   option: Array<OptionData> // 选项具体数据
+  allPollNum: number
   optionWidth: Array<string> // 确定选项染色的宽度
-  allPollNum: number // 总票数
 }
 
 // 定义投票选项数据类型接口
@@ -29,14 +30,10 @@ interface OptionData{
 const voteData: VoteData = reactive({
   type: '投票',
   question: '',
-  optionNum: -1,
-  optionType: '',
+  voteNumLimit: 1,
   endTime: '',
-  isVote: true, // true 表示没有投票
-  color: '#4ade80',
-  text: '开始投票',
-  optionChecked: -1,
-  allPollNum: -1,
+  isVote: 0,
+  optionChecked: [],
   option: [],
   optionWidth: computed(() => {
     const arr: Array<string> = []
@@ -45,14 +42,39 @@ const voteData: VoteData = reactive({
     })
     return arr
   }),
+  allPollNum: computed(() => {
+    let result = 0
+    voteData.option.forEach((item) => {
+      result = result + item.poll
+    })
+    return result
+  }),
 })
 
 onMounted(() => {
-  const id = 3019
-  getVote(id).then((res) => {
+  getVote(voteId).then((res) => {
     console.warn(res.data)
     voteData.question = res.data.voteName
-    voteData.endTime = res.data
+    voteData.endTime = res.data.endTime
+    voteData.isVote = res.data.attend
+    let i = 1
+    voteData.option.pop()
+    for (const key in res.data.voteNums) {
+      const item: OptionData = {
+        id: i,
+        optionValue: key,
+        poll: res.data.voteNums[key],
+      }
+      voteData.option.push(item)
+      i = i + 1
+    }
+    i = 1
+    res.data.presentChoices.forEach((key: string) => {
+      for (const item of voteData.option) {
+        if (item.optionValue === key)
+          voteData.optionChecked.push(item.id)
+      }
+    })
   })
 })
 
@@ -62,19 +84,29 @@ const showChange = function() {
   show.value = !show
 }
 
-// 投票按钮
-const isClick = (
-  item: { isVote: boolean; color: string; text: string },
-  optionChecked: number,
-) => {
-  if (optionChecked !== 0) {
-    voteData.option[optionChecked - 1].poll = voteData.option[optionChecked - 1].poll + 1
-    item.isVote = false
-    item.color = 'rgb(157,212,157)'
-    item.text = '已投票'
-    voteData.allPollNum = voteData.allPollNum + 1
-  }
+// 检查选项是否选中，选中返回true，未选中返回false
+const optionCheck = function(optionId: number) {
+  let result = false
+  voteData.optionChecked.forEach((item) => {
+    if (item === optionId)
+      result = true
+  })
+  return result
 }
+
+// 投票按钮
+const isClick = () => {
+  const voteOption: Array<string> = []
+  console.warn(voteData.optionChecked)
+  voteData.optionChecked.forEach((item) => {
+    const option = voteData.option[item - 1].optionValue
+    voteOption.push(option)
+  })
+  addVoteRecord(voteId, voteOption).then((res) => {
+    voteData.isVote = 1
+  })
+}
+
 </script>
 
 <template>
@@ -85,37 +117,38 @@ const isClick = (
           {{ voteData.question }}
         </div>
         <van-tag type="primary" color="#28B648" size="medium">
-          {{ voteData.optionType }}
+          {{ voteData.voteNumLimit>1?'多选':'单选' }}
         </van-tag>
       </div>
       <!-- 遍历选项 -->
       <div>
-        <van-radio-group
+        <van-checkbox-group
           v-for="item in voteData.option"
           :key="item.id"
           v-model="voteData.optionChecked"
+          :max="voteData.voteNumLimit"
         >
           <!-- 判断是否已经投票 -->
           <!-- 未投票 -->
           <div
-            v-if="voteData.isVote"
+            v-if="voteData.isVote === 0"
             class="mt-6 border-gray-200 border p-10px bg-white"
           >
-            <van-radio
+            <van-checkbox
               :name="item.id"
               checked-color="#dde1e3"
               icon-size="16px"
             >
               {{ item.optionValue }}
-            </van-radio>
+            </van-checkbox>
           </div>
           <!-- 已投票 -->
           <div v-else>
             <!-- 被选中的选项样式 -->
             <div
-              v-if="voteData.optionChecked == item.id"
-              class="mt-6 border h-42px"
-              style="border-color:#23A923"
+              v-if="optionCheck(item.id)"
+              class="mt-6 h-42px bg-light-50 border"
+              style="border-color:#1FA71F"
               @click="show = true"
             >
               <div
@@ -123,7 +156,7 @@ const isClick = (
                 :style="{ width: voteData.optionWidth[item.id-1] }"
                 style="
                   white-space: nowrap;
-                  background-color: rgb(157, 212, 157);
+                  background-color: #C8E5C9;
                 "
               >
                 <van-icon
@@ -144,7 +177,7 @@ const isClick = (
             </div>
             <!-- 没有选上但是有票数的选项 -->
             <div
-              v-else-if="item.poll > 0 && voteData.optionChecked != item.id"
+              v-else-if="item.poll > 0 && !optionCheck(item.id)"
               class="mt-6 border-true-gray-200 border"
             >
               <div
@@ -164,8 +197,8 @@ const isClick = (
               </div>
             </div>
             <div
-              v-else-if="item.poll == 0"
-              class="mt-6 border-true-gray-200 border h-42px  text-dark-900 text-left"
+              v-else-if="item.poll === 0"
+              class="mt-6 border-true-gray-200 border h-42px  text-dark-900 text-left bg-light-50"
             >
               <span class="leading-40px m-10px">{{ item.optionValue }}</span>
               <span
@@ -175,7 +208,7 @@ const isClick = (
               </span>
             </div>
           </div>
-        </van-radio-group>
+        </van-checkbox-group>
       </div>
       <div class="text-cool-gray-500">
         <div class="text-xs mt-15px text-left">
@@ -184,16 +217,17 @@ const isClick = (
         <van-button
           type="primary"
           size="large"
-          :color="voteData.color"
+          :color="voteData.isVote?'#9DD49D':'#1FA71F'"
           class="my-10px"
-          @click="isClick(voteData, voteData.optionChecked)"
+          :disabled="voteData.isVote===1"
+          @click="isClick()"
         >
-          {{ voteData.text }}
+          {{ voteData.isVote?'已投票':'开始投票' }}
         </van-button>
       </div>
     </div>
   </div>
-  <records-list :show="show" :type="voteData.type" @show-change="showChange()" />
+  <records-list :show="show" :type="voteData.type" :active-id="voteId" @show-change="showChange()" />
 </template>
 
 <route lang="yaml">
@@ -201,7 +235,3 @@ meta:
   layout: default
   title: 我要投票
 </route>
-
-function mounted() {
-  throw new Error('Function not implemented.')
-}

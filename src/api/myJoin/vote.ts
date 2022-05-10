@@ -11,3 +11,16 @@ export function addVoteRecord(voteId: number, voteOption: Array<string>) {
     },
   })
 }
+
+// 查询当前投票名单
+export function getVoteRecordList(voteId: number, pageNum: number, pageSize: number) {
+  return request({
+    method: 'get',
+    url: '/signff/voteRecord/list',
+    params: {
+      voteId,
+      pageNum,
+      pageSize,
+    },
+  })
+}
