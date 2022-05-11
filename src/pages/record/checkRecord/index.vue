@@ -13,7 +13,7 @@ const detailMsg = ref({
 const isShow = ref('yes')
 const jumpPage = () => {
   router.push({
-    path: 'checkRecord/help',
+    path: '/record/checkRecord/help',
     query: {
       id: signId
     }
@@ -137,7 +137,7 @@ initData()
     <div class="text-left bg-hex-E1FBE3 border border-hex-8FC798 rounded mt-5 p-4">
       <span>共成功签到了{{totalRecord}}次</span>
     </div>
-    <div class="bg-white border border-hex-D9DADB rounded mt-5 p-3">
+    <div class="bg-white border border-hex-D9DADB rounded mt-5 p-3 border-t-2 border-t-hex-41B062">
       <van-list
         :immediate-check="false"
         v-model:loading="loading"
