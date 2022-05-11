@@ -1,15 +1,20 @@
 <!-- 学生端 -->
 
 <script setup lang="ts">
-import { Notify, Toast } from 'vant'
+import { Notify, Popover } from 'vant'
 import { get } from 'vant/lib/utils'
-import { addAFTFSpace, signSpaceList } from '~/api/mySpace/index'
-const isShow = ref(false)
+import { addAFTFSpace, createSignSpace, signSpaceList } from '~/api/mySpace/index'
+const showJoinSpace = ref(false)// 在我参与的选项卡中显示面对面建群
+const showCreateSpace = ref(false)// 在我管理的选项卡中显示新增空间
 const router = useRouter()
 
 // 点击加号创建空间
-const changeShow = () => {
-  isShow.value = !isShow.value
+const popoverSelect = (action: any) => {
+  if (action === '创建空间')
+    showJoinSpace.value = !showJoinSpace.value
+
+  else
+    showCreateSpace.value = !showCreateSpace.value
 }
 // sss
 
@@ -70,26 +75,44 @@ const goSpace = (item: any) => {
     })
   }
 }
-// 面对面建群的参数
+// 面对面加入群的参数
 const addAFTFSpaceData = reactive({
   code: '',
   longitude: 116.397128,
   latitude: 39.916527,
 })
-// 面对面建群的方法
+// 面对加入建群的方法
 const addFTFSpace = () => {
   addAFTFSpace(addAFTFSpaceData).then((res) => {
     if (res.code === 200) {
-      Notify({ type: 'success', message: '创建成功' })
+      Notify({ type: 'success', message: '加入成功' })
       router.push('/Space')
-      active.value = 1
+      active.value = 0
       spaceList.value = []
       request.value.pageNum = 1
       getsignSpaceList()
     }
   })
 }
-
+// 面对面建群的参数
+const createSpaceData = reactive({
+  spaceName: '',
+})
+// 面对面建群的方法
+const createASpace = () => {
+  createSignSpace(createSpaceData).then((res) => {
+    if (res.code === 200) {
+      Notify({ type: 'success', message: '创建成功' })
+      router.push('/Space')
+      active.value = 1
+      spaceList.value = []
+      request.value.pageNum = 1
+      createSpaceData.spaceName = ''
+      getsignSpaceList()
+    }
+  })
+}
+const showPopover = ref(false)
 </script>
 
 <template>
@@ -108,23 +131,35 @@ const addFTFSpace = () => {
           </template>
         </van-search>
       </span>
-      <span class="text-xl" @click="changeShow">
-        <span
-          class="
-            color-hex-59B476
-            border-3 border-hex-59B476
-            rounded
-            font-bold
-            px-0.2
-            mr-2
-          "
-        ><van-icon class="font-700 w-6" name="plus" /></span>
+      <span class="text-xl">
+        <van-popover
+          v-model:show="showPopover"
+          :actions="[{ text: '创建空间' }, { text: '加入空间' }]"
+          placement="bottom-end"
+          @select="popoverSelect"
+        >
+          <template #reference>
+            <span
+              class="
+              color-hex-59B476
+              border-3 border-hex-59B476
+              rounded
+              font-bold
+              px-0.2
+              mr-2
+            "
+            >
+              <van-icon class="font-700 w-6" name="plus" />
+            </span>
+          </template>
+        </van-popover>
       </span>
     </div>
     <!-- 弹出框 -->
+    <!-- 面对面加入空间 -->
     <van-dialog
-      v-model:show="isShow"
-      title="面对面建空间"
+      v-model:show="showJoinSpace"
+      title="面对面加入空间"
       confirm-button-color="rgb(63,133,255)"
       show-cancel-button
       @confirm="addFTFSpace()"
@@ -134,6 +169,21 @@ const addFTFSpace = () => {
           和身边的朋友输入同样的四个数字，进入同一个空间
         </div>
         <van-field v-model="addAFTFSpaceData.code" class="border-b border-hex-ccc mb-3" type="digit" maxlength="4" />
+      </div>
+    </van-dialog>
+    <!-- 面对面创建空间 -->
+    <van-dialog
+      v-model:show="showCreateSpace"
+      title="面对面创建空间"
+      confirm-button-color="rgb(63,133,255)"
+      show-cancel-button
+      @confirm="createASpace()"
+    >
+      <div class="mt-5 px-10">
+        <div class="text-14px text-hex-999">
+          请输入要创建的空间名称
+        </div>
+        <van-field v-model="createSpaceData.spaceName" class="border-b border-hex-ccc mb-3" />
       </div>
     </van-dialog>
     <div class="mt-8 border-1 border-hex-DEDEDE bg-hex-fff rounded py-3 px-5">
