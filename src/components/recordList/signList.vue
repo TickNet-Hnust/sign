@@ -58,18 +58,30 @@ const router = useRouter()
 const jumpDetail = (item: any) => {
   /**
    * 首先判断用户身份
-   * 如果是发起者，则跳转到发起记录的签到记录页面
+   * 如果是发起者，则判断是否是空间内的签到
+   *    如果是空间内的签到，则跳转到空间内签到的签到记录
+   *    如果是非空间的签到，则跳转到发起记录下的签到记录
    * 如果是参与者，则判断用户是否已经参与过该活动
    *   如果没有参与过，则跳转到我要参与下的我要签到
    *   如果已经参与了，则跳转到我要参与下的签到记录
    */
   if( Number(props.admin) === 1 ) {
-    router.push({
-      path: "/record/checkRecord",
-      query: {
-        id:  item.id,
-      }
-    })
+    if(item.spaceName === "无"|| item.sapceName === '') {
+      router.push({
+        path: "/record/checkRecord",
+        query: {
+          id:  item.id,
+        }
+      })
+    } else {
+      router.push({
+        path: '/space/manage/checkIn/checkList',
+        query: {
+          id: item.id
+        }
+      })
+    }
+    
   } else {
     if( item.attend ) {
       router.push({

@@ -63,21 +63,20 @@ const detailRecord = reactive({
   visible: false
 })
 const initData = () => {
-  getDetailDraw(10027).then((res: any) => {
+  getDetailDraw(10026).then((res: any) => {
     if(res.code === 200) {
-      
       detailRecord.title = res.data.drawName
       detailRecord.optionsList = res.data.optionContent
       detailRecord.optionsNum = res.data.optionNum
       detailRecord.visible = res.data.visible
       if(detailRecord.visible) {
         const stuRequest = reactive({
-          drawId: 10027,
+          drawId: 10026,
           pageNum: 1,
           pageSize: 10,
           optionId: ''
         })
-        detailRecord.optionsList.forEach((item) => {
+        detailRecord.optionsList.forEach((item,index) => {
           let fItem:ChoList = {
             title: item,
             isShow: false,
@@ -88,12 +87,13 @@ const initData = () => {
           drawStuList(stuRequest).then((res: any) => {
             fItem.count = res.total,
             fItem.choer = res.rows
-            cho_list.push(fItem)
+            cho_list[index] = fItem
           })
         })
+        console.log(cho_list)
       } else {
         const stuRequest = reactive({
-          drawId: 10027,
+          drawId: 10026,
           pageNum: 1,
           pageSize: 10
         })
@@ -107,7 +107,7 @@ const initData = () => {
   }).catch((err) => {
     console.log(err)
   })
-  drawRecordCount(10027).then((res: any) => {
+  drawRecordCount(10026).then((res: any) => {
     if(res.code === 200) {
       drawCount.value = res.data
     }

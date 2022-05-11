@@ -20,7 +20,7 @@ const QRRequest = reactive({
 })
 const getQRCode = () => {
   signQRCode(QRRequest).then((res: any) => {
-    QRUrl.value = res.msg
+    QRUrl.value = res.data.url
   }).catch((err) => {
     console.log(err)
   })
