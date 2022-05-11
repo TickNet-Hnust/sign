@@ -63,14 +63,17 @@ const jumpDetail = (item: any) => {
    * 为0：跳转到我要参与的投票
    */
   if(props.admin == 1) {
-
+    router.push({
+      path: '/space/manage/vote',
+      query: {
+        id: item.id
+      }
+    })
   } else {
     router.push({
       path: "/join/vote",
       query: {
-        id:  item.id,
-        voteType: item.voteType,
-        endTime: item.endTime
+        id:  item.id
       }
     })
   }

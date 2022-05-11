@@ -93,7 +93,7 @@ const addFTFSpace = () => {
 </script>
 
 <template>
-  <div class="p-3 bg-gray-500/8 h-screen">
+  <div class="p-3 bg-gray-500/8 min-h-screen">
     <div class="flex justify-between items-center">
       <span class="py-1 flex items-center bg-hex-fff rounded w-xs">
         <van-search
