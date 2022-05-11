@@ -146,21 +146,21 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
       <div class="text-xs my-3 text-left px-2">
         {{ "截止时间：" + drawData.endTime }}
       </div>
-      <div class="flex justify-left my-5 text-sm">
-        <span class="border border-gray-300 bg-white p-5">
-          <div />
-          <div>抽签记录</div>
-        </span>
-        <span class="border border-gray-300 bg-white p-5 ml-2">
-          <div />
-          <div>修改部分设置</div>
-        </span>
-      </div>
-      <div class="flex justify-center">
-        <van-button type="primary" size="large" class="font-400" :disabled="drawData.isDrawing===1" :color="drawData.isDrawing?'#9DD49D':'#1FA71F'" @click="isClick()">
-          {{ drawData.text }}
-        </van-button>
-      </div>
+    </div>
+    <div class="flex justify-center">
+      <van-button type="primary" size="large" class="font-400" :disabled="drawData.isDrawing===1" :color="drawData.isDrawing?'#9DD49D':'#1FA71F'" @click="isClick()">
+        {{ drawData.text }}
+      </van-button>
+    </div>
+    <div class="flex justify-left my-5 text-sm">
+      <span class="border border-gray-300 bg-white p-5">
+        <div />
+        <div>抽签记录</div>
+      </span>
+      <span class="border border-gray-300 bg-white p-5 ml-2">
+        <div />
+        <div>修改部分设置</div>
+      </span>
     </div>
     <records-list :show="show" :type="drawData.type" :draw-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
   </div>
