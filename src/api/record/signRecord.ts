@@ -1,3 +1,10 @@
+/*
+ * @Descipttion: 
+ * @Author: 刘晴
+ * @Date: 2022-05-03 14:25:10
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-08 15:11:28
+ */
 import request from '~/utils/request'
 // 获取签到记录
 export function getSignList(data:any) {

@@ -62,10 +62,22 @@ const jumpDetail = (item: any) => {
    * 为1：跳转到空间内发起人进行投票
    * 为0：跳转到我要参与的投票
    */
+<<<<<<< HEAD
   if (props.admin == 1) {
+=======
+  if(props.admin == 1) {
+    router.push({
+      path: '/space/manage/vote',
+      query: {
+        id: item.id
+      }
+    })
+  } else {
+>>>>>>> b396329b85636b9d6c6cc88dbade5c9fd9066adf
     router.push({
       path: '/space/manage/vote/owner_vote',
       query: {
+<<<<<<< HEAD
         id: item.id,
       },
     })
@@ -76,6 +88,10 @@ const jumpDetail = (item: any) => {
       query: {
         id: item.id,
       },
+=======
+        id:  item.id
+      }
+>>>>>>> b396329b85636b9d6c6cc88dbade5c9fd9066adf
     })
   }
 }

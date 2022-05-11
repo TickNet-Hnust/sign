@@ -47,7 +47,7 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
 
 </script>
 <template>
-  <div class="bg-gray-500/8 p-3">
+  <div class="bg-gray-500/8 p-3 min-h-100vh">
     <div class="bg-hex-fff py-3 border-hex-ccc border rounded">
       <div class="flex justify-around">
         <div class="row">
@@ -115,3 +115,9 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
     </div>
   </div>
 </template>
+<route lang="yaml">
+meta:
+  layout: default
+  title: 空间详情
+</route>
+

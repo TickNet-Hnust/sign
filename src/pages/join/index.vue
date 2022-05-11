@@ -1,3 +1,10 @@
+<!--
+ * @Descipttion: 
+ * @Author: 刘晴
+ * @Date: 2022-04-20 21:46:45
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-11 13:01:22
+-->
 <script setup lang="ts">
 import signList from '~/components/recordList/signList.vue'
 import drawList from '~/components/recordList/drawList.vue'
@@ -26,7 +33,7 @@ const changeTab = () => {
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100vh">
     <div class="top flex bg-white rounded justify-between">
-      <span>
+      <span class="w-75vw">
        <van-search
          v-model="searchValue"
          placeholder="请输入要搜索的记录"

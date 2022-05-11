@@ -238,11 +238,11 @@ const onConfirmStu = (index, value) => {
     </div>
     <van-tabs v-model:active="active" color="rgb(0,51,255)">
       <van-tab title="概况">
-        <div class="rounded flex flex-wrap justify-around">
+        <div class="rounded flex flex-wrap justify-around bg-white mt-5 py-8">
           <div
             v-for="item in details_list"
             :key="item"
-            class="mt-5 p-3 mx-5 inline-block border border-hex-41be62 text-hex-999 rounded w-25vw h-25vw bg-white"
+            class="my-2 p-3 mx-5 inline-block border border-hex-41be62 text-hex-999 rounded w-25vw h-25vw bg-white"
             shadow="~ md gray-400/60"
             @click="jumpPage(item.link)"
           >
@@ -254,7 +254,7 @@ const onConfirmStu = (index, value) => {
         </div>
       </van-tab>
       <van-tab title="成员">
-        <div class="bg-white px-2  items-center">
+        <div class="bg-white mt-5 rounded items-center p-1">
           <van-list
             v-model:loading="loading"
             :finished="finished"
@@ -262,7 +262,7 @@ const onConfirmStu = (index, value) => {
             @load="onLoad"
           >
             <div
-              v-for="item in member_list" :key="item" class="flex text-sm py-2 border-b border-hex-ddd mt-2 "
+              v-for="item in member_list" :key="item" class="flex items-center text-sm py-2 border-b border-hex-ddd mt-2 "
             >
               <div class="flex-1 font-sans">
                 {{ item.userId }}
