@@ -23,30 +23,30 @@ service.interceptors.request.use(
 )
 // 响应拦截器
 service.interceptors.response.use(
-  (response) => {
-    const res = response.data
-    if (res.code !== 200) {
-      // Message.error(res.heaser.msg || "Error")
-      return Promise.reject(new Error(res.msg || 'Error'))
+    (response) => {
+        const res = response.data;
+        // if (res.code !== 200) {
+        //     // Message.error(res.heaser.msg || "Error") 
+        //     return Promise.reject(new Error(res.msg||"Error"))
+        //                   .catch((error) => {
+        //                     console.log(error)
+        //                   })
+        // }
+        return res;
+    },
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            removeToken()
+            removeRoles()
+            removeName()
+            removeAvatar()
+            location.reload()
+          }
+        return Promise.reject(error)
         .catch((error) => {
           console.log(error)
         })
     }
-    return res
-  },
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      removeToken()
-      removeRoles()
-      removeName()
-      removeAvatar()
-      location.reload()
-    }
-    return Promise.reject(error)
-      .catch((error) => {
-        console.log(error)
-      })
-  },
 )
 
 export default service

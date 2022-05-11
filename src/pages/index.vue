@@ -1,19 +1,19 @@
+<!--
+ * @Description: 
+ * @Autor: 张津瑞
+ * @Date: 2022-04-20 16:18:10
+ * @LastEditors: 张津瑞
+ * @LastEditTime: 2022-05-02 13:51:32
+-->
 <script setup lang="ts">
 import { useUserStore } from '~/stores/user'
-
 const user = useUserStore()
-
 const router = useRouter()
 
 const jumpTargetPage = (targetPath: string) => {
   router.push(targetPath)
 }
-const login = () => {
-  // 测试登录接口
-  user.login()
-}
-login()
-const list = ref([
+const list = reactive([
   {
     name: '发起签到',
     icon: 'i-carbon-3d-cursor-alt',
@@ -45,6 +45,8 @@ const list = ref([
     link: '',
   },
 ])
+//用户登录
+user.login()
 </script>
 
 <template>

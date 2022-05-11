@@ -218,7 +218,7 @@ const isClick = () => {
       </div>
     </div>
   </div>
-  <records-list :show="show" :type="voteData.type" @show-change="showChange()" />
+  <records-list :show="show" :type="voteData.type" :active-id="voteId" @show-change="showChange()" />
 </template>
 
 <route lang="yaml">

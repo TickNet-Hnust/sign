@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import {signRecord} from '~/api/launchSign/index'
   const pattern = /^\d{4}$/ // 用户输入的签到码正则匹配规则
   const router = useRouter()
   const inputValue = ref('')
@@ -11,44 +12,95 @@
         canCheck.value = false
         return '请输入4位有效的签到码*^_^*'
       } else {
-        // 判断附近是否有这个验证码
-        if(1) {
-          // 返回发起签到人的姓名
           canCheck.value = true
-          return '秦豪远'
-        } else {
-          canCheck.value = false
-          return '你附近好像没有该签到码哦'
-        }
+          return '点击确认签到进行签到'       
       }
     })
   )
-  const joinCheck = () => {
-    if(canCheck.value) {
-      // 判断是否为重复签到
-      if(0) {
-        Notify({
-          message: '签到成功',
-          color: '#fff',
-          background: 'rgba(0,0,0,.7)'
-        })
-      } else {
-        Notify({
-          message: '你已经签过到啦',
-          color: '#fff',
-          background: 'rgba(0,0,0,.7)'
-        })
+
+//百度地图获取定位方法
+//经度
+let longitude =ref(0)
+//纬度
+let latitude = ref(0)
+let locationLoading = ref(true)
+const getLocationByBaidumap = function(){
+  let geolocation = new BMapGL.Geolocation();
+  geolocation.getCurrentPosition(function(r){
+      if(this.getStatus() == BMAP_STATUS_SUCCESS){
+          //为啥总是112.95046418 27.83570223(湘潭市政府的位置)
+          //破防了，chrome如果不使用https定位就不精确，看来到时候开发环境下只能用火狐测试定位了
+          //正确的位置为 112.92667632467,27.905932201717(科大逸夫楼)
+          longitude.value = r.point.lng
+          latitude.value = r.point.lat
+          locationLoading.value = false
       }
-      checkShow.value = false
-    }
-    else {
-      Notify({
-        message: '请输入正确的签到码',
-        color: '#fff',
-        background: 'rgba(0,0,0,.7)'
-      })
-    }
+      else {
+          alert('failed' + this.getStatus());
+      }        
+  },
+  function(err:any){
+    console.warn('ERROR(' + err.code + '): ' + err.message);
+  },
+  {
+    enableHighAccuracy: true,
+  } 
+  );
+}
+getLocationByBaidumap()
+
+//签到请求数据(初始数据)
+let signRecordRequestData = reactive({
+  longitude:0,
+  latitude:0,
+  signCode:'',
+  os:'windows10',
+  browser:'chrome',
+  ip:'127.0.0.1'
+})
+//签到收到的数据
+let signRecordResponseData = reactive({
+  id:0,
+})
+//确认签到
+const joinCheck = () => {
+  if(canCheck.value) {
+    signRecordRequestData.longitude = longitude.value
+    signRecordRequestData.latitude = latitude.value
+    signRecordRequestData.signCode = inputValue.value
+    console.log(signRecordRequestData,'签到请求传去的数据')
+    signRecord(signRecordRequestData).then((res)=>{
+      console.log(res,'签到请求传来的数据')
+      let {msg,code} = res
+      if(code===500){
+        Notify({
+          message: msg,
+          color: '#fff',
+          background: 'rgba(0,0,0,.7)'
+        })
+      }else if(code===200){
+        Notify({
+          message: msg,
+          color: '#fff',
+          background: 'rgba(0,0,0,.7)'
+        })
+        signRecordResponseData.id = res.data.id
+        checkShow.value = false
+      }
+    })
+}
+}
+
+//跳转到签到记录
+const jumpRecord = function() {
+  router.push({ path: `/record/checkRecord`,
+    query: { 
+      id:signRecordResponseData.id,
+    } 
   }
+  )
+}
+
 </script>
 <template>
   <div class="p-3">
@@ -59,7 +111,14 @@
           <van-field v-model="inputValue" placeholder="输入签到码" class="text-xl" />
         </div>
         <div
+          class="my-6 border w-200px mx-auto py-3 text-base rounded border-hex-4FC09C text-hex-4FC09C"
+          v-if="locationLoading"
+        >
+          正在获取位置信息……
+        </div>
+        <div
           class="my-6 border w-150px mx-auto py-3 text-xl rounded border-hex-4FC09C text-hex-4FC09C"
+          v-else
           @click="joinCheck"
         >
           确认签到
@@ -69,6 +128,7 @@
         <div class="text-3xl mt-5">{{ inputValue }}</div>
         <div
           class="my-6 border w-150px mx-auto py-3 text-xl rounded border-hex-4FC09C text-hex-4FC09C"
+          @click="jumpRecord"
         >
           查看签到记录
         </div>

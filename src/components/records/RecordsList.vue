@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getDrawRecordList } from '~/api/myJoin/draw'
+import { getVoteRecordList } from '~/api/myJoin/vote'
 interface RecordInfo{ // 定义单个数据类型
   id: number
   createUserId: string
@@ -9,7 +10,7 @@ interface RecordInfo{ // 定义单个数据类型
 
 // 父子组件传参，控制详细数据显示
 const props = defineProps({
-  drawId: {
+  activeId: {
     type: Number,
   },
   show: {
@@ -32,31 +33,59 @@ const fun = function() {
 const recordList: Array<RecordInfo> = reactive([])
 
 // 控制分功能实现
-const loading = ref(false)
-const finished = ref(false)
-const pageNum = ref(1)
-const pageSize = 10
+interface ListPage {
+  loading: boolean
+  finished: boolean
+  pageNum: number
+  pageSize: number
+}
+const listPage: ListPage = reactive({
+  loading: false,
+  finished: false,
+  pageNum: 1,
+  pageSize: 10,
+})
+
 const onLoad = () => {
   if (props.type === '抽签') {
-    getDrawRecordList(Number(props.drawId), pageNum.value, pageSize, String(props.optionCheckedValue)).then((res: any) => {
-      recordList.push(...res.rows)
-      if (res.rows.length < pageSize)
-        finished.value = true
+    getDrawRecordList(Number(props.activeId), listPage.pageNum, listPage.pageSize, String(props.optionCheckedValue)).then((res: any) => {
+      let i = 1
+      res.rows.forEach((item: any) => {
+        const recordInfo: RecordInfo = {
+          id: i,
+          createUserId: item.createUserId,
+          createUserName: item.createUserName,
+          createTime: item.createTime,
+        }
+        recordList.push(recordInfo)
+        i = i + 1
+      })
+      if (res.rows.length < listPage.pageSize)
+        listPage.finished = true
       else
-        pageNum.value = pageNum.value + 1
-      loading.value = false
-    })
-  }else{
-    if (props.type === '投票') {
-    getDrawRecordList(Number(props.drawId), pageNum.value, pageSize, String(props.optionCheckedValue)).then((res: any) => {
-      recordList.push(...res.rows)
-      if (res.rows.length < pageSize)
-        finished.value = true
-      else
-        pageNum.value = pageNum.value + 1
-      loading.value = false
+        listPage.pageNum = listPage.pageNum + 1
+      listPage.loading = false
     })
   }
+  else {
+    getVoteRecordList(Number(props.activeId), listPage.pageNum, listPage.pageSize).then((res: any) => {
+      let i = 1
+      res.data.rows.forEach((item: any) => {
+        const recordInfo: RecordInfo = {
+          id: i,
+          createUserId: item.createUserId,
+          createUserName: item.createUserName,
+          createTime: item.createTime,
+        }
+        recordList.push(recordInfo)
+        i = i + 1
+      })
+      if (res.data.rows.length < listPage.pageSize)
+        listPage.finished = true
+      else
+        listPage.pageNum = listPage.pageNum + 1
+      listPage.loading = false
+    })
   }
 }
 
@@ -70,7 +99,7 @@ const onLoad = () => {
           <van-icon name="cross" class="float-right text-base" @click="fun()" />
         </div>
         <div class="border rounded-lg h-4/5" style="border-color:#E4E4E4;background-color:#F6F7F9">
-          <van-list v-model:loading="loading" :finished="finished" @load="onLoad">
+          <van-list v-model:loading="listPage.loading" :finished="listPage.finished" @load="onLoad">
             <van-cell v-for="item in recordList" :key="item.id" style="border-bottom-color:#E4E4E4;background-color:#F6F7F9">
               <span class="">{{ item.createUserName }}</span>
               <span class="float-right">{{ item.createTime }}</span>

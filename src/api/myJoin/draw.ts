@@ -20,7 +20,7 @@ export function getDrawRecordList(drawId: number, pageNum: number, pageSize: num
       drawId,
       pageNum,
       pageSize,
-      optionCheckedValue,
+      optionId: optionCheckedValue,
     },
   })
 }
