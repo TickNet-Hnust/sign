@@ -33,7 +33,7 @@ const changeShow = () => {
   } else {
     changeRequest.value.visible = 0
   }
-  changeRequest.value.signName = detailMsg.value.signName
+  changeRequest.value.signName = signName.value
   changeSignMsg(changeRequest.value).then((res: any) => {
     console.log(res)
   }).catch((err: any) => {
@@ -96,6 +96,7 @@ const initData = () => {
   detailSignRecord(signId).then((res: any) => {
     if(res.code === 200) {
       detailMsg.value = res.data
+      signName.value = detailMsg.value.signName
       if(res.data.visible === 1) isShow.value = 'yes'
       else isShow.value = 'no'
     }
@@ -105,6 +106,22 @@ const initData = () => {
   getStuList()
 }
 initData()
+// 编辑签到名
+const signName = ref('')
+const showDialog = ref(false)
+const changeDialogShow = () => {
+  showDialog.value = true
+}
+const editSignName = () => {
+  // 更改名字与更改用户是否可见用的是同一个接口，直接调用更改名字的方法即可
+  if(signName.value !== detailMsg.value.signName) {
+    detailMsg.value.signName = signName.value
+    changeShow()
+  }
+}
+const onCancel = () => {
+  signName.value = detailMsg.value.signName
+}
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100vh">
@@ -135,6 +152,20 @@ initData()
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
       >
         <span>
+          <span class="text-sm w-5em text-left inline-block">签到名称</span>
+          <span class="text-sm ml-10">{{detailMsg.signName}}</span>
+        </span>
+        <span
+          class="mr-3 text-xl border text-center text-hex-10AA62 h-28px w-28px rounded-14px"
+          @click="changeDialogShow"
+        >
+          <van-icon name="edit" />
+        </span>
+      </div>
+      <div
+        class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
+      >
+        <span>
           <span class="text-sm w-5em text-left inline-block">日期</span>
           <span class="text-sm ml-10">{{detailMsg.createTime}}</span>
         </span>
@@ -143,8 +174,8 @@ initData()
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
       >
         <span>
-          <span class="text-sm w-5em text-left inline-block">名称</span>
-          <span class="text-sm ml-10">{{detailMsg.signName}}</span>
+          <span class="text-sm w-5em text-left inline-block">发起人</span>
+          <span class="text-sm ml-10">{{detailMsg.createUserName}}</span>
         </span>
       </div>
       <div
@@ -161,6 +192,17 @@ initData()
         </span>
       </div>
     </div>
+    <!-- 编辑签到名称的弹出框 -->
+    <van-dialog
+      v-model:show="showDialog"
+      title="编辑签到名称"
+      confirm-button-color="rgb(63,133,255)"
+      show-cancel-button
+      @confirm="editSignName"
+      @cancel="onCancel"
+    >
+      <van-field v-model="signName" placeholder="请输入活动名称" />
+    </van-dialog>
     <div class="text-left bg-hex-E1FBE3 border border-hex-8FC798 rounded mt-5 p-4">
       <span>共成功签到了{{totalRecord}}次</span>
     </div>
