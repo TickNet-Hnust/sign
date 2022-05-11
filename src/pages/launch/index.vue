@@ -2,8 +2,8 @@
  * @Description: 
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
- * @LastEditors: 张津瑞
- * @LastEditTime: 2022-05-06 21:54:02
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-11 14:46:34
 -->
 <script setup lang="ts">
 import { Notify } from 'vant';
@@ -103,29 +103,97 @@ const jumpRecord = function() {
     } 
   })
 }
+// 用户是否可见
+const canSee = ref('yes')
+// 弹出层控制
+const popShow = ref(false)
+const changePopShow = () => {
+  popShow.value = true
+}
 
+// 时间选择器
+const durationTime = ref('2分钟')
+const timePicker = ref([
+  // 天数
+  {
+    values: ['0天','1天','2天','3天','4天','5天','6天'],
+    defaultIndex: 0
+  },
+  {
+    values: ['0小时','1小时','2小时','3小时','4小时','5小时','6小时','7小时','8小时'
+    ,'9小时','10小时','11小时','12小时','13小时','14小时','15小时','16小时','17小时','18小时'
+    ,'19小时','20小时','21小时','22小时','23小时'],
+    defaultIndex: 0
+  },
+  {
+    values: ['0分钟','1分钟','2分钟','3分钟','4分钟','5分钟','6分钟','7分钟','8分钟',
+    '9分钟','10分钟','11分钟','12分钟','13分钟','14分钟','15分钟','16分钟','17分钟',
+    '18分钟','19分钟','20分钟','21分钟','22分钟','23分钟','24分钟','25分钟','26分钟',
+    '27分钟','28分钟','29分钟','30分钟','31分钟','32分钟','33分钟','34分钟','35分钟',
+    '36分钟','37分钟','38分钟','39分钟','40分钟','41分钟','42分钟','43分钟','44分钟',
+    '45分钟','46分钟','47分钟','48分钟','49分钟','50分钟','51分钟','52分钟','53分钟',
+    '54分钟','55分钟','56分钟','57分钟','58分钟','59分钟',],
+    defaultIndex: 2
+  },
+])
+const onCancel = () => {
+  popShow.value = false
+}
+const onConfirm = (currentValue: any) => {
+  durationTime.value = ''
+  for(var i=0;i<3;i++) {
+    if(currentValue[i].charAt(0) !=='0' )
+    durationTime.value += currentValue[i]
+  }
+  popShow.value = false
+}
 </script>
 <template>
   <div class="p-3 h-screen">
-    <div class="bg-hex-F2EFF6 py-3">
+    <div class="bg-hex-F2EFF6 p-3">
       <div v-show="signShow">
-        <div class="text-5em color-hex-41AA62">
-          <van-icon name="location-o" />
+        <div class="text-sm">
+          <div>
+            <input class="w-100% p-3" placeholder="请输入标题（可不填）" />
+          </div>
+          <div class="bg-white border-t border-hex-ccc flex justify-between p-3">
+            <span>签到列表是否可见</span>
+            <van-radio-group v-model="canSee" direction="horizontal">
+              <van-radio name="yes">可见</van-radio>
+              <van-radio name="no">不可见</van-radio>
+            </van-radio-group>
+          </div>
+          <div class="bg-white border-t border-hex-ccc flex justify-between p-3">
+            <span>活动时长</span>
+            <span class="text-hex-1989FA" @click="changePopShow">{{durationTime}}<van-icon name="arrow-down" /></span>
+            <van-popup
+              v-model:show="popShow"
+              position="bottom"
+              :style="{ height: '50%' }"
+            >
+              <van-picker
+                title="活动时长"
+                :columns="timePicker"
+                @confirm="onConfirm"
+                @cancel="onCancel"
+              />
+            </van-popup>
+          </div>
         </div>
-        <div class="text-center mb-5 mt-2">
+        <div class="text-center mb-5 mt-5">
           <span
-            class="rounded text-hex-41AA62 border-1 p-3 px-7 text-lg"
+            class="rounded bg-hex-41AA62 text-white p-3 px-7"
             v-if="locationLoading"
           >
             正在获取位置信息……
           </span>
-          <span
-            class="rounded text-hex-41AA62 border-1 p-3 px-7 text-xl"
+          <div
+            class="rounded bg-hex-41AA62 text-white p-3 px-7"
             v-else
             @click="launchSign"
           >
             发起签到
-          </span>
+          </div>
         </div>
       </div>
       <div v-show="!signShow">
