@@ -133,6 +133,7 @@ const onConfirmAdmin = (index, value) => {
       getSpaceMemberList(id.value).then((res) => {
         member_list.value = res.rows
         showAdminChange.value = false
+        Notify({type:'success',message:'操作成功'})
       })
     })
   }
@@ -146,14 +147,17 @@ const onConfirmDeleteAdmin = () => {
     getSpaceMemberList(id.value).then((res) => {
       member_list.value = res.rows
       showAdminChange.value = false
+      Notify({type:'success',message:'操作成功'})
     })
   })
 }
+//确认删除成员
 const onConfirmDeleteStu = () => {
   deleteSpaceMember(changeStuData).then((res) => {
     getSpaceMemberList(id.value).then((res) => {
       member_list.value = res.rows
       showStuChange.value = false
+      Notify({type:'success',message:'操作成功'})
     })
   })
 }
@@ -174,6 +178,7 @@ const onConfirmStu = (index, value) => {
         console.log(res, '成员列表')
         member_list.value = res.rows
         showStuChange.value = false
+        Notify({type:'success',message:'操作成功'})
       })
     })
   }
@@ -296,7 +301,7 @@ const onConfirmStu = (index, value) => {
       <van-popup
         v-model:show="showAdminChange"
         position="bottom"
-        :style="{ height: '50%' }"
+        :style="{ height: '80%' }"
       >
         <van-picker
           class="mt-10"
@@ -309,7 +314,7 @@ const onConfirmStu = (index, value) => {
       <van-popup
         v-model:show="showStuChange"
         position="bottom"
-        :style="{ height: '50%' }"
+        :style="{ height: '80%' }"
       >
         <van-picker
           class="mt-10"
