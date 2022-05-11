@@ -4,41 +4,41 @@ interface RecordList{ // 定义记录列表
   id: Number // 活动id
   attend: Number // 用户是否参与过该活动
   status: Number // 活动是否以及结束
-  activityName: String //活动名称
-  createTime: String //开始时间
-  endTime: String //结束时间
+  activityName: String // 活动名称
+  createTime: String // 开始时间
+  endTime: String // 结束时间
   spaceName: String // 所属空间名称
   signCode: String // 签到码
   voteNums: String
   voteType: Number
-  createUserName: String //发起人
+  createUserName: String // 发起人
 }
-const list: Array<RecordList> = reactive([]);
-const loading = ref(false);
-const finished = ref(false);
-let pageCnt = ref(1);
+const list: Array<RecordList> = reactive([])
+const loading = ref(false)
+const finished = ref(false)
+const pageCnt = ref(1)
 const props = defineProps({
-  admin: Number
+  admin: Number,
 })
 const request = reactive({
-    pageNum: 1,
-    pageSize: 10,
-    admin: props.admin,
-    voteName: ''
+  pageNum: 1,
+  pageSize: 10,
+  admin: props.admin,
+  voteName: '',
 })
 const getList = () => {
   request.pageNum = pageCnt.value
   getVoteList(request).then((res: any) => {
-    if(res.code === 200){
+    if (res.code === 200) {
       list.push(...res.rows)
-      pageCnt.value++;
+      pageCnt.value++
       loading.value = false
-      if(list.length >= res.total) {
+      if (list.length >= res.total) {
         console.log('数据加载完毕')
         finished.value = true
       }
     }
-  }).catch(err => {
+  }).catch((err) => {
     console.log(err)
   })
 }
@@ -54,7 +54,7 @@ const search = (voteName: any) => {
   pageCnt.value = 1
   getList()
 }
-defineExpose({search})
+defineExpose({ search })
 const router = useRouter()
 const jumpDetail = (item: any) => {
   /**
@@ -62,26 +62,29 @@ const jumpDetail = (item: any) => {
    * 为1：跳转到空间内发起人进行投票
    * 为0：跳转到我要参与的投票
    */
-  if(props.admin == 1) {
-
-  } else {
+  if (props.admin == 1) {
     router.push({
-      path: "/join/vote",
+      path: '/space/manage/vote/owner_vote',
       query: {
-        id:  item.id,
-        voteType: item.voteType,
-        endTime: item.endTime
-      }
+        id: item.id,
+      },
     })
   }
-  
+  else {
+    router.push({
+      path: '/join/vote',
+      query: {
+        id: item.id,
+      },
+    })
+  }
 }
 </script>
 
 <template>
   <van-list
-    :immediate-check="false"
     v-model:loading="loading"
+    :immediate-check="false"
     :finished="finished"
     loading-text="————下拉加载更多————"
     finished-text="没有更多了"
@@ -95,6 +98,7 @@ const jumpDetail = (item: any) => {
       @click="jumpDetail(item)"
     >
       <div
+        v-if="!item.status"
         class="h-0 w-0"
         style="
            border: 11px solid transparent;
@@ -103,9 +107,9 @@ const jumpDetail = (item: any) => {
            position: absolute;
            top: 0;
            left: 0"
-        v-if="!item.status"
-      ></div>
+      />
       <div
+        v-if="!item.attend"
         class="w-54px h-54px"
         style="
           position: absolute;
@@ -113,9 +117,9 @@ const jumpDetail = (item: any) => {
           right: 84px;
           background: url(../../../public/join.png);
           background-size: 100%"
-        v-if="!item.attend"
-      ></div>
+      />
       <div
+        v-if="item.status"
         class="h-0 w-0"
         style="
            border: 11px solid transparent;
@@ -124,13 +128,12 @@ const jumpDetail = (item: any) => {
            position: absolute;
            top: 0;
            left: 0"
-        v-if="item.status"
-      ></div>
+      />
       <div style="display: flex; justify-content: space-between">
         <span class="text-base font-semibold">{{ item.activityName }}</span>
         <span class="text-xs">
-          <span class="bg-hex-41BD62 text-white px-2 py-1 rounded" v-if="!item.status">投票中</span>
-          <span class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded" v-if="item.status">已结束</span>
+          <span v-if="!item.status" class="bg-hex-41BD62 text-white px-2 py-1 rounded">投票中</span>
+          <span v-if="item.status" class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded">已结束</span>
         </span>
       </div>
       <div class="text-xs text-gray-400 text-left mt-3">

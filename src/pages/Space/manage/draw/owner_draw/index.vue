@@ -63,10 +63,7 @@ const drawData: DrawData = reactive({
 })
 
 onMounted(() => {
-  console.warn('发送axios请求')
   getDraw(drawId).then((res) => {
-    console.warn('获取数据')
-    console.warn(res)
     drawData.question = res.data.drawName
     drawData.endTime = res.data.endTime
     drawData.status = res.data.status
@@ -87,7 +84,6 @@ onMounted(() => {
         drawData.option[i].lastPoll = res.data[i]
     })
   })
-  console.warn(drawData.option)
 })
 
 const show = ref(false)
