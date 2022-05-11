@@ -62,7 +62,7 @@ const jumpDetail = (item: any) => {
    * 为1：跳转到空间内发起人进行投票
    * 为0：跳转到我要参与的投票
    */
-  if (props.admin === 1) {
+  if (Number(props.admin) === 1) {
     router.push({
       path: '/space/manage/vote/owner_vote',
       query: {

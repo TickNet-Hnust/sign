@@ -5,6 +5,7 @@ import { addVoteRecord } from '../../../../../api/myJoin/vote'
 import { getVote } from '../../../../../api/myJoin/record'
 
 const route = useRoute()
+const router = useRouter()
 const voteId = Number(route.query.id)
 
 // 定义投票页面数据接口
@@ -107,6 +108,15 @@ const isClick = () => {
   })
 }
 
+// 跳转投票记录
+const toVoteRecord = () => {
+  router.push({
+    path: '/record/voteRecord',
+    query: {
+      id: voteId,
+    },
+  })
+}
 </script>
 
 <template>
@@ -224,6 +234,16 @@ const isClick = () => {
         >
           {{ voteData.isVote?'已投票':'开始投票' }}
         </van-button>
+      </div>
+      <div class="flex justify-left my-5 text-sm">
+        <span class="border border-gray-300 bg-white p-5">
+          <div />
+          <div @click="toVoteRecord()">投票记录</div>
+        </span>
+        <span class="border border-gray-300 bg-white p-5 ml-2">
+          <div />
+          <div @click="modifyVoteTime()">修改结束时间</div>
+        </span>
       </div>
     </div>
   </div>

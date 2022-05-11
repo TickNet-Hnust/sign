@@ -3,6 +3,8 @@ import { Dialog } from 'vant'
 import { addDrawRecord, getDrawNum } from '~/api/myJoin/draw'
 import { getDraw } from '~/api/myJoin/record'
 const route = useRoute()
+const router = useRouter()
+
 // 定义投票数据类型接口
 interface DrawData {
   type: string // 抽签或者投票
@@ -113,6 +115,26 @@ const isClick = () => {
 const normal = 'background-color: #ffffff;border-color: #E1E2E3;'// 普通选项的样式
 const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后选项的样式
 
+// 抽签记录跳转
+const toDrawRecord = () => {
+  router.push({
+    path: '/record/sortitionRecord',
+    query: {
+      id: drawId,
+    },
+  })
+}
+
+// 修改抽签设置
+const toDrawModify = () => {
+  router.push({
+    path: '/space/manage/draw/owner_draw/modify',
+    query: {
+      id: drawId,
+    },
+  })
+}
+
 </script>
 
 <template>
@@ -155,11 +177,11 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
     <div class="flex justify-left my-5 text-sm">
       <span class="border border-gray-300 bg-white p-5">
         <div />
-        <div>抽签记录</div>
+        <div @click="toDrawRecord()">抽签记录</div>
       </span>
       <span class="border border-gray-300 bg-white p-5 ml-2">
         <div />
-        <div>修改部分设置</div>
+        <div @click="toDrawModify()">修改部分设置</div>
       </span>
     </div>
     <records-list :show="show" :type="drawData.type" :draw-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
