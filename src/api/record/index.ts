@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-01 20:32:16
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-08 15:54:41
+ * @LastEditTime: 2022-05-12 16:40:35
  */
 import request from '~/utils/request'
 
@@ -38,5 +38,14 @@ export function sign(data: any) {
     method: 'post',
     url: '/signff/signRecord',
     data: data
+  })
+}
+
+// 查询空间活动记录
+export function getRecord(data: any) {
+  return request({
+    method: 'get',
+    url: '/sign/space/getRecord',
+    params: data
   })
 }

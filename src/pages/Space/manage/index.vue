@@ -45,7 +45,12 @@ const member_list = ref([])
 const router = useRouter()
 const finished = ref(true)
 const jumpPage = (path) => {
-  router.push(`manage/${path}`)
+  router.push({
+    path: `manage/${path}`,
+    query: {
+      id: route.query.id
+    }
+  })
 }
 // 初始化一个空间列表
 const spaceList = reactive({

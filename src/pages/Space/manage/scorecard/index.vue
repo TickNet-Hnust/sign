@@ -1,101 +1,38 @@
+<!--
+ * @Descipttion: 
+ * @Author: 刘晴
+ * @Date: 2022-04-20 21:46:45
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-12 16:58:05
+-->
 <script lang="ts" setup>
-const signList = ref([
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-])
-const voteList = ref([
-  {
-    num: '1905020118',
-    name: '李四',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '李四',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-])
-const rollList = ref([
-  {
-    num: '1905020118',
-    name: '王五',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '王五',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-])
-const checkedList = ref()
-const checkedTab = ref('signList')
-const changeTab = () => {
-  if (checkedTab.value === 'sign')
-    checkedList.value = signList.value
-
-  else if (checkedTab.value === 'vote')
-    checkedList.value = voteList.value
-
-  else
-    checkedList.value = rollList.value
+import { getRecord } from '~/api/record/index'
+interface RecordList {
+  userId: String //学号/工号
+  userName: String //用户名
+  number: String //用户当前获取积分
+  total: String //总积分
 }
+// 获取空间id
+const route = useRoute()
+const spaceId = route.query.id
+const recordList: Array<RecordList> = reactive([])
+// 初始化数据
+onMounted(() => {
+  getRecord({
+    spaceId: spaceId
+  }).then((res: any) => {
+    if(res.code === 200) {
+      recordList.push(...res.data)
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
+})
 </script>
 
 <template>
-  <div class="bg-gray-500/8 p-3">
+  <div class="bg-gray-500/8 p-3 min-h-100%">
     <div class="bg-white mx-3 text-left p-4 pb-5 text-15px rounded">
       <li class="flex items-center">
         <div class="w-5.5em">
@@ -110,7 +47,7 @@ const changeTab = () => {
           • 积分规则
         </div>
         <div class="text-13px text-hex-41AA62">
-          每参与签到/投票/抽签一次，加一积分
+          每参与签到一次，加一积分
         </div>
       </li>
       <li class="mt-3 flex items-center">
@@ -122,18 +59,6 @@ const changeTab = () => {
         </div>
       </li>
     </div>
-    <div class="mt-3">
-      <van-tabs
-        v-model:active="checkedTab"
-        color="rgb(40,182,72)"
-        background="rgb(243,244,245)"
-        @change="changeTab()"
-      >
-        <van-tab title="签到积分" name="sign" />
-        <van-tab title="投票积分" name="vote" />
-        <van-tab title="抽签积分" name="roll" />
-      </van-tabs>
-    </div>
     <ul class="bg-white mx-3 mt-4 border border-t-2 border-hex-ccc border-t-hex-28B648 px-2">
       <li class="flex py-2">
         <span class="flex-1">学号/工号<van-icon name="sort" /></span>
@@ -141,13 +66,13 @@ const changeTab = () => {
         <span class="flex-1">积分</span>
       </li>
       <li
-        v-for="item in checkedList"
+        v-for="item in recordList"
         :key="item"
         class="flex py-2 border-t border-hex-ccc"
       >
-        <span class="flex-1">{{ item.num }}</span>
-        <span class="flex-1">{{ item.name }}</span>
-        <span class="flex-1">{{ item.score }}</span>
+        <span class="flex-1">{{ item.userId }}</span>
+        <span class="flex-1">{{ item.userName }}</span>
+        <span class="flex-1">{{ item.number }} / {{ item.total }}</span>
       </li>
     </ul>
   </div>

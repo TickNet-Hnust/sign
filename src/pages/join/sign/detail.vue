@@ -82,8 +82,8 @@ initData()
         class="flex justify-between h-3em p-2 items-center"
       >
         <span>
-          <span class="text-sm w-5em text-left inline-block">名称</span>
-          <span class="text-sm ml-10">{{detailMsg.signName}}</span>
+          <span class="text-sm w-5em text-left inline-block">发起人</span>
+          <span class="text-sm ml-10">{{detailMsg.createUserName}}</span>
         </span>
       </div>
     </div>
