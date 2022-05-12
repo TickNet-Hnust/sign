@@ -69,12 +69,14 @@ onMounted(() => {
       i = i + 1
     }
     i = 1
-    res.data.presentChoices.forEach((key: string) => {
-      for (const item of voteData.option) {
-        if (item.optionValue === key)
-          voteData.optionChecked.push(item.id)
-      }
-    })
+    if (res.data.presentChoices !== null) {
+      res.data.presentChoices.forEach((key: string) => {
+        for (const item of voteData.option) {
+          if (item.optionValue === key)
+            voteData.optionChecked.push(item.id)
+        }
+      })
+    }
   })
 })
 
