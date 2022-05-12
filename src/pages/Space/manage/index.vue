@@ -34,18 +34,26 @@ const details_list = reactive([
     link: 'add_member',
   },
   {
-    title: '积分',
+    title: '签到统计',
     icon: 'i-carbon-report',
     link: 'scorecard',
   },
 ])
 // 成员列表
 const member_list = ref([])
-
 const router = useRouter()
 const finished = ref(true)
-const jumpPage = (path) => {
-  router.push(`manage/${path}`)
+const id = ref(route.query.id)
+const jumpPage = (item, id) => {
+  if (item.link === 'scorecard') {
+    router.push({
+      path: `manage/${item.link}`,
+      query: {
+        id,
+      },
+    })
+  }
+  else { router.push(`manage/${item.link}`) }
 }
 // 初始化一个空间列表
 const spaceList = reactive({
@@ -54,6 +62,7 @@ const spaceList = reactive({
   count: '',
   createTime: '',
 })
+// 负责人的操作 ++++
 // 修改空间名称请求的数据
 const updateData = reactive({
   spaceName: '',
@@ -73,10 +82,12 @@ const changeStuData = reactive({
   userId: '',
   spaceId: 0,
 })
-
+// 获取当前操作者的权限 1为管理员 2为负责人
+const rank = ref(0)
 // 查询空间列表的参数
-const id = ref(route.query.id)
 getSignSpace(id.value).then((res) => {
+  console.log(res.data)
+  rank.value = res.data.memberRank
   spaceList.id = res.data.id
   spaceList.createTime = res.data.createTime
   spaceList.spaceName = res.data.spaceName
@@ -84,25 +95,40 @@ getSignSpace(id.value).then((res) => {
   updateData.spaceName = res.data.spaceName
   updateData.spaceId = res.data.id
   deleteData.spaceId = res.data.id
-  console.log(spaceList)
+  console.log(rank.value)
 })
 getSpaceMemberList(id.value).then((res) => {
-  member_list.value = res.rows
+  if (res.code === 200) {
+    member_list.value = res.rows
+    console.log(member_list.value)
+  }
+  else if (res.code === 401) {
+    Notify({ type: 'danger', message: '身份验证失败！' })
+    router.push({ path: '/' })
+  }
 })
 
 // 修改空间名称
 const updateSpaceName = () => {
   updateSignSpace(updateData).then((res) => {
-    if (res.code === 200)
-      spaceList.spaceName = updateData.spaceName
+    if (res.code === 200) { spaceList.spaceName = updateData.spaceName }
+    else if (res.code === 401) {
+      Notify({ type: 'danger', message: '身份验证失败！' })
+      router.push({ path: '/' })
+    }
   })
 }
 // 删除空间
 const deleteSpace = () => {
   deleteSignSpace(deleteData).then((res) => {
-    if (res.code === 200)
+    if (res.code === 200) {
       Notify({ type: 'primary', message: '删除成功' })
-    router.push('/Space')
+      router.push('/Space')
+    }
+    else if (res.code === 401) {
+      Notify({ type: 'danger', message: '身份验证失败！' })
+      router.push({ path: '/' })
+    }
   })
 }
 const showUpdate = ref(false)// 是否显示修改空间名称的弹窗
@@ -131,9 +157,15 @@ const onConfirmAdmin = (index, value) => {
   if (value === 0) {
     updateSpaceMember(changeAdminData).then((res) => {
       getSpaceMemberList(id.value).then((res) => {
-        member_list.value = res.rows
-        showAdminChange.value = false
-        Notify({type:'success',message:'操作成功'})
+        if (res.code === 200) {
+          member_list.value = res.rows
+          showAdminChange.value = false
+          Notify({ type: 'success', message: '操作成功' })
+        }
+        else if (res.code === 401) {
+          Notify({ type: 'danger', message: '身份验证失败！' })
+          router.push({ path: '/' })
+        }
       })
     })
   }
@@ -145,19 +177,31 @@ const onConfirmAdmin = (index, value) => {
 const onConfirmDeleteAdmin = () => {
   deleteSpaceMember(changeAdminData).then((res) => {
     getSpaceMemberList(id.value).then((res) => {
-      member_list.value = res.rows
-      showAdminChange.value = false
-      Notify({type:'success',message:'操作成功'})
+      if (res.code === 200) {
+        member_list.value = res.rows
+        showAdminChange.value = false
+        Notify({ type: 'success', message: '操作成功' })
+      }
+      else if (res.code === 401) {
+        Notify({ type: 'danger', message: '身份验证失败！' })
+        router.push({ path: '/' })
+      }
     })
   })
 }
-//确认删除成员
+// 确认删除成员
 const onConfirmDeleteStu = () => {
   deleteSpaceMember(changeStuData).then((res) => {
     getSpaceMemberList(id.value).then((res) => {
-      member_list.value = res.rows
-      showStuChange.value = false
-      Notify({type:'success',message:'操作成功'})
+      if (res.code === 200) {
+        member_list.value = res.rows
+        showStuChange.value = false
+        Notify({ type: 'success', message: '操作成功' })
+      }
+      else if (res.code === 401) {
+        Notify({ type: 'danger', message: '身份验证失败！' })
+        router.push({ path: '/' })
+      }
     })
   })
 }
@@ -175,10 +219,16 @@ const onConfirmStu = (index, value) => {
   if (value === 0) {
     updateSpaceMember(changeStuData).then((res) => {
       getSpaceMemberList(id.value).then((res) => {
-        console.log(res, '成员列表')
-        member_list.value = res.rows
-        showStuChange.value = false
-        Notify({type:'success',message:'操作成功'})
+        if (res.code === 200) {
+          console.log(res, '成员列表')
+          member_list.value = res.rows
+          showStuChange.value = false
+          Notify({ type: 'success', message: '操作成功' })
+        }
+        else if (res.code === 401) {
+          Notify({ type: 'danger', message: '身份验证失败！' })
+          router.push({ path: '/' })
+        }
       })
     })
   }
@@ -186,6 +236,7 @@ const onConfirmStu = (index, value) => {
     showDeleteStu.value = true
   }
 }
+//
 
 </script>
 <template>
@@ -249,7 +300,7 @@ const onConfirmStu = (index, value) => {
             :key="item"
             class="my-2 p-3 mx-5 inline-block border border-hex-41be62 text-hex-999 rounded w-25vw h-25vw bg-white"
             shadow="~ md gray-400/60"
-            @click="jumpPage(item.link)"
+            @click="jumpPage(item,id)"
           >
             <div class="mt-2" text="2xl" color="green-600" m="auto" :class="item.icon" />
             <div class="mt-3 text-14px">
@@ -280,7 +331,6 @@ const onConfirmStu = (index, value) => {
                 <span v-if="item.memberRank == 1" class="text-xs" @click="changeAdmin(item)"><van-button
                   class="rounded"
                   size="mini"
-                  icon="arrow"
                   type="success"
                 >
                   管理员
@@ -288,7 +338,6 @@ const onConfirmStu = (index, value) => {
                 <span v-if="item.memberRank == 0" class="text-xs" @click="changeStu(item)"><van-button
                   class="rounded"
                   size="mini"
-                  icon="arrow"
                   type="primary"
                 >
                   成员

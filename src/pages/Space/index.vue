@@ -245,13 +245,13 @@ const addFTFSpace = () => {
       show-cancel-button
       @confirm="addFTFSpace()"
     >
-      <div class="mt-5 px-10">
+      <div class="mt-5 px-5">
         <div class="text-14px text-hex-999">
           请输入要创建的空间名称
         </div>
         <van-field v-model.trim="addAFTFSpaceData.spaceName" class="border-b border-hex-ccc mb-3" />
         <div class="text-14px text-hex-999">
-          请输入四位空间码供他人加入你创建的空间
+          请输入四位空间码供他人加入你创建的空间(空间码的有效时间为30分钟！)
         </div>
         <van-field v-model.trim="addAFTFSpaceData.code" class="border-b border-hex-ccc mb-3" type="digit" maxlength="4" />
       </div>

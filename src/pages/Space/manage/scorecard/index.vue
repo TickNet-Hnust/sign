@@ -1,97 +1,20 @@
 <script lang="ts" setup>
+import { Notify } from 'vant'
+import { getRecord } from '~/api/mySpace/index'
+const route = useRoute()
 const signList = ref([
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-])
-const voteList = ref([
-  {
-    num: '1905020118',
-    name: '李四',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '李四',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-])
-const rollList = ref([
-  {
-    num: '1905020118',
-    name: '王五',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '王五',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-  {
-    num: '1905020118',
-    name: '张三',
-    score: '31/36',
-  },
-])
-const checkedList = ref()
-const checkedTab = ref('signList')
-const changeTab = () => {
-  if (checkedTab.value === 'sign')
-    checkedList.value = signList.value
 
-  else if (checkedTab.value === 'vote')
-    checkedList.value = voteList.value
-
-  else
-    checkedList.value = rollList.value
-}
+])
+const id = ref(route.query.id)// 接收路由跳转的空间id，需从字符串转换为数字
+const idNumber = ref(0)
+idNumber.value = parseInt(id.value)
+getRecord(idNumber.value).then((res) => {
+  if (res.code === 200) { signList.value = res.data }
+  else if (res.code === 401) {
+    Notify({ type: 'danger', message: '身份验证失败！' })
+    router.push({ path: '/' })
+  }
+})
 </script>
 
 <template>
@@ -124,14 +47,10 @@ const changeTab = () => {
     </div>
     <div class="mt-3">
       <van-tabs
-        v-model:active="checkedTab"
         color="rgb(40,182,72)"
         background="rgb(243,244,245)"
-        @change="changeTab()"
       >
         <van-tab title="签到积分" name="sign" />
-        <van-tab title="投票积分" name="vote" />
-        <van-tab title="抽签积分" name="roll" />
       </van-tabs>
     </div>
     <ul class="bg-white mx-3 mt-4 border border-t-2 border-hex-ccc border-t-hex-28B648 px-2">
@@ -141,13 +60,13 @@ const changeTab = () => {
         <span class="flex-1">积分</span>
       </li>
       <li
-        v-for="item in checkedList"
+        v-for="item in signList"
         :key="item"
         class="flex py-2 border-t border-hex-ccc"
       >
-        <span class="flex-1">{{ item.num }}</span>
-        <span class="flex-1">{{ item.name }}</span>
-        <span class="flex-1">{{ item.score }}</span>
+        <span class="flex-1">{{ item.userId }}</span>
+        <span class="flex-1">{{ item.userName }}</span>
+        <span class="flex-1">{{ item.total }}/{{ item.number }}</span>
       </li>
     </ul>
   </div>
