@@ -87,14 +87,17 @@ const addAFTFSpaceData = reactive({
   code: '',
   longitude: 116.397128,
   latitude: 39.916527,
-  join: isJoin.value,
+  addAFTFSpaceData: isJoin.value,
   spaceName: '',
 })
 // 面对加入建群的方法
 const addFTFSpace = () => {
-  addAFTFSpace(addAFTFSpaceData).then((res) => {
-    console.log(res)
-    if (isJoin.value === false) {
+  if (isJoin.value === false) { // 创建空间
+    addAFTFSpaceData.join = false
+    addAFTFSpace(addAFTFSpaceData).then((res) => {
+      console.log(addAFTFSpaceData)
+      console.log(res)
+
       if (res.code === 200) {
         Notify({ type: 'success', message: '创建成功' })
         router.push('/Space')
@@ -104,8 +107,58 @@ const addFTFSpace = () => {
         request.value.pageNum = 1
         getsignSpaceList()
       }
-    }
-  })
+      else if (res.code === 501) {
+        if (res.msg === '该空间名已存在，请勿重复命名！') {
+          addAFTFSpaceData.code = ''
+          Notify({ type: 'warning', message: '该空间名已存在，请勿重复命名！' })
+        }
+
+        else if (res.msg === '该空间码已存在！') {
+          addAFTFSpaceData.code = ''
+          Notify({ type: 'warning', message: '该空间码已存在！' })
+        }
+      }
+      else if (res.code === 500) {
+        if (res.msg === '只能包括逗号、下划线、汉字、数字、字母！') {
+          addAFTFSpaceData.code = ''
+          Notify({ type: 'warning', message: '只能包括逗号、下划线、汉字、数字、字母！' })
+        }
+      }
+    })
+  }
+  else if (isJoin.value === true) { // 加入空间
+    addAFTFSpaceData.join = true
+    addAFTFSpace(addAFTFSpaceData).then((res) => {
+      console.log(addAFTFSpaceData)
+      console.log(res)
+      if (res.code === 200) {
+        Notify({ type: 'success', message: '加入成功' })
+        router.push('/Space')
+        addAFTFSpaceData.code = ''
+        active.value = 0
+        spaceList.value = []
+        request.value.pageNum = 1
+        getsignSpaceList()
+      }
+      else if (res.code === 501) {
+        if (res.msg === '该空间不存在！') {
+          Notify({ type: 'warning', message: '该空间不存在！' })
+          addAFTFSpaceData.code = ''
+          router.push('/Space')
+        }
+        else {
+          Notify({ type: 'warning', message: '您已经在空间里了，请勿重复加入' })
+          addAFTFSpaceData.code = ''
+          router.push('/Space')
+        }
+      }
+      else if (res.code === 500) {
+        Notify({ type: 'warning', message: '空间码不能为空' })
+        addAFTFSpaceData.code = ''
+        router.push('/Space')
+      }
+    })
+  }
 }
 // // 面对面建群的参数
 // const createSpaceData = reactive({
@@ -181,7 +234,7 @@ const addFTFSpace = () => {
         <div class="text-14px text-hex-999">
           和身边的朋友输入同样的四个数字，进入同一个空间
         </div>
-        <van-field v-model="addAFTFSpaceData.code" class="border-b border-hex-ccc mb-3" type="digit" maxlength="4" />
+        <van-field v-model.trim="addAFTFSpaceData.code" class="border-b border-hex-ccc mb-3" type="digit" maxlength="4" />
       </div>
     </van-dialog>
     <!-- 面对面创建空间 -->
@@ -196,11 +249,11 @@ const addFTFSpace = () => {
         <div class="text-14px text-hex-999">
           请输入要创建的空间名称
         </div>
-        <van-field v-model="addAFTFSpaceData.spaceName" class="border-b border-hex-ccc mb-3" />
+        <van-field v-model.trim="addAFTFSpaceData.spaceName" class="border-b border-hex-ccc mb-3" />
         <div class="text-14px text-hex-999">
           请输入四位空间码供他人加入你创建的空间
         </div>
-        <van-field v-model="addAFTFSpaceData.code" class="border-b border-hex-ccc mb-3" />
+        <van-field v-model.trim="addAFTFSpaceData.code" class="border-b border-hex-ccc mb-3" type="digit" maxlength="4" />
       </div>
     </van-dialog>
     <div class="mt-8 border-1 border-hex-DEDEDE bg-hex-fff rounded py-3 px-5">
