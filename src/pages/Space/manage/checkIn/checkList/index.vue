@@ -1,17 +1,21 @@
 
 <script setup lang="ts">
 import { signStuList, detailSignRecord, changeSignMsg } from '~/api/record/signRecord'
-const loading = ref(false);
-const finished = ref(false);
+
 // 已签到学生列表
 const clist = ref([]);
-const router = useRouter()
+// 签到活动id
 const route = useRoute()
 const signId = route.query.id
+// 详细信息
 const detailMsg = ref({
-  signName: ''
+  signName: '',// 签到名
+  signCode: '',// 签到码
+  createTime: '',// 创建日期
+  createUserName: ''// 创建人
 })
-const isShow = ref('yes')
+// 跳转到辅助签到页面
+const router = useRouter()
 const jumpPage = () => {
   router.push({
     path: '/record/checkRecord/help',
@@ -20,13 +24,14 @@ const jumpPage = () => {
     }
   })
 }
+//改变是否可见
 const changeRequest = ref({
   id: signId,
   signName: '',
   duration: 2,
   visible: 1
 })
-//改变是否可见
+const isShow = ref('yes')
 const changeShow = () => {
   if(isShow.value === 'yes') {
     changeRequest.value.visible = 1
@@ -40,13 +45,15 @@ const changeShow = () => {
     console.log(err)
   })
 }
+// 请求已签到学生列表
 const pageNum = ref(1)
+const loading = ref(false);
+const finished = ref(false);
 const request = reactive({
   signId: signId,
   pageNum: pageNum.value,
   pageSize: 10
 })
-// 获取已签到学生列表
 const getStuList = () => {
   signStuList(request).then((res: any) => {
     if(res.code === 200) {
@@ -92,7 +99,8 @@ const onLoad = () => {
     }
   }, 500);
 };
-const initData = () => {
+// 初始化数据
+onMounted(()=>{
   detailSignRecord(signId).then((res: any) => {
     if(res.code === 200) {
       detailMsg.value = res.data
@@ -104,8 +112,7 @@ const initData = () => {
     console.log(err)
   })
   getStuList()
-}
-initData()
+})
 // 编辑签到名
 const signName = ref('')
 const showDialog = ref(false)

@@ -11,14 +11,14 @@ interface RecordList{ // 定义记录列表
   signCode: String // 签到码
   createUserName: String //发起人
 }
-var list: Array<RecordList> = reactive([]);
-const loading = ref(false);
-const finished = ref(false);
-let pageCnt = ref(1);
 // admin用来判断是用户发起的还是参与的
 const props = defineProps({
   admin: Number
 })
+var list: Array<RecordList> = reactive([]);
+const loading = ref(false);
+const finished = ref(false);
+const pageCnt = ref(1);
 const request = reactive({
     pageNum: 1,
     pageSize: 10,
@@ -41,12 +41,16 @@ const getList = () => {
     console.log(err)
   })
 }
-getList()
+// 初始化页面时请求一次数据（van-list的一个bug）
+onMounted(() => {
+  getList()
+})
 const onload = () => {
   setTimeout(() => {
     getList()
   }, 1000)
 }
+// 关键词搜索
 const search = (signName: any) => {
   request.signName = signName
   list.length = 0
@@ -54,6 +58,7 @@ const search = (signName: any) => {
   getList()
 }
 defineExpose({search})
+// 点击某条记录跳转
 const router = useRouter()
 const jumpDetail = (item: any) => {
   /**

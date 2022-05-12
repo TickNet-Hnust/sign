@@ -5,7 +5,6 @@ interface Choer {
   createUserName: String //姓名
   createTime: String //投票
 }
-
 interface ChoList {
   title: String //选项名
   count: Number //票数
@@ -55,21 +54,26 @@ const changeShow = (item: any) => {
     item.isShow = false;
   }
 }
+// 详细数据
 const detailRecord = reactive({
   title: '',
   optionsList: [],
   optionsNum: [],
   visible: false
 })
-const initData = () => {
-  getDetailVote(3021).then((res: any) => {
+// 投票活动id
+const route = useRoute()
+const voteId = route.query.id
+// 初始化数据
+onMounted(() => {
+  getDetailVote(voteId).then((res: any) => {
     if(res.code === 200) {
       detailRecord.title = res.data.voteName
       detailRecord.optionsList = res.data.voteOption
       detailRecord.optionsNum = res.data.optionCount
       voteCount.value = res.data.votedUsersCount
       const stuRequest = reactive({
-        voteId: 3021,
+        voteId: voteId,
         pageNum: 1,
         pageSize: 10,
         optionName: ''
@@ -93,8 +97,7 @@ const initData = () => {
   }).catch((err) => {
     console.log(err)
   })
-}
-initData()
+})
 </script>
 
 <template>
@@ -129,7 +132,7 @@ initData()
                     <span>{{item.title}}</span>
                   </div>
                   <div>
-                    <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 mr-3">{{item.count}}票</span>
+                    <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 mr-3">{{item.count}} 票</span>
                     <span @click="changeShow(item)">
                       <van-icon v-show=!item.isShow name="arrow-down" />
                       <van-icon v-show=item.isShow name="arrow-up" />

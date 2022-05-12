@@ -78,6 +78,15 @@ const joinCheck = () => {
           color: '#fff',
           background: 'rgba(0,0,0,.7)'
         })
+      }else if(code===401){
+        Notify({
+          message: '身份验证失效!',
+          color: '#fff',
+          background: 'rgba(0,0,0,.7)',
+          // 展示时长
+          duration: 700,
+        })
+        router.push({ path: `/`})
       }else if(code===200){
         Notify({
           message: msg,

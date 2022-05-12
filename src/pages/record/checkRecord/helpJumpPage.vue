@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-07 15:08:29
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-10 19:16:30
+ * @LastEditTime: 2022-05-11 20:18:50
 -->
 <script lang="ts" setup>
 import { sign } from '~/api/record/index'
@@ -29,19 +29,25 @@ const helpSign = () => {
     loadingType: 'spinner',
     position: 'top'
   });
-  sign(request).then((res: any) => {
-    if(res.code === 200) {
-      console.log('签到成功')
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
+
   setTimeout(() => {
-    Toast.success({
-      message: '签到成功',
-      position: 'top'
+    sign(request).then((res: any) => {
+      if(res.code === 200) {
+        console.log('签到成功')
+        Toast.success({
+          message: '签到成功',
+          position: 'top'
+        })
+      } else {
+        Toast.fail({
+          message: '签到失败，请重试',
+          position: 'top'
+        })
+      }
+    }).catch((err) => {
+      console.log(err)
     })
-    router.push({
+    router.replace({
       path: '/record/checkRecord',
       query: { id: request.signId }
     })
