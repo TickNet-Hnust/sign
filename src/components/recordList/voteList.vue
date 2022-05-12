@@ -13,13 +13,14 @@ interface RecordList{ // 定义记录列表
   voteType: Number
   createUserName: String // 发起人
 }
+// admin用来判断是用户发起的还是参与的
+const props = defineProps({
+  admin: Number,
+})
 const list: Array<RecordList> = reactive([])
 const loading = ref(false)
 const finished = ref(false)
 const pageCnt = ref(1)
-const props = defineProps({
-  admin: Number,
-})
 const request = reactive({
   pageNum: 1,
   pageSize: 10,
@@ -42,7 +43,10 @@ const getList = () => {
     console.log(err)
   })
 }
-getList()
+// 初始化页面时请求一次数据（van-list的一个bug）
+onMounted(() => {
+  getList()
+})
 const onload = () => {
   setTimeout(() => {
     getList()

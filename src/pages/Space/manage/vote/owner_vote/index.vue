@@ -28,6 +28,11 @@ interface OptionData{
   poll: number
 }
 
+const props = reactive({
+  endDate: '',
+  endTime: '',
+})
+
 const voteData: VoteData = reactive({
   type: '投票',
   question: '',
@@ -58,6 +63,9 @@ onMounted(() => {
     voteData.question = res.data.voteName
     voteData.endTime = res.data.endTime
     voteData.isVote = res.data.attend
+    props.endDate = voteData.endTime.split(' ')[0]
+    props.endTime = `${voteData.endTime.split(' ')[1].split(':')[0]}:${voteData.endTime.split(' ')[1].split(':')[1]}`
+    console.warn(props)
     let i = 1
     voteData.option.pop()
     for (const key in res.data.voteNums) {
@@ -70,12 +78,14 @@ onMounted(() => {
       i = i + 1
     }
     i = 1
-    res.data.presentChoices.forEach((key: string) => {
-      for (const item of voteData.option) {
-        if (item.optionValue === key)
-          voteData.optionChecked.push(item.id)
-      }
-    })
+    if (res.data.presentChoices !== null) {
+      res.data.presentChoices.forEach((key: string) => {
+        for (const item of voteData.option) {
+          if (item.optionValue === key)
+            voteData.optionChecked.push(item.id)
+        }
+      })
+    }
   })
 })
 
@@ -117,6 +127,7 @@ const toVoteRecord = () => {
     },
   })
 }
+
 </script>
 
 <template>
@@ -240,10 +251,7 @@ const toVoteRecord = () => {
           <div />
           <div @click="toVoteRecord()">投票记录</div>
         </span>
-        <span class="border border-gray-300 bg-white p-5 ml-2">
-          <div />
-          <div @click="modifyVoteTime()">修改结束时间</div>
-        </span>
+        <modify-time :vote-date="props.endDate" :vote-time="props.endTime" :vote-id="voteId" />
       </div>
     </div>
   </div>

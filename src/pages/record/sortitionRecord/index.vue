@@ -4,14 +4,15 @@ interface Choer {
   createUserId: String //学号
   createUserName: String //姓名
   createTime: String //抽中时间
+  status: Number //状态（请假等）
 }
-
 interface ChoList {
   title: String //选项名
   count: Number //签数
   isShow: Boolean //是否可见
   choer: Array<Choer> //抽中这个签的人
 }
+// 未抽签数组
 const no_list = reactive([
   {
     num: "1905020118",
@@ -62,8 +63,12 @@ const detailRecord = reactive({
   optionsNum: [],
   visible: false
 })
-const initData = () => {
-  getDetailDraw(10026).then((res: any) => {
+// 抽签活动id
+const route = useRoute()
+const drawId = route.query.id
+// 初始化数据
+onMounted(() => {
+  getDetailDraw(drawId).then((res: any) => {
     if(res.code === 200) {
       detailRecord.title = res.data.drawName
       detailRecord.optionsList = res.data.optionContent
@@ -71,7 +76,7 @@ const initData = () => {
       detailRecord.visible = res.data.visible
       if(detailRecord.visible) {
         const stuRequest = reactive({
-          drawId: 10026,
+          drawId: drawId,
           pageNum: 1,
           pageSize: 10,
           optionId: ''
@@ -93,7 +98,7 @@ const initData = () => {
         console.log(cho_list)
       } else {
         const stuRequest = reactive({
-          drawId: 10026,
+          drawId: drawId,
           pageNum: 1,
           pageSize: 10
         })
@@ -107,15 +112,14 @@ const initData = () => {
   }).catch((err) => {
     console.log(err)
   })
-  drawRecordCount(10026).then((res: any) => {
+  drawRecordCount(drawId).then((res: any) => {
     if(res.code === 200) {
       drawCount.value = res.data
     }
   }).catch((err) => {
     console.log(err)
   })
-}
-initData()
+})
 </script>
 
 <template>
@@ -150,7 +154,7 @@ initData()
                     <span>{{item.title}}</span>
                   </div>
                   <div>
-                    <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 mr-3">{{item.count}}票</span>
+                    <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 mr-3">{{item.count}} 票</span>
                     <span @click="changeShow(item)">
                       <van-icon v-show=!item.isShow name="arrow-down" />
                       <van-icon v-show=item.isShow name="arrow-up" />
@@ -165,7 +169,7 @@ initData()
                     <span class="flex-1">时间</span
                     >
                   </ul>
-                  <ul class="flex justify-around border-b border-hex-ccc py-3 text-sm" v-for="choerItem in item.choer" :key="choerItem">
+                  <ul class="flex justify-around border-b border-hex-ccc py-3 text-sm items-center" v-for="choerItem in item.choer" :key="choerItem">
                     <span class="flex-1">{{ choerItem.createUserId }}</span>
                     <span class="flex-1">{{ choerItem.createUserName }}</span>
                     <span class="flex-1">{{ choerItem.createTime }}</span>

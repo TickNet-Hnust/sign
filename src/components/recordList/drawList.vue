@@ -13,15 +13,15 @@ interface RecordList{ // 定义记录列表
   spaceName: String // 所属空间
   createUserName: String //发起人
 }
+// 通过父组件传值判断是查询用户发起的还是参与的
+const props = defineProps({
+  admin: Number,
+})
 let list: Array<RecordList> = reactive([])
 const loading = ref(false)
 const finished = ref(false)
 const refreshing = ref(false)
 const pageCnt = ref(1)
-// 通过父组件传值判断是查询用户发起的还是参与的
-const props = defineProps({
-  admin: Number,
-})
 const request = reactive({
   pageNum: 1,
   pageSize: 10,
@@ -44,7 +44,10 @@ const getList = () => {
     console.warn(err)
   })
 }
-getList()
+// 初始化页面时请求一次数据（van-list的一个bug）
+onMounted(() => {
+  getList()
+})
 const onload = () => {
   setTimeout(() => {
     getList()
