@@ -1,6 +1,23 @@
 <script setup lang="ts">
-// import { useIntervalFn } from '@vueuse/core'
-const check_name = ref('张三')
+import { getSpaceMemberList } from '~/api/mySpace/spaceMember'
+const route = useRoute()
+const spaceId = route.query.id
+// 班级成员列表
+const name_list = ref([])
+// 获取班级成员
+const check_name = ref('')
+onMounted(() => {
+  getSpaceMemberList(Number(spaceId)).then((res: any) => {
+    if(res.code === 200 ) {
+      res.rows.forEach((item: any) => {
+        name_list.value.push(item.name)
+      })
+      check_name.value = name_list.value[0]
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
+})
 const checkTime = (i) => {
   if (i < 10)
     return `0${i}`
@@ -16,38 +33,7 @@ const stop_roll = () => {
   }
   checked_list.push(checked_item)
 }
-const name_list = ref([
-  '冯大',
-  '赵二',
-  '张三',
-  '李四',
-  '周五',
-  '赵六',
-  '李七',
-  '吴八',
-  '王九',
-  '孙十',
-  '陈含玉',
-  '罗修敏',
-  '陈青木',
-  '丁又儿',
-  '戴怀玉',
-  '赖许暖',
-  '蒋醉波',
-  '沈俊英',
-  '夏慧颖',
-  '钱恨云',
-  '邱露',
-  '乔颜',
-  '陆艳',
-  '丁亿',
-  '蒋莎',
-  '姚英',
-  '汪璧',
-  '漕炅',
-  '孙曼',
-  '陆倩',
-])
+// 选中列表
 const checked_list = reactive([])
 const { pause, resume, isActive } = useIntervalFn(
   () => {
