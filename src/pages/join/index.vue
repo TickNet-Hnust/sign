@@ -2,8 +2,8 @@
  * @Descipttion: 
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: 张津瑞
- * @LastEditTime: 2022-05-13 11:38:35
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-13 21:16:38
 -->
 <script setup lang="ts">
 import signList from '~/components/recordList/signList.vue'
@@ -33,7 +33,7 @@ const changeTab = () => {
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100vh">
     <div class="top flex bg-white rounded justify-between">
-      <span class="w-75vw">
+      <span class="w-100vw">
        <van-search
          v-model="searchValue"
          placeholder="请输入要搜索的记录"
@@ -41,15 +41,6 @@ const changeTab = () => {
          @search="search"
          />
       </span>
-      <span
-        class="
-          text-13px
-          flex
-          items-center
-          text-hex-666
-          justify-center
-          mr-5"
-      >时间<van-icon name="sort" /></span>
     </div>
     <div class="record_list mt-2">
       <van-tabs color="rgb(40,182,72)" @change="changeTab" v-model:active="activeName">

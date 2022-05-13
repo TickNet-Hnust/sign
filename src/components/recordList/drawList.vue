@@ -118,7 +118,7 @@ const jumpDetail = (item: any) => {
           v-if="!item.status"
           class="h-0 w-0"
           style="
-             border: 11px solid transparent;
+             border: 10px solid transparent;
              border-left-color: #41BD62;
              border-top-color: #41BD62;
              position: absolute;
@@ -139,7 +139,7 @@ const jumpDetail = (item: any) => {
           v-if="item.status"
           class="h-0 w-0"
           style="
-             border: 11px solid transparent;
+             border: 10px solid transparent;
              border-left-color: #C9C9C9;
              border-top-color: #C9C9C9;
              position: absolute;

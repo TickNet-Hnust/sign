@@ -183,21 +183,16 @@ const addFTFSpace = () => {
 
 <template>
   <div class="p-3 bg-gray-500/8 min-h-screen">
-    <div class="flex justify-between items-center">
-      <span class="py-1 flex items-center bg-hex-fff rounded w-xs">
+    <div class="py-1 flex items-center bg-hex-fff rounded justify-between">
+      <span class="w-85vw">
         <van-search
-          v-model.trim="request.spaceName"
-          class="w-full"
-          show-action
-          placeholder="请输入搜索关键词"
-          @clear="clear"
-        >
-          <template #action>
-            <div @click="searchList">搜索</div>
-          </template>
-        </van-search>
+         v-model.trim="request.spaceName"
+         placeholder="请输入搜索关键词"
+         left-icon="search"
+         @search="searchList"
+         />
       </span>
-      <span class="text-xl">
+      <span>
         <van-popover
           v-model:show="showPopover"
           :actions="[{ text: '创建空间' }, { text: '加入空间' }]"
@@ -205,18 +200,7 @@ const addFTFSpace = () => {
           @select="popoverSelect"
         >
           <template #reference>
-            <span
-              class="
-              color-hex-59B476
-              border-3 border-hex-59B476
-              rounded
-              font-bold
-              px-0.2
-              mr-2
-            "
-            >
-              <van-icon class="font-700 w-6" name="plus" />
-            </span>
+            <van-icon class="color-hex-59B476 font-600 w-6 mr-3 text-xl" name="plus" />
           </template>
         </van-popover>
       </span>

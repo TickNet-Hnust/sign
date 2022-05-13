@@ -49,32 +49,36 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100vh">
-    <div class="bg-hex-fff py-3 border-hex-ccc border rounded">
-      <div class="flex justify-around">
-        <div class="row">
-          <div class="text-sm">
-            {{ spaceList.spaceName }}
-          </div>
-          <div class="text-xs my-1 text-left">
-            成员：{{ member_list.length }}
-          </div>
-        </div>
-        <div class="rounded items-center flex">
-          <van-button type="danger" class="rounded" size="small" @click="showQuit = true">
-            退出空间
-          </van-button>
-          <van-dialog
-            v-model:show="showQuit"
-            title="是否删除空间"
-            confirm-button-color="rgb(63,133,255)"
-            show-cancel-button
-            @confirm="quitSpace()"
-          />
-        </div>
+    <div class="text-left text-hex-aaa text-xs ml-3">空间信息</div>
+    <div class="bg-hex-fff rounded px-5 pt-2 text-hex-666 border border-hex-ccc">
+      <div class="flex justify-between border-b border-hex-ccc text-14px py-2">
+        <span>空间名称</span>
+        <span>
+          {{ spaceList.spaceName }}
+          <span v-if="rank ===2" @click="showUpdate = true"><van-icon name="arrow" /></span>
+        </span>
       </div>
+      <div class="flex justify-between text-14px py-2">
+        <span>成员</span>
+        <span>
+          {{ member_list.length }}人
+        </span>
+      </div>
+      <!-- <div class="flex justify-between text-14px py-2 items-center">
+        <span>操作</span>
+        <span @click="showQuit = true" class="bg-hex-10AA62 rounded text-white text-13px p-1">退出空间</span>
+      </div> -->
+      <van-dialog
+        v-model:show="showQuit"
+        title="是否删除空间"
+        confirm-button-color="rgb(63,133,255)"
+        show-cancel-button
+        @confirm="quitSpace()"
+      />
     </div>
+    <div class="text-left mt-5 text-hex-aaa text-xs ml-3 mt-3">成员</div>
     <div
-      class="bg-hex-fff mt-5 px-2 border-t-2 border-hex-41BD62"
+      class="bg-hex-fff px-2 border border-hex-ccc rounded"
     >
       <van-list
         v-model:loading="loading"
@@ -85,35 +89,35 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
       >
         <ul
           class="
-      flex
-      justify-around
-      h-3em
-      leading-12
-      border-b border-b-hex-E4E4E4
-      text-sm
-      list_top
-      "
+            flex
+            justify-around
+            h-3em
+            leading-12
+            border-b border-b-hex-E4E4E4
+            text-sm
+            list_top
+            "
         >
-          <span class="inline-block w-6em">学号/工号</span>
-          <span class="inline-block w-4em">姓名</span>
+          <span class="flex-1">学号/工号</span>
+          <span class="flex-1">姓名</span>
+          <span class="flex-1">身份</span>
         </ul>
         <ul
           v-for="item in member_list"
           :key="item"
-          class="
-                  flex
-                  justify-around
-                  h-3em
-                  leading-12
-                  border-b border-b-hex-E4E4E4
-                  text-sm
-                "
+          class="flex justify-around h-3em leading-12 border-b border-b-hex-E4E4E4 text-sm"
         >
-          <span class="inline-block w-6em">{{ item.userId }}</span>
-          <span class="inline-block w-4em">{{ item.name }}</span>
+          <span class="flex-1">{{ item.userId }}</span>
+          <span class="flex-1">{{ item.name }}</span>
+          <span class="flex-1">
+            <van-tag plain v-if="item.memberRank===2" color="#ef4444">负责人</van-tag>
+            <van-tag plain v-if="item.memberRank===1" color="#10b981">管理员</van-tag>
+            <van-tag plain v-if="item.memberRank===0" color="#78716c">成员</van-tag>
+          </span>
         </ul>
       </van-list>
     </div>
+    <div class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600">退出空间</div>
   </div>
 </template>
 <route lang="yaml">

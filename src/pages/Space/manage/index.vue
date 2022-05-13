@@ -3,7 +3,7 @@
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-13 16:13:49
+ * @LastEditTime: 2022-05-13 21:30:35
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -265,35 +265,46 @@ const onConfirmStudent = (index, value) => {
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 h-screen">
-    <div class="flex bg-hex-fff rounded justify-between px-5 pt-5">
-      <div class="flex-col flex">
-        <div>
-          <span class="mt-6 mr-4 text-md">{{ spaceList.spaceName }}</span>
-          <span v-if="rank ===2" @click="showUpdate = true"><van-icon name="edit" /></span>
+    <div class="text-left text-hex-aaa text-xs ml-3">空间信息</div>
+    <div class="bg-hex-fff rounded px-5 pt-2 text-hex-666 border border-hex-ccc">
+      <div class="flex justify-between border-b border-hex-ccc text-14px py-2">
+        <span>空间名称</span>
+        <span>
+          {{ spaceList.spaceName }}
+          <span v-if="rank ===2" @click="showUpdate = true"><van-icon name="arrow" /></span>
+        </span>
+      </div>
+      <div class="flex justify-between border-b border-hex-ccc text-14px py-2 items-center">
+        <span>群聊二维码</span>
+        <span>
+          <span class="text-xl bg-hex-10AA62 text-white rounded-15px px-1">
+            <van-icon name="qr" />
+          </span>
+          <van-icon name="arrow" />
+        </span>
+      </div>
+      <div class="flex justify-between text-14px py-2">
+        <span>成员</span>
+        <span>
+          {{ member_list.length }}人
+        </span>
+      </div>
+      <van-dialog
+        v-model:show="showUpdate"
+        title="修改空间名称"
+        confirm-button-color="rgb(63,133,255)"
+        show-cancel-button
+        @confirm="updateSpaceName()"
+      >
+        <div class="mt-5 px-10">
+          <van-field
+            v-model="updateData.spaceName"
+            class="border-b border-hex-ccc mb-3"
+            placeholder="请输入新的空间名称"
+            :rules="[{ required: true, message: '请输入新名称' }]"
+          />
         </div>
-        <van-dialog
-          v-model:show="showUpdate"
-          title="修改空间名称"
-          confirm-button-color="rgb(63,133,255)"
-          show-cancel-button
-          @confirm="updateSpaceName()"
-        >
-          <div class="mt-5 px-10">
-            <van-field
-              v-model="updateData.spaceName"
-              class="border-b border-hex-ccc mb-3"
-              placeholder="请输入新的空间名称"
-              :rules="[{ required: true, message: '请输入新名称' }]"
-            />
-          </div>
-        </van-dialog>
-        <span class="mt-3 text-xs text-left">成员：{{ member_list.length }}</span>
-      </div>
-      <div v-if="rank===2" class="rounded">
-        <van-button type="danger" class="rounded" size="small" @click="showDelete = true">
-          删除空间
-        </van-button>
-      </div>
+      </van-dialog>
       <van-dialog
         v-model:show="showDelete"
         title="是否删除此空间"
@@ -323,31 +334,39 @@ const onConfirmStudent = (index, value) => {
         @confirm="onConfirmDeleteStudent()"
       />
     </div>
-    <van-tabs v-model:active="active" color="rgb(0,51,255)">
+    <van-tabs class="mt-3" v-model:active="active" color="rgb(40,182,72)">
       <van-tab title="概况">
-        <div class="rounded flex flex-wrap justify-around bg-white mt-5 py-8">
-          <div
-            v-for="item in details_list"
-            :key="item"
-            class="my-2 p-3 mx-5 inline-block border border-hex-41be62 text-hex-999 rounded w-25vw h-25vw bg-white"
-            shadow="~ md gray-400/60"
-            @click="jumpPage(item,id)"
-          >
-            <div class="mt-2" text="2xl" color="green-600" m="auto" :class="item.icon" />
-            <div class="mt-3 text-14px">
-              {{ item.title }}
+        <div class="text-left text-hex-aaa text-xs ml-3 mt-3">应用</div>
+        <div class="bg-white p-3 py-5 rounded border border-hex-10AA62">
+          <div class="flex flex-wrap justify-around">
+            <div
+              v-for="item in details_list"
+              :key="item"
+              class="mb-5 mx-5 inline-block text-hex-666 w-15vw h-15vw"
+              @click="jumpPage(item,id)"
+            >
+              <div class="mt-2" text="2xl" color="green-600" m="auto" :class="item.icon" />
+              <div class="mt-3 text-14px">
+                {{ item.title }}
+              </div>
             </div>
           </div>
         </div>
       </van-tab>
       <van-tab title="成员">
-        <div class="bg-white mt-5 rounded items-center p-1">
+        <div class="text-left mt-3 text-hex-aaa text-xs ml-3">成员</div>
+        <div class="bg-white rounded items-center p-1 border border-hex-ccc">
           <van-list
             v-model:loading="loading"
             :finished="finished"
             finished-text="没有更多了"
             @load="onLoad"
           >
+            <div class="flex items-center text-sm py-2 border-b border-hex-ddd mt-2">
+              <span class="flex-1">学号/工号</span>
+              <span class="flex-1">姓名</span>
+              <span class="flex-1">身份</span>
+            </div>
             <div
               v-for="item in member_list" :key="item" class="flex items-center text-sm py-2 border-b border-hex-ddd mt-2 "
             >
@@ -358,21 +377,15 @@ const onConfirmStudent = (index, value) => {
                 {{ item.name }}
               </div>
               <div class="flex-1">
-                <span v-if="item.memberRank == 2"><van-tag size="large" color="#7232dd" class="text-xs">负责人</van-tag></span>
-                <span v-if="item.memberRank == 1" class="text-xs" @click="changeAdmin(item)"><van-button
-                  class="rounded"
-                  size="mini"
-                  type="success"
-                >
-                  管理员
-                </van-button></span>
-                <span v-if="item.memberRank == 0" class="text-xs" @click="changeStu(item)"><van-button
-                  class="rounded"
-                  size="mini"
-                  type="primary"
-                >
-                  成员
-                </van-button></span>
+                <span v-if="item.memberRank == 2">
+                  <van-tag plain color="#ef4444">负责人</van-tag>
+                </span>
+                <span v-if="item.memberRank == 1" @click="changeAdmin(item)">
+                  <van-tag plain color="#10b981">管理员</van-tag>
+                </span>
+                <span v-if="item.memberRank == 0" class="text-xs" @click="changeStu(item)">
+                  <van-tag plain color="#78716c">成员</van-tag>
+                </span>
               </div>
             </div>
           </van-list>
@@ -418,6 +431,15 @@ const onConfirmStudent = (index, value) => {
         />
       </van-popup>
     </van-tabs>
+    <div
+      v-if="rank===1"
+      class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600"
+    >退出空间</div>
+    <div
+      v-if="rank===2"
+      @click="showDelete = true"
+      class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600"
+    >解散空间</div>
   </div>
 </template>
 <route lang="yaml">
