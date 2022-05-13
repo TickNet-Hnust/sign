@@ -1,42 +1,46 @@
 <script setup lang="ts">
-import { assistSignIn, signQRCode } from '~/api/record/index'
+import { assistSignIn, signQRCode } from "~/api/record/index";
 const stuMsg = ref({
-  stuNum: '',
-  stuName: ''
-})
-const route = useRoute()
-const signId = route.query.id
-const QRUrl = ref('')
+  stuNum: "",
+  stuName: "",
+});
+const route = useRoute();
+const signId = route.query.id;
+const QRUrl = ref("");
 const helpSign = () => {
-  assistSignIn(stuMsg.value).then((res: any) => {
-    console.log(res)
-  }).catch((err) => {
-    console.log(err)
-  })
-}
+  assistSignIn(stuMsg.value)
+    .then((res: any) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 const QRRequest = reactive({
   signId: signId,
-  path: 'http://localhost:3333/sign/record/checkRecord/helpJumpPage'
-})
+  path: "http://localhost:3333/sign/record/checkRecord/helpJumpPage",
+});
 const getQRCode = () => {
-  signQRCode(QRRequest).then((res: any) => {
-    QRUrl.value = res.data.url
-  }).catch((err) => {
-    console.log(err)
-  })
-}
+  signQRCode(QRRequest)
+    .then((res: any) => {
+      QRUrl.value = res.data.url;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 const refresh = () => {
-  getQRCode()
-}
-const activeTab = ref('byName')
+  getQRCode();
+};
+const activeTab = ref("byName");
 const changeTab = () => {
-  if(activeTab.value === 'byCode') {
-    refresh()
+  if (activeTab.value === "byCode") {
+    refresh();
   } else {
-    stuMsg.value.stuNum = ''
-    stuMsg.value.stuName = ''
+    stuMsg.value.stuNum = "";
+    stuMsg.value.stuName = "";
   }
-}
+};
 </script>
 <template>
   <div class="p-3">
@@ -57,7 +61,12 @@ const changeTab = () => {
       </div>
     </div>
     <div class="m-t-4">
-      <van-tabs color="rgb(0,51,255)" title-active-color="rgb(0,51,255)" @change="changeTab()" v-model:active="activeTab">
+      <van-tabs
+        color="rgb(0,51,255)"
+        title-active-color="rgb(0,51,255)"
+        @change="changeTab()"
+        v-model:active="activeTab"
+      >
         <van-tab title="直接补录" name="byName">
           <div class="text-left mt-6 border-1 p-4 border-gray-500/50 rounded">
             <van-cell-group border="false">
@@ -76,18 +85,19 @@ const changeTab = () => {
             </van-cell-group>
           </div>
           <div class="mt-8">
-            <van-button type="success" size="large" @click="helpSign()">补录</van-button>
+            <van-button type="success" size="large" @click="helpSign()"
+              >补录</van-button
+            >
           </div>
         </van-tab>
         <van-tab title="生成二维码" name="byCode">
-          <div class="mt-6 border-1 p-4 border-gray-500/50 font-semibold rounded">
+          <div
+            class="mt-6 border-1 p-4 border-gray-500/50 font-semibold rounded"
+          >
             辅助扫码签到（
             <span style="color: rgb(0, 102, 255)" @click="refresh()">刷新</span>
             ）
-            <img
-              class="px-10 py-5"
-              :src="QRUrl"
-            />
+            <img class="px-10 py-5" :src="QRUrl" />
           </div>
         </van-tab>
       </van-tabs>

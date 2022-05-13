@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const active = ref(0)
+const active = ref(0);
 
-const value = ref('')
+const value = ref("");
 </script>
 
 <template>
@@ -58,14 +58,12 @@ const value = ref('')
         </van-tab>
         <van-tab title="生成二维码">
           <div class="mt-6 border px-12" style="background-color: #f2f2f2">
-            <div class="my-4 text-center font-600">
-              辅助扫码签到（刷新)
-            </div>
+            <div class="my-4 text-center font-600">辅助扫码签到（刷新)</div>
             <div class="mb-4">
               <img
                 src="https://qr.api.cli.im/newqr/create?data=ticknet&level=H&transparent=false&bgcolor=%23FFFFFF&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&logoshape=no&size=500&kid=cliim&key=98aa02e15a0a3a15145eff50a09ccec8"
                 alt=""
-              >
+              />
             </div>
           </div>
         </van-tab>

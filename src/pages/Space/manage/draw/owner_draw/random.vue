@@ -1,18 +1,18 @@
 <template>
   <div class="p-3 bg-gray-100">
     <div class="draw_name bg-white border border-gray-300 text-left p-3">
-      <div class="text-lg">
-        冬奥会2022什么时候举办？
-      </div>
+      <div class="text-lg">冬奥会2022什么时候举办？</div>
       <div class="mt-3">
         <span
           class="text-0.8em rounded text-white py-1 px-2"
           style="background-color: rgb(102, 204, 255)"
-        >进行中</span>
+          >进行中</span
+        >
         <span
           class="text-0.8em rounded text-white ml-2 py-1 px-2"
           style="background-color: rgb(40, 182, 72)"
-        >已抽 0 /8</span>
+          >已抽 0 /8</span
+        >
       </div>
     </div>
     <div
@@ -31,9 +31,7 @@
       截止时间：01-17 22:33
     </div>
     <div class="mt-5">
-      <van-button color="rgb(31,167,31)" size="large">
-        开始抽签
-      </van-button>
+      <van-button color="rgb(31,167,31)" size="large"> 开始抽签 </van-button>
     </div>
     <div class="flex justify-left mt-5 text-sm">
       <span class="border border-gray-300 bg-white p-5">
@@ -50,9 +48,7 @@
       <div>1.仅发起人查看抽签结果</div>
       <div>2.每人最多可参与1次抽签</div>
     </div>
-    <div style="color: rgb(148, 149, 150)">
-      —2022-01-03 18:12:49发起—
-    </div>
+    <div style="color: rgb(148, 149, 150)">—2022-01-03 18:12:49发起—</div>
   </div>
 </template>
 <route lang="yaml">

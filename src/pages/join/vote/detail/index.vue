@@ -1,11 +1,11 @@
 <script setup lang="ts">
 const data = ref({
-  user: '张志豪',
-  voteTime: '01-15 10:45',
-  message: '投票：',
-  option: '两顿',
+  user: "张志豪",
+  voteTime: "01-15 10:45",
+  message: "投票：",
+  option: "两顿",
   num: 1,
-})
+});
 </script>
 <template>
   <div class="bg-true-gray-50 w-screen h-screen">

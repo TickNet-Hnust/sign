@@ -1,16 +1,18 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import { loginTest } from '~/api/system'
-import { setToken } from '~/utils/cookies'
+import { acceptHMRUpdate, defineStore } from "pinia";
+import { loginTest } from "~/api/system";
+import { setToken } from "~/utils/cookies";
 
-export const useUserStore = defineStore('user', () => {
+export const useUserStore = defineStore("user", () => {
   /**
    * Current name of the user.
    */
-  const savedName = ref('')
-  const previousNames = ref(new Set<string>())
+  const savedName = ref("");
+  const previousNames = ref(new Set<string>());
 
-  const usedNames = computed(() => Array.from(previousNames.value))
-  const otherNames = computed(() => usedNames.value.filter(name => name !== savedName.value))
+  const usedNames = computed(() => Array.from(previousNames.value));
+  const otherNames = computed(() =>
+    usedNames.value.filter((name) => name !== savedName.value)
+  );
 
   /**
    * Changes the current name of the user and saves the one that was used
@@ -19,33 +21,33 @@ export const useUserStore = defineStore('user', () => {
    * @param name - new name to set
    */
   function setNewName(name: string) {
-    if (savedName.value)
-      previousNames.value.add(savedName.value)
+    if (savedName.value) previousNames.value.add(savedName.value);
 
-    savedName.value = name
+    savedName.value = name;
   }
 
   /**
    * 用户登录及token设置
    */
-  const token = ref('')
+  const token = ref("");
 
   function login() {
     return new Promise((resolve, reject) => {
-      loginTest().then((res: any) => {
-        if (res.code == 200) {
-          token.value = res.data.access_token
-          // 将token存储到cookie中
-          setToken(token.value)
-        }
-        else {
-          // 弹出出错信息
-        }
-        resolve(res)
-      }).catch((error) => {
-        reject(error)
-      })
-    })
+      loginTest()
+        .then((res: any) => {
+          if (res.code == 200) {
+            token.value = res.data.access_token;
+            // 将token存储到cookie中
+            setToken(token.value);
+          } else {
+            // 弹出出错信息
+          }
+          resolve(res);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
   return {
     setNewName,
@@ -53,8 +55,8 @@ export const useUserStore = defineStore('user', () => {
     savedName,
     login,
     token,
-  }
-})
+  };
+});
 
 if (import.meta.hot)
-  import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useUserStore, import.meta.hot));

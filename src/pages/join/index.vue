@@ -6,53 +6,51 @@
  * @LastEditTime: 2022-05-11 13:01:22
 -->
 <script setup lang="ts">
-import signList from '~/components/recordList/signList.vue'
-import drawList from '~/components/recordList/drawList.vue'
-import voteList from '~/components/recordList/voteList.vue'
-const searchValue = ref('')
-const activeName = ref('sign')
-const signlist = ref(null)
-const drawlist = ref(null)
-const votelist = ref(null)
+import signList from "~/components/recordList/signList.vue";
+import drawList from "~/components/recordList/drawList.vue";
+import voteList from "~/components/recordList/voteList.vue";
+const searchValue = ref("");
+const activeName = ref("sign");
+const signlist = ref(null);
+const drawlist = ref(null);
+const votelist = ref(null);
 const search = () => {
-  if(activeName.value === 'sign') {
-    (signlist as any).value.search(searchValue.value)
-  } else if(activeName.value === 'vote') {
-    (votelist as any).value.search(searchValue.value)
+  if (activeName.value === "sign") {
+    (signlist as any).value.search(searchValue.value);
+  } else if (activeName.value === "vote") {
+    (votelist as any).value.search(searchValue.value);
   } else {
-    (drawlist as any).value.search(searchValue.value)
+    (drawlist as any).value.search(searchValue.value);
   }
-}
+};
 const changeTab = () => {
-  if(searchValue.value !== '') {
-    searchValue.value = '';
-    search()
+  if (searchValue.value !== "") {
+    searchValue.value = "";
+    search();
   }
-}
+};
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100vh">
     <div class="top flex bg-white rounded justify-between">
       <span class="w-75vw">
-       <van-search
-         v-model="searchValue"
-         placeholder="请输入要搜索的记录"
-         left-icon="search"
-         @search="search"
-         />
+        <van-search
+          v-model="searchValue"
+          placeholder="请输入要搜索的记录"
+          left-icon="search"
+          @search="search"
+        />
       </span>
-      <span
-        class="
-          text-13px
-          flex
-          items-center
-          text-hex-666
-          justify-center
-          mr-5"
-      >时间<van-icon name="sort" /></span>
+      <span class="text-13px flex items-center text-hex-666 justify-center mr-5"
+        >时间<van-icon name="sort"
+      /></span>
     </div>
     <div class="record_list mt-2">
-      <van-tabs color="rgb(40,182,72)" @change="changeTab" v-model:active="activeName">
+      <van-tabs
+        color="rgb(40,182,72)"
+        @change="changeTab"
+        v-model:active="activeName"
+      >
         <van-tab title="签到" name="sign">
           <sign-list ref="signlist" admin="0"></sign-list>
         </van-tab>

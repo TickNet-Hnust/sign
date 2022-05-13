@@ -1,78 +1,77 @@
 <script setup lang="ts">
 // import { useIntervalFn } from '@vueuse/core'
-const check_name = ref('张三')
+const check_name = ref("张三");
 const checkTime = (i) => {
-  if (i < 10)
-    return `0${i}`
-  else return i
-}
+  if (i < 10) return `0${i}`;
+  else return i;
+};
 const stop_roll = () => {
-  pause()
-  const mydate = new Date()
+  pause();
+  const mydate = new Date();
   const checked_item = {
     name: check_name.value,
-    time: `${checkTime(mydate.getMonth() + 1)}-${checkTime(mydate.getDate())} ${checkTime(mydate.getHours())
-    }:${checkTime(mydate.getMinutes())}:${checkTime(mydate.getSeconds())}`,
-  }
-  checked_list.push(checked_item)
-}
+    time: `${checkTime(mydate.getMonth() + 1)}-${checkTime(
+      mydate.getDate()
+    )} ${checkTime(mydate.getHours())}:${checkTime(
+      mydate.getMinutes()
+    )}:${checkTime(mydate.getSeconds())}`,
+  };
+  checked_list.push(checked_item);
+};
 const name_list = ref([
-  '冯大',
-  '赵二',
-  '张三',
-  '李四',
-  '周五',
-  '赵六',
-  '李七',
-  '吴八',
-  '王九',
-  '孙十',
-  '陈含玉',
-  '罗修敏',
-  '陈青木',
-  '丁又儿',
-  '戴怀玉',
-  '赖许暖',
-  '蒋醉波',
-  '沈俊英',
-  '夏慧颖',
-  '钱恨云',
-  '邱露',
-  '乔颜',
-  '陆艳',
-  '丁亿',
-  '蒋莎',
-  '姚英',
-  '汪璧',
-  '漕炅',
-  '孙曼',
-  '陆倩',
-])
-const checked_list = reactive([])
+  "冯大",
+  "赵二",
+  "张三",
+  "李四",
+  "周五",
+  "赵六",
+  "李七",
+  "吴八",
+  "王九",
+  "孙十",
+  "陈含玉",
+  "罗修敏",
+  "陈青木",
+  "丁又儿",
+  "戴怀玉",
+  "赖许暖",
+  "蒋醉波",
+  "沈俊英",
+  "夏慧颖",
+  "钱恨云",
+  "邱露",
+  "乔颜",
+  "陆艳",
+  "丁亿",
+  "蒋莎",
+  "姚英",
+  "汪璧",
+  "漕炅",
+  "孙曼",
+  "陆倩",
+]);
+const checked_list = reactive([]);
 const { pause, resume, isActive } = useIntervalFn(
   () => {
-    let r = Math.round(Math.random() * (name_list.value.length - 1))
+    let r = Math.round(Math.random() * (name_list.value.length - 1));
     while (1) {
-      let flag = true
+      let flag = true;
       for (let i = 0; i < checked_list.length; i++) {
         if (checked_list[i].name === name_list.value[r]) {
-          flag = false
-          break
+          flag = false;
+          break;
         }
       }
-      if (flag)
-        break
-
-      else
-        r = Math.round(Math.random() * (name_list.value.length - 1))
+      if (flag) break;
+      else r = Math.round(Math.random() * (name_list.value.length - 1));
     }
-    check_name.value = name_list.value[r]
+    check_name.value = name_list.value[r];
   },
   100,
   {
     immediate: false,
-  },
-)
+  }
+);
 </script>
 <template>
   <div class="bg-gray-500/8 p-7 h-screen">

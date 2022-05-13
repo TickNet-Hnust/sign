@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { Notify } from 'vant';
-const signShow = ref(true)
-const router = useRouter()
+import { Notify } from "vant";
+const signShow = ref(true);
+const router = useRouter();
 const launchSign = () => {
-  signShow.value=!signShow.value
+  signShow.value = !signShow.value;
   Notify({
-    message: '60分钟后自动结束签到',
-    color: '#fff',
-    background: 'rgba(0,0,0,.7)'
-  })
-}
+    message: "60分钟后自动结束签到",
+    color: "#fff",
+    background: "rgba(0,0,0,.7)",
+  });
+};
 const jumpRecord = () => {
-  router.push('checkIn/checkList')
-}
+  router.push("checkIn/checkList");
+};
 </script>
 <template>
   <div class="p-3">
@@ -31,7 +31,11 @@ const jumpRecord = () => {
         </div>
       </div>
       <div v-show="!signShow">
-        <div class="text-sm p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB mt-3 mx-5">张智豪</div>
+        <div
+          class="text-sm p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB mt-3 mx-5"
+        >
+          张智豪
+        </div>
         <div class="text-3xl mt-5">2 0 0 0</div>
         <div class="text-center mb-5 mt-8">
           <span
@@ -54,9 +58,11 @@ const jumpRecord = () => {
       </div>
       <div class="color-hex-41AA62 mt-2">有问题、意见、建议</div>
       <div class="bg-hex-f7f7f7 px-4">
-        如果在使用过程中有什么问题、意见或建议，并且在<a class="color-hex-0066FF"
+        如果在使用过程中有什么问题、意见或建议，并且在<a
+          class="color-hex-0066FF"
           >使用帮助</a
-        >中也无法找到想要的结果时 ，可以通过<a class="color-hex-0066FF">留言反馈</a
+        >中也无法找到想要的结果时 ，可以通过<a class="color-hex-0066FF"
+          >留言反馈</a
         >联系我们，留言时请务必说明具体情况（如签到问题请说明当前时间、地点、签到方式等等具体问题描述）
       </div>
       <div class="mt-5">
@@ -67,9 +73,6 @@ const jumpRecord = () => {
     </div>
   </div>
 </template>
-
-
-
 
 <route lang="yaml">
 meta:

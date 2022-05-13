@@ -1,7 +1,11 @@
 <template>
   <div class="bg-gray-500/8 p-3 h-screen">
     <div class="bg-white p-5 rounded">
-      <div class="text-xs p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB">签到发起人可以通过生成二维码来追加成员</div>
+      <div
+        class="text-xs p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB"
+      >
+        签到发起人可以通过生成二维码来追加成员
+      </div>
       <div
         class="mt-8 p-4 font-semibold rounded bg-gray-250 border border-gray-300"
       >
@@ -23,6 +27,4 @@ meta:
   layout: default
   title: 成员追加
 </route>
-<style scoped>
-
-</style>
+<style scoped></style>

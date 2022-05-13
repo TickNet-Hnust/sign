@@ -6,47 +6,47 @@
  * @LastEditTime: 2022-05-02 13:51:32
 -->
 <script setup lang="ts">
-import { useUserStore } from '~/stores/user'
-const user = useUserStore()
-const router = useRouter()
+import { useUserStore } from "~/stores/user";
+const user = useUserStore();
+const router = useRouter();
 
 const jumpTargetPage = (targetPath: string) => {
-  router.push(targetPath)
-}
+  router.push(targetPath);
+};
 const list = reactive([
   {
-    name: '发起签到',
-    icon: 'i-carbon-3d-cursor-alt',
-    link: 'launch',
+    name: "发起签到",
+    icon: "i-carbon-3d-cursor-alt",
+    link: "launch",
   },
   {
-    name: '我要签到',
-    icon: 'i-carbon-flash',
-    link: 'joinCheck',
+    name: "我要签到",
+    icon: "i-carbon-flash",
+    link: "joinCheck",
   },
   {
-    name: '发起记录',
-    icon: 'i-carbon-report',
-    link: 'record',
+    name: "发起记录",
+    icon: "i-carbon-report",
+    link: "record",
   },
   {
-    name: '我要参与',
-    icon: 'i-carbon-arrival',
-    link: 'join',
+    name: "我要参与",
+    icon: "i-carbon-arrival",
+    link: "join",
   },
   {
-    name: '我的空间',
-    icon: 'i-carbon-notebook',
-    link: 'space',
+    name: "我的空间",
+    icon: "i-carbon-notebook",
+    link: "space",
   },
   {
-    name: '在线帮助',
-    icon: 'i-carbon-help',
-    link: '',
+    name: "在线帮助",
+    icon: "i-carbon-help",
+    link: "",
   },
-])
+]);
 //用户登录
-user.login()
+user.login();
 </script>
 
 <template>
@@ -68,7 +68,13 @@ user.login()
       @click="jumpTargetPage(item.link)"
     >
       <div h="12" text="center">
-        <div class="boxIcon" text="2xl" color="green-600" m="auto" :class="item.icon" />
+        <div
+          class="boxIcon"
+          text="2xl"
+          color="green-600"
+          m="auto"
+          :class="item.icon"
+        />
       </div>
       <div text="center" class="boxTitle">
         {{ item.name }}
@@ -79,13 +85,11 @@ user.login()
 
 <style>
 .linear {
-  background: linear-gradient(
-    to top right, #41ac62, #41bf62, #41be62
-  );
+  background: linear-gradient(to top right, #41ac62, #41bf62, #41be62);
 }
 .mainBox:hover .boxIcon,
 .mainBox:hover .boxTitle {
-  color: #fff
+  color: #fff;
 }
 .boxIcon,
 .boxTitle {

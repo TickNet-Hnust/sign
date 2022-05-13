@@ -1,123 +1,130 @@
 <script setup lang="ts">
-  import {signRecord} from '~/api/launchSign/index'
-  const pattern = /^\d{4}$/ // 用户输入的签到码正则匹配规则
-  const router = useRouter()
-  const inputValue = ref('')
-  const canCheck = ref(false) // 是否可以开始签到
-  const checkShow = ref(true)
-  import { Notify } from 'vant';
-  const titleText = ref(
-    computed( () => {
-      if(!pattern.test(inputValue.value)) {
-        canCheck.value = false
-        return '请输入4位有效的签到码*^_^*'
-      } else {
-          canCheck.value = true
-          return '点击确认签到进行签到'       
-      }
-    })
-  )
+import { signRecord } from "~/api/launchSign/index";
+const pattern = /^\d{4}$/; // 用户输入的签到码正则匹配规则
+const router = useRouter();
+const inputValue = ref("");
+const canCheck = ref(false); // 是否可以开始签到
+const checkShow = ref(true);
+import { Notify } from "vant";
+const titleText = ref(
+  computed(() => {
+    if (!pattern.test(inputValue.value)) {
+      canCheck.value = false;
+      return "请输入4位有效的签到码*^_^*";
+    } else {
+      canCheck.value = true;
+      return "点击确认签到进行签到";
+    }
+  })
+);
 
 //百度地图获取定位方法
 //经度
-let longitude =ref(0)
+let longitude = ref(0);
 //纬度
-let latitude = ref(0)
-let locationLoading = ref(true)
-const getLocationByBaidumap = function(){
+let latitude = ref(0);
+let locationLoading = ref(true);
+const getLocationByBaidumap = function () {
   let geolocation = new BMapGL.Geolocation();
-  geolocation.getCurrentPosition(function(r){
-      if(this.getStatus() == BMAP_STATUS_SUCCESS){
-          //为啥总是112.95046418 27.83570223(湘潭市政府的位置)
-          //破防了，chrome如果不使用https定位就不精确，看来到时候开发环境下只能用火狐测试定位了
-          //正确的位置为 112.92667632467,27.905932201717(科大逸夫楼)
-          longitude.value = r.point.lng
-          latitude.value = r.point.lat
-          locationLoading.value = false
+  geolocation.getCurrentPosition(
+    function (r) {
+      if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+        //为啥总是112.95046418 27.83570223(湘潭市政府的位置)
+        //破防了，chrome如果不使用https定位就不精确，看来到时候开发环境下只能用火狐测试定位了
+        //正确的位置为 112.92667632467,27.905932201717(科大逸夫楼)
+        longitude.value = r.point.lng;
+        latitude.value = r.point.lat;
+        locationLoading.value = false;
+      } else {
+        alert("failed" + this.getStatus());
       }
-      else {
-          alert('failed' + this.getStatus());
-      }        
-  },
-  function(err:any){
-    console.warn('ERROR(' + err.code + '): ' + err.message);
-  },
-  {
-    enableHighAccuracy: true,
-  } 
+    },
+    function (err: any) {
+      console.warn("ERROR(" + err.code + "): " + err.message);
+    },
+    {
+      enableHighAccuracy: true,
+    }
   );
-}
-getLocationByBaidumap()
+};
+getLocationByBaidumap();
 
 //签到请求数据(初始数据)
 let signRecordRequestData = reactive({
-  longitude:0,
-  latitude:0,
-  signCode:'',
-  os:'windows10',
-  browser:'chrome',
-  ip:'127.0.0.1'
-})
+  longitude: 0,
+  latitude: 0,
+  signCode: "",
+  os: "windows10",
+  browser: "chrome",
+  ip: "127.0.0.1",
+});
 //签到收到的数据
 let signRecordResponseData = reactive({
-  id:0,
-})
+  id: 0,
+});
 //确认签到
 const joinCheck = () => {
-  if(canCheck.value) {
-    signRecordRequestData.longitude = longitude.value
-    signRecordRequestData.latitude = latitude.value
-    signRecordRequestData.signCode = inputValue.value
-    console.log(signRecordRequestData,'签到请求传去的数据')
-    signRecord(signRecordRequestData).then((res)=>{
-      console.log(res,'签到请求传来的数据')
-      let {msg,code} = res
-      if(code===500){
+  if (canCheck.value) {
+    signRecordRequestData.longitude = longitude.value;
+    signRecordRequestData.latitude = latitude.value;
+    signRecordRequestData.signCode = inputValue.value;
+    console.log(signRecordRequestData, "签到请求传去的数据");
+    signRecord(signRecordRequestData).then((res) => {
+      console.log(res, "签到请求传来的数据");
+      let { msg, code } = res;
+      if (code === 500) {
         Notify({
           message: msg,
-          color: '#fff',
-          background: 'rgba(0,0,0,.7)'
-        })
-      }else if(code===401){
+          color: "#fff",
+          background: "rgba(0,0,0,.7)",
+        });
+      } else if (code === 401) {
         Notify({
-          message: '身份验证失效!',
-          color: '#fff',
-          background: 'rgba(0,0,0,.7)',
+          message: "身份验证失效!",
+          color: "#fff",
+          background: "rgba(0,0,0,.7)",
           // 展示时长
           duration: 700,
-        })
-        router.push({ path: `/`})
-      }else if(code===200){
+        });
+        router.push({ path: `/` });
+      } else if (code === 200) {
         Notify({
           message: msg,
-          color: '#fff',
-          background: 'rgba(0,0,0,.7)'
-        })
-        signRecordResponseData.id = res.data.id
-        checkShow.value = false
+          color: "#fff",
+          background: "rgba(0,0,0,.7)",
+        });
+        signRecordResponseData.id = res.data.id;
+        checkShow.value = false;
       }
-    })
-}
-}
+    });
+  }
+};
 
 //跳转到签到记录
-const jumpRecord = function() {
-  router.push({ path: `/record/checkRecord`,
-    query: { 
-      id:signRecordResponseData.id,
-    } 
-  }
-  )
-}
-
+const jumpRecord = function () {
+  router.push({
+    path: `/record/checkRecord`,
+    query: {
+      id: signRecordResponseData.id,
+    },
+  });
+};
 </script>
 <template>
   <div class="p-3">
     <div class="bg-hex-F2EFF6 p-3">
-      <div class="text-sm p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB mt-3">{{ titleText }}</div>
+      <div
+        class="text-sm p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB mt-3"
+      >
+        {{ titleText }}
+      </div>
       <div v-show="checkShow">
         <div class="w-133px mt-6 mx-auto">
-          <van-field v-model="inputValue" placeholder="输入签到码" class="text-xl" />
+          <van-field
+            v-model="inputValue"
+            placeholder="输入签到码"
+            class="text-xl"
+          />
         </div>
         <div
           class="my-6 border w-200px mx-auto py-3 text-base rounded border-hex-4FC09C text-hex-4FC09C"
@@ -154,13 +161,15 @@ const jumpRecord = function() {
       </div>
       <div class="color-hex-41AA62 mt-2">多次定位失败怎么办</div>
       <div class="bg-hex-f7f7f7 px-4">
-       如果多次签到失败，请寻找签到发起人进行扫码签到或者补录
+        如果多次签到失败，请寻找签到发起人进行扫码签到或者补录
       </div>
       <div class="color-hex-41AA62 mt-2">有问题、意见、建议</div>
       <div class="bg-hex-f7f7f7 px-4">
-        如果在使用过程中有什么问题、意见或建议，并且在<a class="color-hex-0066FF"
+        如果在使用过程中有什么问题、意见或建议，并且在<a
+          class="color-hex-0066FF"
           >使用帮助</a
-        >中也无法找到想要的结果时 ，可以通过<a class="color-hex-0066FF">留言反馈</a
+        >中也无法找到想要的结果时 ，可以通过<a class="color-hex-0066FF"
+          >留言反馈</a
         >联系我们，留言时请务必说明具体情况（如签到问题请说明当前时间、地点、签到方式等等具体问题描述）
       </div>
       <div class="mt-5">

@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { modifyVoteTime } from '~/api/myJoin/vote'
+import { modifyVoteTime } from "~/api/myJoin/vote";
 
 // 投票日期修改 数据类型
-interface VoteTime{
+interface VoteTime {
   // 日期选择器
-  voteDate: string
-  maxDate: object
-  minDate: object
+  voteDate: string;
+  maxDate: object;
+  minDate: object;
   // 时间选择器
-  voteTime: string
-  minHour: string|number
-  maxHour: string|number
+  voteTime: string;
+  minHour: string | number;
+  maxHour: string | number;
 }
 
 // 接受父组件相关参数
@@ -18,101 +18,95 @@ const props = defineProps({
   voteDate: String,
   voteTime: String,
   voteId: Number,
-})
+});
 
 // 控制遮罩层是否显示
-const dialogShow = ref(false)
+const dialogShow = ref(false);
 
 // 控制日期选择器弹出层
-const datePopupShow = ref(false)
-const currentDate = ref(new Date(2022, 5, 12))
+const datePopupShow = ref(false);
+const currentDate = ref(new Date(2022, 5, 12));
 
 // 控制时间选择器弹出层
-const currentTime = ref(' ')
-const timePopupShow = ref(false)
+const currentTime = ref(" ");
+const timePopupShow = ref(false);
 
 const voteTime: VoteTime = reactive({
-  voteDate: '',
+  voteDate: "",
   maxDate: new Date(2025, 0, 1),
   minDate: new Date(2021, 10, 1),
-  voteTime: '',
+  voteTime: "",
   minHour: 0,
   maxHour: 23,
-})
+});
 
 const init = () => {
-  voteTime.voteDate = String(props.voteDate)
-  voteTime.voteTime = String(props.voteTime)
-  dialogShow.value = true
-}
+  voteTime.voteDate = String(props.voteDate);
+  voteTime.voteTime = String(props.voteTime);
+  dialogShow.value = true;
+};
 
 const formatter = (type: string, val: number) => {
-  if (type === 'year')
-    return `${val}年`
+  if (type === "year") return `${val}年`;
 
-  if (type === 'month')
-    return `${val}月`
+  if (type === "month") return `${val}月`;
 
-  if (type === 'day')
-    return `${val}日`
+  if (type === "day") return `${val}日`;
 
-  if (type === 'hour')
-    return `${val}时`
+  if (type === "hour") return `${val}时`;
+  else if (type === "minute") return `${val}分`;
 
-  else if (type === 'minute')
-    return `${val}分`
-
-  return val
-}
+  return val;
+};
 
 // 日期格式化
 const confirmPickerDate = (val: any) => {
-  const year = val.getFullYear()
-  let month = val.getMonth() + 1
-  let day = val.getDate()
-  if (month >= 1 && month <= 9)
-    month = `0${month}`
-  if (day >= 1 && day <= 9)
-    day = `0${day}`
-  voteTime.voteDate = `${year}-${month}-${day}`
-  datePopupShow.value = false
-}
+  const year = val.getFullYear();
+  let month = val.getMonth() + 1;
+  let day = val.getDate();
+  if (month >= 1 && month <= 9) month = `0${month}`;
+  if (day >= 1 && day <= 9) day = `0${day}`;
+  voteTime.voteDate = `${year}-${month}-${day}`;
+  datePopupShow.value = false;
+};
 
 const confirmPickerTime = () => {
-  voteTime.voteTime = currentTime.value
-  timePopupShow.value = false
-  console.warn(voteTime.voteTime)
-}
+  voteTime.voteTime = currentTime.value;
+  timePopupShow.value = false;
+  console.warn(voteTime.voteTime);
+};
 
 // 提交信息
 const modifyTime = () => {
-  const time = `${voteTime.voteDate} ${voteTime.voteTime}:00`
-  console.warn(time, Number(props.voteId))
+  const time = `${voteTime.voteDate} ${voteTime.voteTime}:00`;
+  console.warn(time, Number(props.voteId));
   modifyVoteTime(Number(props.voteId), time).then((res) => {
-    console.warn(res)
-  })
-}
-
+    console.warn(res);
+  });
+};
 </script>
 
 <template>
   <div class="border border-gray-300 bg-white p-5 ml-2" @click="init()">
     修改投票时间
   </div>
-  <van-dialog v-model:show="dialogShow" show-cancel-button confirm-button-color="#0066CC" @confirm="modifyTime()">
-    <div class="p-1rem font-600 text-lg">
-      修改投票结束时间
-    </div>
+  <van-dialog
+    v-model:show="dialogShow"
+    show-cancel-button
+    confirm-button-color="#0066CC"
+    @confirm="modifyTime()"
+  >
+    <div class="p-1rem font-600 text-lg">修改投票结束时间</div>
     <van-cell
       title="截止日期"
       is-link
-      :value="voteTime.voteDate?voteTime.voteDate:props.voteDate"
+      :value="voteTime.voteDate ? voteTime.voteDate : props.voteDate"
       @click="datePopupShow = true"
     />
     <van-cell
       title="截止时间"
       is-link
-      :value="voteTime.voteTime?voteTime.voteTime:props.voteTime"
+      :value="voteTime.voteTime ? voteTime.voteTime : props.voteTime"
       @click="timePopupShow = true"
     />
   </van-dialog>

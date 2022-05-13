@@ -6,10 +6,10 @@ Powered by TickNet
 
 Thanks to these developers for their great contributions:
 
-* [7UP-hue](https://github.com/7UP-hue)
-* [thosewhoyoulove](https://github.com/thosewhoyoulove)
-* [Resuragam](https://github.com/Resuragam)
-* [peterroe](https://github.com/peterroe)
+- [7UP-hue](https://github.com/7UP-hue)
+- [thosewhoyoulove](https://github.com/thosewhoyoulove)
+- [Resuragam](https://github.com/Resuragam)
+- [peterroe](https://github.com/peterroe)
 
 ## Dev
 
@@ -21,7 +21,7 @@ $ pnpm dev
 ```
 
 ## Build
-  
+
 ```shell
 $ pnpm build
 ```
