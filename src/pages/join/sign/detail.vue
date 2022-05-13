@@ -14,11 +14,14 @@ const request = reactive({
   pageNum: pageNum.value,
   pageSize: 10
 })
+// 成功签到次数
+const totalRecord = ref(0)
 const getStuList = () => {
   signStuList(request).then((res: any) => {
     if(res.code === 200) {
       const rows = res.rows
       clist.value = clist.value.concat(rows)
+      totalRecord.value = res.total
       pageNum.value++;
       loading.value = false
       if(clist.value.length >= res.total) {
@@ -35,7 +38,7 @@ const onLoad = () => {
     getStuList()
   }, 500);
 };
-const initData = () => {
+onMounted( () => {
   detailSignRecord(signId).then((res: any) => {
     console.log(res)
     if(res.code === 200) {
@@ -47,8 +50,7 @@ const initData = () => {
   }).catch((err) => {
     console.log(err)
   })
-}
-initData()
+})
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100ch">

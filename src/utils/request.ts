@@ -1,7 +1,15 @@
+/*
+ * @Descipttion: 
+ * @Author: 刘晴
+ * @Date: 2022-05-01 19:32:33
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-13 09:17:06
+ */
 // 封装axios
 import axios from 'axios'
-// import { Message } from 'element-ui';
+// 引入vant组件
 import { getToken, removeAvatar, removeName, removeRoles, removeToken } from './cookies'
+import { Toast } from 'vant'
 // 创建axios实例
 const service = axios.create({
   // 请求路由
@@ -25,6 +33,16 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     (response) => {
         const res = response.data;
+        if(res.code === 401) {
+          Toast.fail({
+            message: '登录状态错误',
+            position: 'top',
+            duration: 1000
+          })
+          setTimeout(() => {
+            location.href = '/'
+          },1000)
+        }
         // if (res.code !== 200) {
         //     // Message.error(res.heaser.msg || "Error") 
         //     return Promise.reject(new Error(res.msg||"Error"))
