@@ -3,13 +3,12 @@
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
  * @LastEditors: 张津瑞
- * @LastEditTime: 2022-05-02 13:51:32
+ * @LastEditTime: 2022-05-13 11:38:12
 -->
 <script setup lang="ts">
 import { useUserStore } from '~/stores/user'
 const user = useUserStore()
 const router = useRouter()
-
 const jumpTargetPage = (targetPath: string) => {
   router.push(targetPath)
 }

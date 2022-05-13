@@ -2,8 +2,8 @@
  * @Descipttion: 
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-11 13:01:22
+ * @LastEditors: 张津瑞
+ * @LastEditTime: 2022-05-13 11:38:35
 -->
 <script setup lang="ts">
 import signList from '~/components/recordList/signList.vue'

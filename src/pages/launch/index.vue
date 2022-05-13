@@ -3,7 +3,7 @@
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
  * @LastEditors: 张津瑞
- * @LastEditTime: 2022-05-13 08:39:57
+ * @LastEditTime: 2022-05-13 16:44:49
 -->
 <script setup lang="ts">
 import { Notify } from 'vant';
@@ -11,6 +11,7 @@ import {sign} from '~/api/launchSign/index'
 //nanoid产生唯一id
 import {nanoid} from  'nanoid'
 const router = useRouter()
+const route = useRoute()
 //百度地图获取定位方法
 //经度
 let longitude =ref(0)
@@ -76,6 +77,9 @@ let inputName = ref('')
 let canSee = ref(1)
 //实际请求的持续时间
 let requestDurationTime = ref(10)
+//获取query中的spaceId
+const spaceId  = typeof route.query.spaceId === 'undefined' ? 0 : +route.query.spaceId
+console.log(spaceId,'spaceId')
 //发起签到方法
 const  launchSign = function(){
   console.log(canSee.value,'签到列表是否可见')
@@ -88,6 +92,7 @@ const  launchSign = function(){
   signRequestData.signName = inputName.value||`signName${nanoid()}`
   signRequestData.duration = requestDurationTime.value
   signRequestData.visible = canSee.value
+  signRequestData.spaceId = spaceId
   console.log(signRequestData,'发起签到接口请求的数据')
   sign(signRequestData).then(res=>{
     console.log(res,'发起签到接口返回的res')
@@ -100,7 +105,7 @@ const  launchSign = function(){
           duration: 700,
         })
         router.push({ path: `/`})
-    }else if(res.code===500){
+    }else if(res.code===501){
         Notify({
           message: res.msg,
           color: '#fff',
