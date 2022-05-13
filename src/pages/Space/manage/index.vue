@@ -43,13 +43,15 @@ const details_list = reactive([
 const member_list = ref([])
 const router = useRouter()
 const finished = ref(true)
-const jumpPage = (path) => {
+const id = ref(route.query.id)
+const jumpPage = (item) => {
   router.push({
-    path: `manage/${path}`,
+    path: `manage/${item.link}`,
     query: {
-      id: route.query.id
-    }
+      id: route.query.id,
+    },
   })
+}
 // 初始化一个空间列表
 const spaceList = reactive({
   id: '',
@@ -270,7 +272,6 @@ const onConfirmStudent = (index, value) => {
   if (value === 0)
     showDeleteStudent.value = true// 展示是否删除成员弹窗
 }
-
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 h-screen">
