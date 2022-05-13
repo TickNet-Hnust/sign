@@ -3,7 +3,7 @@
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
  * @LastEditors: 张津瑞
- * @LastEditTime: 2022-05-12 20:09:54
+ * @LastEditTime: 2022-05-13 08:39:57
 -->
 <script setup lang="ts">
 import { Notify } from 'vant';
@@ -87,6 +87,7 @@ const  launchSign = function(){
   signRequestData.latitude = latitude.value
   signRequestData.signName = inputName.value||`signName${nanoid()}`
   signRequestData.duration = requestDurationTime.value
+  signRequestData.visible = canSee.value
   console.log(signRequestData,'发起签到接口请求的数据')
   sign(signRequestData).then(res=>{
     console.log(res,'发起签到接口返回的res')

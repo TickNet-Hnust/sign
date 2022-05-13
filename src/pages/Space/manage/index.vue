@@ -43,18 +43,13 @@ const details_list = reactive([
 const member_list = ref([])
 const router = useRouter()
 const finished = ref(true)
-const id = ref(route.query.id)
-const jumpPage = (item, id) => {
-  if (item.link === 'scorecard') {
-    router.push({
-      path: `manage/${item.link}`,
-      query: {
-        id,
-      },
-    })
-  }
-  else { router.push(`manage/${item.link}`) }
-}
+const jumpPage = (path) => {
+  router.push({
+    path: `manage/${path}`,
+    query: {
+      id: route.query.id
+    }
+  })
 // 初始化一个空间列表
 const spaceList = reactive({
   id: '',
