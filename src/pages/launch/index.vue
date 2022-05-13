@@ -2,14 +2,15 @@
  * @Description: 
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
- * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-11 14:46:34
+ * @LastEditors: 张津瑞
+ * @LastEditTime: 2022-05-13 08:39:57
 -->
 <script setup lang="ts">
 import { Notify } from 'vant';
 import {sign} from '~/api/launchSign/index'
+//nanoid产生唯一id
+import {nanoid} from  'nanoid'
 const router = useRouter()
-
 //百度地图获取定位方法
 //经度
 let longitude =ref(0)
@@ -48,13 +49,13 @@ const signShow = ref(true)
 const signRequestData = reactive({
     longitude:0,
     latitude:0,
-    //目前是随机名字
-    signName:`signName${parseInt(Math.random()*1000 as any)}`,
+    //目前是随机名字 这地方记得使用uuid
+    signName:'',
     //下面的数据都是默认写好
     os:'windows10',
     browser:'chrome',
     ip:'127.0.0.1',
-    duration:1,
+    duration:10,
     visible:1,
     spaceId:0
 })
@@ -68,33 +69,65 @@ let signResponseData = reactive({
   spaceName:null,
   status:null
 })
+
+//用户输入签到名
+let inputName = ref('')
+// 用户是否可见
+let canSee = ref(1)
+//实际请求的持续时间
+let requestDurationTime = ref(10)
 //发起签到方法
 const  launchSign = function(){
-  //赋值经纬度
+  console.log(canSee.value,'签到列表是否可见')
+  console.log(inputName.value,'签到名')
+  console.log(durationTime.value,'活动时长字符串')
+  console.log(requestDurationTime.value,'活动实际请求发送的时长')
+  //赋值请求数据
   signRequestData.longitude = longitude.value
   signRequestData.latitude = latitude.value
+  signRequestData.signName = inputName.value||`signName${nanoid()}`
+  signRequestData.duration = requestDurationTime.value
+  signRequestData.visible = canSee.value
   console.log(signRequestData,'发起签到接口请求的数据')
   sign(signRequestData).then(res=>{
-    signResponseData.attend = res.data.attend
-    signResponseData.createTime = res.data.createTime
-    signResponseData.id = res.data.id
-    signResponseData.signCode = res.data.signCode
-    signResponseData.signName = res.data.signName
-    signResponseData.spaceName = res.data.spaceName
-    signResponseData.status = res.data.status
-    console.log(signResponseData,'发起签到接口返回的数据')
-    signShow.value=!signShow.value
-  })
-  Notify({
-    message: '60分钟后自动结束签到',
-    color: '#fff',
-    background: 'rgba(0,0,0,.7)',
-    // 展示时长
-    duration: 700,
+    console.log(res,'发起签到接口返回的res')
+    if(res.code===401){
+        Notify({
+          message: '身份验证失效!',
+          color: '#fff',
+          background: 'rgba(0,0,0,.7)',
+          // 展示时长
+          duration: 700,
+        })
+        router.push({ path: `/`})
+    }else if(res.code===500){
+        Notify({
+          message: res.msg,
+          color: '#fff',
+          background: 'rgba(0,0,0,.7)',
+          // 展示时长
+          duration: 700,
+        })
+    }else{
+        signResponseData.attend = res.data.attend
+        signResponseData.createTime = res.data.createTime
+        signResponseData.id = res.data.id
+        signResponseData.signCode = res.data.signCode
+        signResponseData.signName = res.data.signName
+        signResponseData.spaceName = res.data.spaceName
+        signResponseData.status = res.data.status
+        console.log(signResponseData,'发起签到接口返回的数据')
+        Notify({
+          message: `${signRequestData.duration}分钟后自动结束签到`,
+          color: '#fff',
+          background: 'rgba(0,0,0,.7)',
+          // 展示时长
+          duration: 700,
+        })
+        signShow.value=!signShow.value
+    }
   })
 }
-
-
 //跳转到签到记录
 //跳转时通过query参数带上相关数据
 const jumpRecord = function() {
@@ -103,8 +136,7 @@ const jumpRecord = function() {
     } 
   })
 }
-// 用户是否可见
-const canSee = ref('yes')
+
 // 弹出层控制
 const popShow = ref(false)
 const changePopShow = () => {
@@ -112,7 +144,8 @@ const changePopShow = () => {
 }
 
 // 时间选择器
-const durationTime = ref('2分钟')
+//持续时间展示字符串
+let durationTime = ref('10分钟')
 const timePicker = ref([
   // 天数
   {
@@ -133,7 +166,7 @@ const timePicker = ref([
     '36分钟','37分钟','38分钟','39分钟','40分钟','41分钟','42分钟','43分钟','44分钟',
     '45分钟','46分钟','47分钟','48分钟','49分钟','50分钟','51分钟','52分钟','53分钟',
     '54分钟','55分钟','56分钟','57分钟','58分钟','59分钟',],
-    defaultIndex: 2
+    defaultIndex: 10
   },
 ])
 const onCancel = () => {
@@ -145,6 +178,17 @@ const onConfirm = (currentValue: any) => {
     if(currentValue[i].charAt(0) !=='0' )
     durationTime.value += currentValue[i]
   }
+  console.log(currentValue,'时间数据')
+  //将天小时全部转换为分钟
+  let dayToMin = currentValue[0][0] === '0' ? 0 : currentValue[0][0]*1440
+  let hourToMin = currentValue[1][0] === '0' ? 0 : currentValue[1][0]*60
+  let Min = currentValue[2][0] === '0' ? 0 : +currentValue[2][0]
+  let res = dayToMin + hourToMin + Min
+  console.log(dayToMin,'天转换的分钟数')
+  console.log(hourToMin,'小时转换的分钟数')
+  console.log(Min,'分钟数')
+  console.log(res,'总分钟数')
+  requestDurationTime.value = res
   popShow.value = false
 }
 </script>
@@ -154,16 +198,16 @@ const onConfirm = (currentValue: any) => {
       <div v-show="signShow">
         <div class="text-sm">
           <div>
-            <input class="w-100% p-3" placeholder="请输入标题（可不填）" />
+            <input class="w-100% p-3" v-model="inputName" placeholder="请输入标题（不填将自动生成）" />
           </div>
-          <div class="bg-white border-t border-hex-ccc flex justify-between p-3">
-            <span>签到列表是否可见</span>
+          <div class="bg-white border-t border-hex-ccc flex justify-between py-3 px-2">
+            <div>签到列表是否可见</div>
             <van-radio-group v-model="canSee" direction="horizontal">
-              <van-radio name="yes">可见</van-radio>
-              <van-radio name="no">不可见</van-radio>
+              <van-radio icon-size="15px" :name="1">可见</van-radio>
+              <van-radio icon-size="15px" :name="0">不可见</van-radio>
             </van-radio-group>
           </div>
-          <div class="bg-white border-t border-hex-ccc flex justify-between p-3">
+          <div class="bg-white border-t border-hex-ccc flex justify-between py-3 px-2">
             <span>活动时长</span>
             <span class="text-hex-1989FA" @click="changePopShow">{{durationTime}}<van-icon name="arrow-down" /></span>
             <van-popup

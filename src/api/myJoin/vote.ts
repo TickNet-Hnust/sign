@@ -24,3 +24,14 @@ export function getVoteRecordList(voteId: number, pageNum: number, pageSize: num
     },
   })
 }
+
+export function modifyVoteTime(voteId: number, endTime: string) {
+  return request({
+    method: 'put',
+    url: '/signff/vote',
+    data: {
+      id: voteId,
+      endTime,
+    },
+  })
+}

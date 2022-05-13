@@ -51,3 +51,14 @@ export function quitSignSpace(data: any) {
     data,
   })
 }
+
+// 获取空间活动记录
+export function getRecord(spaceId: number) {
+  return request({
+    method: 'get',
+    url: '/sign/space/getRecord',
+    params: {
+      spaceId,
+    },
+  })
+}

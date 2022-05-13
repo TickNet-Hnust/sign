@@ -23,6 +23,7 @@ const quitData = reactive({
   userId: '1905040121',
   spaceId: 0,
 })
+// 获取我参与的空间的列表
 getSignSpace(id.value).then((res) => {
   spaceList.id = res.data.id
   spaceList.createTime = res.data.createTime
@@ -120,4 +121,3 @@ meta:
   layout: default
   title: 空间详情
 </route>
-

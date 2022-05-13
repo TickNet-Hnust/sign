@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-12 16:58:05
+ * @LastEditTime: 2022-05-13 09:23:49
 -->
 <script lang="ts" setup>
 import { getRecord } from '~/api/record/index'
