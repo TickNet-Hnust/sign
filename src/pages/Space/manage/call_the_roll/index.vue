@@ -62,7 +62,6 @@ const { pause, resume, isActive } = useIntervalFn(
       }
       if (flag)
         break
-
       else
         r = Math.round(Math.random() * (name_list.value.length - 1))
     }
@@ -100,6 +99,7 @@ const { pause, resume, isActive } = useIntervalFn(
       style="overflow: scroll"
     >
       <div class="py-1">选中人名单</div>
+      <van-empty v-if="checked_list.length === 0" class="py-2" description="暂时为空" :image-size="[120, 80]" />
       <div
         v-for="item in checked_list"
         :key="item"

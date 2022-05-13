@@ -1,24 +1,38 @@
+<!--
+ * @Descipttion: 
+ * @Author: 刘晴
+ * @Date: 2022-04-20 21:46:45
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-13 09:23:49
+-->
 <script lang="ts" setup>
-import { Notify } from 'vant'
-import { getRecord } from '~/api/mySpace/index'
+import { getRecord } from '~/api/record/index'
+interface RecordList {
+  userId: String //学号/工号
+  userName: String //用户名
+  number: String //用户当前获取积分
+  total: String //总积分
+}
+// 获取空间id
 const route = useRoute()
-const signList = ref([
-
-])
-const id = ref(route.query.id)// 接收路由跳转的空间id，需从字符串转换为数字
-const idNumber = ref(0)
-idNumber.value = parseInt(id.value)
-getRecord(idNumber.value).then((res) => {
-  if (res.code === 200) { signList.value = res.data }
-  else if (res.code === 401) {
-    Notify({ type: 'danger', message: '身份验证失败！' })
-    router.push({ path: '/' })
-  }
+const spaceId = route.query.id
+const recordList: Array<RecordList> = reactive([])
+// 初始化数据
+onMounted(() => {
+  getRecord({
+    spaceId: spaceId
+  }).then((res: any) => {
+    if(res.code === 200) {
+      recordList.push(...res.data)
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
 })
 </script>
 
 <template>
-  <div class="bg-gray-500/8 p-3">
+  <div class="bg-gray-500/8 p-3 min-h-100%">
     <div class="bg-white mx-3 text-left p-4 pb-5 text-15px rounded">
       <li class="flex items-center">
         <div class="w-5.5em">
@@ -33,7 +47,7 @@ getRecord(idNumber.value).then((res) => {
           • 积分规则
         </div>
         <div class="text-13px text-hex-41AA62">
-          每参与签到/投票/抽签一次，加一积分
+          每参与签到一次，加一积分
         </div>
       </li>
       <li class="mt-3 flex items-center">
@@ -45,14 +59,6 @@ getRecord(idNumber.value).then((res) => {
         </div>
       </li>
     </div>
-    <div class="mt-3">
-      <van-tabs
-        color="rgb(40,182,72)"
-        background="rgb(243,244,245)"
-      >
-        <van-tab title="签到积分" name="sign" />
-      </van-tabs>
-    </div>
     <ul class="bg-white mx-3 mt-4 border border-t-2 border-hex-ccc border-t-hex-28B648 px-2">
       <li class="flex py-2">
         <span class="flex-1">学号/工号<van-icon name="sort" /></span>
@@ -60,13 +66,13 @@ getRecord(idNumber.value).then((res) => {
         <span class="flex-1">积分</span>
       </li>
       <li
-        v-for="item in signList"
+        v-for="item in recordList"
         :key="item"
         class="flex py-2 border-t border-hex-ccc"
       >
         <span class="flex-1">{{ item.userId }}</span>
         <span class="flex-1">{{ item.userName }}</span>
-        <span class="flex-1">{{ item.total }}/{{ item.number }}</span>
+        <span class="flex-1">{{ item.number }} / {{ item.total }}</span>
       </li>
     </ul>
   </div>

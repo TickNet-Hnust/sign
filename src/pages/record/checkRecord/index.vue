@@ -56,11 +56,13 @@ const request = reactive({
   pageNum: pageNum.value,
   pageSize: 10
 })
+const totalRecord = ref(0)
 const getStuList = () => {
   signStuList(request).then((res: any) => {
     if(res.code === 200) {
       const rows = res.rows
       clist.value = clist.value.concat(rows)
+      totalRecord.value = res.total
       pageNum.value++;
       loading.value = false
       if(clist.value.length >= res.total) {
