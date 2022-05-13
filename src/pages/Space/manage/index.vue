@@ -63,22 +63,27 @@ const spaceList = reactive({
   createTime: '',
 })
 // 负责人的操作 ++++
-// 修改空间名称请求的数据
+// 负责人修改空间名称请求的数据
 const updateData = reactive({
   spaceName: '',
   spaceId: 0,
 })
-// 删除空间请求的数据
+// 负责人删除空间请求的数据
 const deleteData = reactive({ spaceId: 0 })
 
-// 改变管理员权限的数据
+// 负责人改变管理员权限的数据
 const changeAdminData = reactive({
   userId: '',
   spaceId: 0,
 })
 
-// 改变学生权限的数据
+// 负责人改变学生权限的数据
 const changeStuData = reactive({
+  userId: '',
+  spaceId: 0,
+})
+// 管理员删除学生的数据
+const deleteStudentData = reactive({
   userId: '',
   spaceId: 0,
 })
@@ -95,8 +100,11 @@ getSignSpace(id.value).then((res) => {
   updateData.spaceName = res.data.spaceName
   updateData.spaceId = res.data.id
   deleteData.spaceId = res.data.id
+  deleteStudentData.spaceId = res.data.id
+  deleteStudentData.userId = res.data.id
   console.log(rank.value)
 })
+// 获取空间成员列表
 getSpaceMemberList(id.value).then((res) => {
   if (res.code === 200) {
     member_list.value = res.rows
@@ -108,7 +116,7 @@ getSpaceMemberList(id.value).then((res) => {
   }
 })
 
-// 修改空间名称
+// 负责人修改空间名称
 const updateSpaceName = () => {
   updateSignSpace(updateData).then((res) => {
     if (res.code === 200) { spaceList.spaceName = updateData.spaceName }
@@ -118,7 +126,7 @@ const updateSpaceName = () => {
     }
   })
 }
-// 删除空间
+// 负责人删除空间
 const deleteSpace = () => {
   deleteSignSpace(deleteData).then((res) => {
     if (res.code === 200) {
@@ -133,21 +141,32 @@ const deleteSpace = () => {
 }
 const showUpdate = ref(false)// 是否显示修改空间名称的弹窗
 const showDelete = ref(false)// 是否显示删除空间的弹窗
-const showDeleteAdmin = ref(false)// 是否显示删除管理员的弹窗
-const showDeleteStu = ref(false)// 是否显示删除学生的弹窗
+const showDeleteAdmin = ref(false)// 是否负责人显示删除管理员的弹窗
+const showDeleteStu = ref(false)// 是否显示负责人删除学生的弹窗
 const showAdminChange = ref(false)// 是否显示操作管理员权限的弹出层
 const showStuChange = ref(false)// 是否显示操作学生权限的弹出层
+const showStudentChange = ref(false)// 是否显示管理员操作学生权限的弹出层
+const showDeleteStudent = ref(false)// 是否显示删除学生的弹窗
 // 点击管理员的方法
 const changeAdmin = (item) => {
-  showAdminChange.value = true
-  changeAdminData.userId = item.userId
-  changeAdminData.spaceId = id
+  if (rank.value === 2) {
+    showAdminChange.value = true
+    changeAdminData.userId = item.userId
+    changeAdminData.spaceId = id
+  }
 }
 // 点击学生的方法
 const changeStu = (item) => {
-  showStuChange.value = true
-  changeStuData.userId = item.userId
-  changeStuData.spaceId = id
+  if (rank.value === 2) {
+    showStuChange.value = true
+    changeStuData.userId = item.userId
+    changeStuData.spaceId = id
+  }
+  else if (rank.value === 1) {
+    showStudentChange.value = true
+    deleteStudentData.userId = item.userId
+    deleteStudentData.spaceId = id
+  }
 }
 // 操作管理员列表
 // const columnsAdmin = ['取消管理员资格', '删除成员']
@@ -173,7 +192,7 @@ const onConfirmAdmin = (index, value) => {
     showDeleteAdmin.value = true
   }
 }
-// 确认删除管理员
+// 负责人确认删除管理员
 const onConfirmDeleteAdmin = () => {
   deleteSpaceMember(changeAdminData).then((res) => {
     getSpaceMemberList(id.value).then((res) => {
@@ -189,7 +208,7 @@ const onConfirmDeleteAdmin = () => {
     })
   })
 }
-// 确认删除成员
+// 负责人确认删除学生
 const onConfirmDeleteStu = () => {
   deleteSpaceMember(changeStuData).then((res) => {
     getSpaceMemberList(id.value).then((res) => {
@@ -205,16 +224,31 @@ const onConfirmDeleteStu = () => {
     })
   })
 }
-// 操作普通成员列表
+// 管理员确认删除学生
+const onConfirmDeleteStudent = () => {
+  deleteSpaceMember(deleteStudentData).then((res) => {
+    getSpaceMemberList(id.value).then((res) => {
+      if (res.code === 200) {
+        member_list.value = res.rows
+        showStudentChange.value = false
+        Notify({ type: 'success', message: '操作成功' })
+      }
+    })
+  })
+}
+// 负责人操作普通成员列表
 const columnsStu = ['设为管理员', '删除成员']
-// 点击取消,关闭弹窗
+// 管理员操作普通成员列表
+const columnsStudent = ['删除成员']
+// 点击取消,关闭弹窗(通用)
 const onCancel = () => {
   showAdminChange.value = false
   showStuChange.value = false
+  showStudentChange.value = false
   Toast('取消')
 }
 
-// 将成员设为管理员
+// 负责人将成员设为管理员
 const onConfirmStu = (index, value) => {
   if (value === 0) {
     updateSpaceMember(changeStuData).then((res) => {
@@ -236,7 +270,11 @@ const onConfirmStu = (index, value) => {
     showDeleteStu.value = true
   }
 }
-//
+// 管理员确认删除学成员
+const onConfirmStudent = (index, value) => {
+  if (value === 0)
+    showDeleteStudent.value = true// 展示是否删除成员弹窗
+}
 
 </script>
 <template>
@@ -245,7 +283,7 @@ const onConfirmStu = (index, value) => {
       <div class="flex-col flex">
         <div>
           <span class="mt-6 mr-4 text-md">{{ spaceList.spaceName }}</span>
-          <span @click="showUpdate = true"><van-icon name="edit" /></span>
+          <span v-if="rank ===2" @click="showUpdate = true"><van-icon name="edit" /></span>
         </div>
         <van-dialog
           v-model:show="showUpdate"
@@ -265,7 +303,7 @@ const onConfirmStu = (index, value) => {
         </van-dialog>
         <span class="mt-3 text-xs text-left">成员：{{ member_list.length }}</span>
       </div>
-      <div class="rounded">
+      <div v-if="rank===2" class="rounded">
         <van-button type="danger" class="rounded" size="small" @click="showDelete = true">
           删除空间
         </van-button>
@@ -290,6 +328,13 @@ const onConfirmStu = (index, value) => {
         confirm-button-color="rgb(63,133,255)"
         show-cancel-button
         @confirm="onConfirmDeleteStu()"
+      />
+      <van-dialog
+        v-model:show="showDeleteStudent"
+        title="是否删除此成员"
+        confirm-button-color="rgb(63,133,255)"
+        show-cancel-button
+        @confirm="onConfirmDeleteStudent()"
       />
     </div>
     <van-tabs v-model:active="active" color="rgb(0,51,255)">
@@ -370,6 +415,19 @@ const onConfirmStu = (index, value) => {
           title="请选择操作"
           :columns="columnsStu"
           @confirm="onConfirmStu"
+          @cancel="onCancel"
+        />
+      </van-popup>
+      <van-popup
+        v-model:show="showStudentChange"
+        position="bottom"
+        :style="{ height: '80%' }"
+      >
+        <van-picker
+          class="mt-10"
+          title="请选择操作"
+          :columns="columnsStudent"
+          @confirm="onConfirmStudent"
           @cancel="onCancel"
         />
       </van-popup>
