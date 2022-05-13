@@ -86,6 +86,7 @@ const jumpDetail = (item: any) => {
 </script>
 
 <template>
+  <van-empty v-if="list.length === 0" description="" />
   <van-list
     v-model:loading="loading"
     :immediate-check="false"
