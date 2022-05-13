@@ -138,9 +138,9 @@ const onCancel = () => {
       <div
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
       >
-        <span>
+        <span class="flex items-center">
           <span class="text-sm w-5em text-left inline-block">签到名称</span>
-          <span class="text-sm ml-10">{{detailMsg.signName}}</span>
+          <span class="text-left text-sm ml-10 w-12em" style="word-break:break-all;">{{detailMsg.signName}}</span>
         </span>
         <span
           class="mr-3 text-xl border text-center text-hex-10AA62 h-28px w-28px rounded-14px"

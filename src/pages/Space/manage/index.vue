@@ -2,8 +2,8 @@
  * @Descipttion:
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: 曹俊
- * @LastEditTime: 2022年5月13日14:22:31
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-13 16:13:49
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -18,7 +18,7 @@ const details_list = reactive([
   {
     title: '发起签到',
     icon: 'i-carbon-3d-cursor-alt',
-    link: 'checkIn',
+    link: '/launch',
   },
   {
     title: '发起投票',
@@ -52,12 +52,22 @@ const router = useRouter()
 const finished = ref(true)
 const id = ref(route.query.id)
 const jumpPage = (item) => {
-  router.push({
-    path: `manage/${item.link}`,
-    query: {
-      id: route.query.id,
-    },
-  })
+  if(item.title !== '发起签到') {
+    router.push({
+      path: `manage/${item.link}`,
+      query: {
+        id: id.value,
+      },
+    })
+  }
+  else {
+    router.push({
+      path: item.link,
+      query: {
+        spaceId: id.value,
+      },
+    })
+  }
 }
 // 初始化一个空间列表
 const spaceList = reactive({

@@ -134,8 +134,11 @@ const jumpDetail = (item: any) => {
            left: 0"
       />
       <div style="display: flex; justify-content: space-between">
-        <span class="text-base font-semibold">{{ item.activityName }}</span>
-        <span class="text-xs">
+        <span
+          class="text-base font-semibold w-15em text-left"
+          style="word-break:break-all;"
+        >{{ item.activityName }}</span>
+        <span class="text-xs w-5em">
           <span v-if="!item.status" class="bg-hex-41BD62 text-white px-2 py-1 rounded">投票中</span>
           <span v-if="item.status" class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded">已结束</span>
         </span>
