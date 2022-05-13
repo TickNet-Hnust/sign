@@ -1,3 +1,10 @@
+<!--
+ * @Descipttion:
+ * @Author: 曹俊
+ * @Date: 2022-04-20 21:46:45
+ * @LastEditors: 曹俊
+ * @LastEditTime: 2022年5月13日14:22:31
+-->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
 import src from '~/assets/1.png'
@@ -107,20 +114,13 @@ getSpaceMemberList(id.value).then((res) => {
     member_list.value = res.rows
     console.log(member_list.value)
   }
-  else if (res.code === 401) {
-    Notify({ type: 'danger', message: '身份验证失败！' })
-    router.push({ path: '/' })
-  }
 })
 
 // 负责人修改空间名称
 const updateSpaceName = () => {
   updateSignSpace(updateData).then((res) => {
-    if (res.code === 200) { spaceList.spaceName = updateData.spaceName }
-    else if (res.code === 401) {
-      Notify({ type: 'danger', message: '身份验证失败！' })
-      router.push({ path: '/' })
-    }
+    if (res.code === 200)
+      spaceList.spaceName = updateData.spaceName
   })
 }
 // 负责人删除空间
@@ -129,10 +129,6 @@ const deleteSpace = () => {
     if (res.code === 200) {
       Notify({ type: 'primary', message: '删除成功' })
       router.push('/Space')
-    }
-    else if (res.code === 401) {
-      Notify({ type: 'danger', message: '身份验证失败！' })
-      router.push({ path: '/' })
     }
   })
 }
@@ -178,10 +174,6 @@ const onConfirmAdmin = (index, value) => {
           showAdminChange.value = false
           Notify({ type: 'success', message: '操作成功' })
         }
-        else if (res.code === 401) {
-          Notify({ type: 'danger', message: '身份验证失败！' })
-          router.push({ path: '/' })
-        }
       })
     })
   }
@@ -198,10 +190,6 @@ const onConfirmDeleteAdmin = () => {
         showAdminChange.value = false
         Notify({ type: 'success', message: '操作成功' })
       }
-      else if (res.code === 401) {
-        Notify({ type: 'danger', message: '身份验证失败！' })
-        router.push({ path: '/' })
-      }
     })
   })
 }
@@ -213,10 +201,6 @@ const onConfirmDeleteStu = () => {
         member_list.value = res.rows
         showStuChange.value = false
         Notify({ type: 'success', message: '操作成功' })
-      }
-      else if (res.code === 401) {
-        Notify({ type: 'danger', message: '身份验证失败！' })
-        router.push({ path: '/' })
       }
     })
   })
@@ -255,10 +239,6 @@ const onConfirmStu = (index, value) => {
           member_list.value = res.rows
           showStuChange.value = false
           Notify({ type: 'success', message: '操作成功' })
-        }
-        else if (res.code === 401) {
-          Notify({ type: 'danger', message: '身份验证失败！' })
-          router.push({ path: '/' })
         }
       })
     })
