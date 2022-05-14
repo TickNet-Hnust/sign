@@ -35,14 +35,16 @@ const request = ref({
 })
 const getsignSpaceList = () => {
   request.value.memberRank = active.value
+  console.log(request.value)
+
   signSpaceList(request.value).then((res: any) => {
     if (res.code === 200)
       spaceList.value = spaceList.value.concat(res.rows)
 
-    if (spaceList.value.length < res.total) {
-      request.value.pageNum++
-      getsignSpaceList()
-    }
+    // if (spaceList.value.length < res.total) {
+    //   request.value.pageNum++
+    //   getsignSpaceList()
+    // }
   }).catch((err) => {
     console.log(err)
   })
@@ -50,6 +52,8 @@ const getsignSpaceList = () => {
 getsignSpaceList()// 进入页面获取空间列表
 // 搜索空间的方法
 const searchList = () => {
+  console.log('搜索了')
+
   spaceList.value = []
   getsignSpaceList()
 }
@@ -57,7 +61,7 @@ const tabChange = () => {
   spaceList.value = []
   request.value.pageNum = 1
   getsignSpaceList()
-  console.log(spaceList.value)
+  console.log(active.value)
 }
 // 点击清除重新加载数据
 const clear = () => {
@@ -160,24 +164,6 @@ const addFTFSpace = () => {
     })
   }
 }
-// // 面对面建群的参数
-// const createSpaceData = reactive({
-//   spaceName: '',
-// })
-// // 面对面建群的方法
-// const createASpace = () => {
-//   createSignSpace(createSpaceData).then((res) => {
-//     if (res.code === 200) {
-//       Notify({ type: 'success', message: '创建成功' })
-//       router.push('/Space')
-//       active.value = 1
-//       spaceList.value = []
-//       request.value.pageNum = 1
-//       createSpaceData.spaceName = ''
-//       getsignSpaceList()
-//     }
-//   })
-// }
 
 </script>
 
@@ -186,11 +172,12 @@ const addFTFSpace = () => {
     <div class="py-1 flex items-center bg-hex-fff rounded justify-between">
       <span class="w-85vw">
         <van-search
-         v-model.trim="request.spaceName"
-         placeholder="请输入搜索关键词"
-         left-icon="search"
-         @search="searchList"
-         />
+          v-model.trim="request.spaceName"
+          placeholder="请输入搜索关键词"
+          left-icon="search"
+          @search="searchList"
+          @clear="clear"
+        />
       </span>
       <span>
         <van-popover
