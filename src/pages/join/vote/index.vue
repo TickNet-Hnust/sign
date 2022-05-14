@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // 定义投票数据类型接口
 import { onMounted } from 'vue'
-import { getVote } from '~/api/myJoin/record'
 import { addVoteRecord } from '~/api/myJoin/vote'
+import { getVote } from '~/api/myJoin/record'
 
 const route = useRoute()
 const voteId = Number(route.query.id)
@@ -26,6 +26,11 @@ interface OptionData{
   optionValue: string
   poll: number
 }
+
+const props = reactive({
+  endDate: '',
+  endTime: '',
+})
 
 const voteData: VoteData = reactive({
   type: '投票',
@@ -57,6 +62,9 @@ onMounted(() => {
     voteData.question = res.data.voteName
     voteData.endTime = res.data.endTime
     voteData.isVote = res.data.attend
+    props.endDate = voteData.endTime.split(' ')[0]
+    props.endTime = `${voteData.endTime.split(' ')[1].split(':')[0]}:${voteData.endTime.split(' ')[1].split(':')[1]}`
+    console.warn(props)
     let i = 1
     voteData.option.pop()
     for (const key in res.data.voteNums) {
@@ -113,8 +121,8 @@ const isClick = () => {
 
 <template>
   <div class=" w-screen h-screen bg-gray-500/8">
-    <div class="p-6">
-      <div class="p-4 text-left border border-gray-200 bg-white  ">
+    <div class="p-3">
+      <div class="p-3 text-left border border-gray-200 bg-white  rounded ">
         <div class="mb-2">
           {{ voteData.question }}
         </div>
@@ -134,7 +142,7 @@ const isClick = () => {
           <!-- 未投票 -->
           <div
             v-if="voteData.isVote === 0"
-            class="mt-6 border-gray-200 border p-10px bg-white"
+            class="mt-4 border-gray-200 border p-10px bg-white rounded text-sm"
           >
             <van-checkbox
               :name="item.id"
@@ -149,7 +157,7 @@ const isClick = () => {
             <!-- 被选中的选项样式 -->
             <div
               v-if="optionCheck(item.id)"
-              class="mt-6 h-42px bg-light-50 border"
+              class="mt-4 h-42px bg-light-50 border rounded"
               style="border-color:#1FA71F"
               @click="show = true"
             >
@@ -167,11 +175,11 @@ const isClick = () => {
                   size="1.25em"
                   class="relative left-10px leading-40px"
                 />
-                <span class="text-dark-900 left-3 relative flex">{{
-                  item.optionValue
-                }}</span>
+                <div class="text-dark-900 left-3 relative w-40px leading-40px text-sm">
+                  {{ item.optionValue }}
+                </div>
                 <span
-                  class="absolute right-50px leading-40px text-sm text-cool-gray-400"
+                  class="absolute right-50px leading-40px text-xs text-cool-gray-400"
                 >
                   {{ item.poll + "票" }}
                 </span>
@@ -180,7 +188,7 @@ const isClick = () => {
             <!-- 没有选上但是有票数的选项 -->
             <div
               v-else-if="item.poll > 0 && !optionCheck(item.id)"
-              class="mt-6 border-true-gray-200 border"
+              class="mt-4 border-true-gray-200 border rounded"
             >
               <div
                 class="border-none h-40px bg-gray-300 leading-40px text-left"
@@ -188,9 +196,9 @@ const isClick = () => {
                 style="white-space: nowrap"
               >
                 <!-- <van-icon name="checked" color="green" size="1.25em" class="relative left-10px  leading-40px" /> -->
-                <span class="text-dark-900 left-10px relative">{{
+                <div class="text-dark-900 left-10px relative w-40px leading-40px text-sm">{{
                   item.optionValue
-                }}</span>
+                }}</div>
                 <span
                   class="absolute right-50px leading-40px text-sm text-cool-gray-400"
                 >
@@ -200,11 +208,11 @@ const isClick = () => {
             </div>
             <div
               v-else-if="item.poll === 0"
-              class="mt-6 border-true-gray-200 border h-42px  text-dark-900 text-left bg-light-50"
+              class="mt-4 border-true-gray-200 border h-42px  text-dark-900 text-left bg-light-50 rounded"
             >
-              <span class="leading-40px m-10px">{{ item.optionValue }}</span>
+              <span class="leading-40px m-10px text-sm">{{ item.optionValue }}</span>
               <span
-                class="absolute right-50px leading-20px text-sm text-cool-gray-400 pt-10px"
+                class="absolute right-50px leading-20px text-xs text-cool-gray-400 pt-10px"
               >
                 {{ item.poll + "票" }}
               </span>
@@ -220,7 +228,7 @@ const isClick = () => {
           type="primary"
           size="large"
           :color="voteData.isVote?'#9DD49D':'#1FA71F'"
-          class="my-10px"
+          class="my-10px rounded"
           :disabled="voteData.isVote===1"
           @click="isClick()"
         >
@@ -235,5 +243,5 @@ const isClick = () => {
 <route lang="yaml">
 meta:
   layout: default
-  title: 我要投票
+  title: 进行投票
 </route>
