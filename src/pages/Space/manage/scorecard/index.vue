@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-13 21:55:41
+ * @LastEditTime: 2022-05-14 12:27:23
 -->
 <script lang="ts" setup>
 import { getRecord } from '~/api/record/index'
@@ -67,7 +67,7 @@ onMounted(() => {
           • 说明
         </div>
         <div class="text-13px text-hex-41AA62">
-          积分统计方式：成员积分/总积分
+          统计方式：成员积分/总积分
         </div>
       </li>
     </div>
@@ -106,5 +106,5 @@ onMounted(() => {
 <route lang="yaml">
 meta:
   layout: default
-  title: 积分详情
+  title: 签到统计
 </route>

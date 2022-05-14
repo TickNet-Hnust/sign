@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-13 21:16:14
+ * @LastEditTime: 2022-05-14 13:15:12
 -->
 <script setup lang="ts">
 import signList from '~/components/recordList/signList.vue'
@@ -14,6 +14,13 @@ const activeName = ref('sign')
 const signlist = ref(null)
 const drawlist = ref(null)
 const votelist = ref(null)
+/**
+ * admin代表是发起列表还是参与列表
+ * admin = 1 发起列表
+ * admin = 0 参与列表
+ */
+const route = useRoute()
+const admin = route.query.admin
 const search = () => {
   if(activeName.value === 'sign') {
     (signlist as any).value.search(searchValue.value)
@@ -45,13 +52,13 @@ const changeTab = () => {
     <div class="record_list mt-2">
       <van-tabs color="rgb(40,182,72)" v-model:active="activeName" @change="changeTab">
         <van-tab title="签到" name="sign">
-          <sign-list ref="signlist" admin="1"></sign-list>
+          <sign-list ref="signlist" :admin="admin"></sign-list>
         </van-tab>
         <van-tab title="投票" name="vote">
-          <vote-list ref="votelist" admin="1"></vote-list>
+          <vote-list ref="votelist" :admin="admin"></vote-list>
         </van-tab>
         <van-tab title="抽签" name="draw">
-          <draw-list ref="drawlist" admin="1"></draw-list>
+          <draw-list ref="drawlist" :admin="admin"></draw-list>
         </van-tab>
       </van-tabs>
     </div>

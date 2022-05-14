@@ -11,6 +11,7 @@ declare module 'vue' {
     README: typeof import('./components/README.md')['default']
     RecordsList: typeof import('./components/records/RecordsList.vue')['default']
     SignList: typeof import('./components/recordList/signList.vue')['default']
+    StuList: typeof import('./components/recordList/stuList.vue')['default']
     VoteList: typeof import('./components/recordList/voteList.vue')['default']
   }
 }

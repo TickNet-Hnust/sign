@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-13 18:12:54
+ * @LastEditTime: 2022-05-14 16:15:01
 -->
 
 <script setup lang="ts">
@@ -62,7 +62,7 @@ onMounted( () => {
     </div>
     <div v-if="detailMsg.visible">
       <!-- 签到列表 -->
-      <stu-list :signId="signId"></stu-list>
+      <stu-list :activityId="signId" attend="1" action="sign"></stu-list>
     </div>
     <div v-if="!detailMsg.visible">
       <div class="p-2 bg-hex-FEF8F0 mt-5 border border-hex-F0E9E1">签到列表不可见</div>

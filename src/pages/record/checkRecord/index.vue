@@ -2,16 +2,23 @@
 <script setup lang="ts">
 import { detailSignRecord, changeSignMsg } from '~/api/record/signRecord'
 import stuList from '~/components/recordList/stuList.vue'
-//签到活动id
+// 签到活动id
 const route = useRoute()
 const signId = route.query.id
+/**
+ * attend表示查询的是已签到列表还是未签到列表
+ * attend=1已签到
+ * attend=0未签到
+ */
+const attend = ref('1')
+// 详细信息
 const detailMsg = ref({
   signName: '',// 签到名
   signCode: '',// 签到码
   createTime: '',// 创建日期
-  createUserName: ''// 创建人
+  createUserName: '',// 创建人
+  spaceName: '', // 所属空间 如果是非空间的签到则为null
 })
-
 // 跳转到辅助签到页面
 const router = useRouter()
 const jumpPage = () => {
@@ -22,9 +29,8 @@ const jumpPage = () => {
     }
   })
 }
-// 改变是否可见
+//改变是否可见
 const changeRequest = ref({
-  // 请求参数
   id: signId,
   signName: '',
   duration: 2,
@@ -45,7 +51,9 @@ const changeShow = () => {
   })
 }
 // 初始化数据
-onMounted(() => {
+const totalRecord = ref(0)
+const stulist = ref(null)
+onMounted(()=>{
   detailSignRecord(signId).then((res: any) => {
     if(res.code === 200) {
       detailMsg.value = res.data
@@ -57,6 +65,11 @@ onMounted(() => {
     console.log(err)
   })
 })
+// 获取子组件传过来的值
+const getTotal = (total: any) => {
+  console.log('etw')
+  totalRecord.value = total
+}
 // 编辑签到名
 const signName = ref('')
 const showDialog = ref(false)
@@ -73,28 +86,16 @@ const editSignName = () => {
 const onCancel = () => {
   signName.value = detailMsg.value.signName
 }
-const jumpToScorecard = () => {
-  router.push({
-    path: '/space/manage/scorecard',
-    // query: {
-    //   id: 
-    // }
-  })
-}
 </script>
 <template>
-  <div class="bg-gray-500/8 p-3 min-h-100%">
+  <div class="bg-gray-500/8 p-3 min-h-100vh">
     <div class="bg-white border border-t-2 border-hex-D9DADB border-t-hex-41B062 rounded">
       <div
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
       >
         <span class="bg-hex-D7D7D7 text-hex-222 rounded px-2 py-1">
-          <span><van-icon name="setting" /></span>
-          <span class="text-sm ml-2">基本配置</span>
-        </span>
-        <span class="bg-hex-10AA62 text-white rounded px-2 py-1" @click="jumpToScorecard">
-          <van-icon name="fire-o" />
-          <span class="text-sm ml-2">查看所有记录</span>
+          <span><van-icon name="column" /></span>
+          <span class="text-sm ml-2">签到信息</span>
         </span>
       </div>
       <div
@@ -112,11 +113,11 @@ const jumpToScorecard = () => {
         </span>
       </div>
       <div
-        class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
+        class="flex justify-between border-b border-hex-DEDEDE p-2 items-center"
       >
         <span class="flex items-center">
           <span class="text-sm w-5em text-left inline-block">签到名称</span>
-          <span class="text-left text-sm ml-10 w-12em" style="word-break:break-all;">{{detailMsg.signName}}</span>
+          <span class="text-left text-sm ml-10 w-9em" style="word-break:break-all;">{{detailMsg.signName}}</span>
         </span>
         <span
           class="mr-3 text-xl border text-center text-hex-10AA62 h-28px w-28px rounded-14px"
@@ -166,8 +167,17 @@ const jumpToScorecard = () => {
     >
       <van-field v-model="signName" placeholder="请输入活动名称" />
     </van-dialog>
-     <!-- 签到列表 -->
-    <stu-list :signId="signId"></stu-list>
+    <div class="text-left bg-hex-E1FBE3 border border-hex-8FC798 rounded mt-5 p-4">
+      <span>共成功签到了{{totalRecord}}次</span>
+    </div>
+    <van-tabs v-if="detailMsg.spaceName !== '无' " v-model:active="attend" class="mt-3" color="rgb(40,182,72)">
+      <van-tab title="已签到" name="1">
+      </van-tab>
+      <van-tab title="未签到" name="0">
+      </van-tab>
+    </van-tabs>
+    <stu-list @getTotal="getTotal" v-if="attend === '1' " :activityId="signId" attend="1" action="sign"></stu-list>
+    <stu-list v-if="attend === '0' " :activityId="signId" attend="0" action="sign"></stu-list>
   </div>
 </template>
 <route lang="yaml">

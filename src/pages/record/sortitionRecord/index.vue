@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getDetailDraw, drawStuList, drawRecordCount } from '~/api/record/drawRecord'
+import signList from '~/components/recordList/stuList.vue'
 interface Choer {
   createUserId: String //学号
   createUserName: String //姓名
@@ -7,49 +8,15 @@ interface Choer {
   status: Number //状态（请假等）
 }
 interface ChoList {
-  title: String //选项名
+  choOption: String //选项名
   count: Number //签数
   isShow: Boolean //是否可见
   choer: Array<Choer> //抽中这个签的人
 }
-// 未抽签数组
-const no_list = reactive([
-  {
-    num: "1905020118",
-    name: "张三",
-    status: "",
-  },
-  {
-    num: "1905020118",
-    name: "张三",
-    status: "",
-  },
-  {
-    num: "1905020118",
-    name: "张三",
-    status: "",
-  },
-  {
-    num: "1905020118",
-    name: "张三",
-    status: "请假",
-  },
-  {
-    num: "1905020118",
-    name: "张三",
-    status: "",
-  },
-  {
-    num: "1905020118",
-    name: "张三",
-    status: "",
-  },
-]);
 // 如果抽签结果可见则展示这个数组
 const cho_list: Array<ChoList> = reactive([])
-// 如果抽签结果不可见则展示这个数组
-let notSeeList: Array<Choer> = reactive([])
 const drawCount = ref() // 已抽签人数
+// 展示某个子菜单
 const changeShow = (item) => {
   if(!item.isShow) {
     item.isShow = true;
@@ -79,11 +46,12 @@ onMounted(() => {
           drawId: drawId,
           pageNum: 1,
           pageSize: 10,
-          optionId: ''
+          optionId: '',
+          attend: 1
         })
         detailRecord.optionsList.forEach((item,index) => {
           let fItem:ChoList = {
-            title: item,
+            choOption: item,
             isShow: false,
             count: 0,
             choer: []
@@ -96,17 +64,6 @@ onMounted(() => {
           })
         })
         console.log(cho_list)
-      } else {
-        const stuRequest = reactive({
-          drawId: drawId,
-          pageNum: 1,
-          pageSize: 10
-        })
-        drawStuList(stuRequest).then((res: any) => {
-          if(res.code === 200) {
-            notSeeList.push(...res.rows)
-          }
-        })
       }
     }
   }).catch((err) => {
@@ -120,10 +77,15 @@ onMounted(() => {
     console.log(err)
   })
 })
+// 获取子组件传过来的未抽签人数
+const notDraw = ref(0)
+const getTotal = (total: any) => {
+  notDraw.value = total
+}
 </script>
 
 <template>
-  <div class="bg-gray-500/8 p-3 h-screen">
+  <div class="bg-gray-500/8 p-3 min-h-100vh">
     <div>
       <div class="text-left ml-3">
         <span class="text-sm">签数统计</span>
@@ -151,7 +113,7 @@ onMounted(() => {
               <div class="bg-white mt-3 rounded flex justify-between p-3 text-14px">
                  <div>
                     <span>抽中：</span>
-                    <span>{{item.title}}</span>
+                    <span>{{item.choOption}}</span>
                   </div>
                   <div>
                     <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 mr-3">{{item.count}} 票</span>
@@ -181,48 +143,16 @@ onMounted(() => {
               </div>
             </div>
           </div>
-          <div class="mt-3 bg-white rounded border border-hex-ccc px-5 py-2" v-if="!detailRecord.visible">
-            <van-list>
-              <ul class="flex justify-around border-b border-hex-ccc py-3 text-sm">
-                <span class="flex-1">学号/工号<van-icon name="sort" /></span>
-                <span class="flex-1">姓名</span>
-                <span class="flex-1">时间</span
-                >
-              </ul>
-              <ul class="flex justify-around border-b border-hex-ccc py-3 text-sm" v-for="item in notSeeList" :key="item">
-                <span class="flex-1">{{ item.createUserId }}</span>
-                <span class="flex-1">{{ item.createUserName }}</span>
-                <span class="flex-1">{{ item.createTime }}</span>
-              </ul>
-              <ul class="text-x py-3">
-                没有更多了
-              </ul>
-            </van-list>
+          <div v-if="!detailRecord.visible">
+            <stu-list action="draw" :activityId="drawId" attend="1"></stu-list>
           </div>
         </van-tab>
         <van-tab>
           <template #title>
             <span class="text-sm">未抽签</span>
-            <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 ml-2">7人</span>
+            <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 ml-2">{{notDraw}}人</span>
           </template>
-          <div class="mt-3 bg-white rounded border border-hex-ccc px-5 py-2">
-            <van-list>
-              <ul class="flex justify-around border-b border-hex-ccc py-3 text-sm">
-                <span class="flex-1">学号/工号<van-icon name="sort" /></span>
-                <span class="flex-1">姓名</span>
-                <span class="flex-1">状态</span
-                >
-              </ul>
-              <ul class="flex justify-around border-b border-hex-ccc py-3 text-sm" v-for="item in no_list" :key="item">
-                <span class="flex-1">{{ item.num }}</span>
-                <span class="flex-1">{{ item.name }}</span>
-                <span class="flex-1" style="color: rgb(0,102,204)">{{ item.status }}</span>
-              </ul>
-              <ul class="text-x py-3">
-                没有更多了
-              </ul>
-            </van-list>
-          </div>
+          <stu-list @getTotal="getTotal" action="draw" :activityId="drawId" attend="0"></stu-list>
         </van-tab>
       </van-tabs>
     </div>
