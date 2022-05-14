@@ -48,8 +48,9 @@ const listPage: ListPage = reactive({
 
 const onLoad = () => {
   if (props.type === '抽签') {
-    getDrawRecordList(Number(props.activeId), listPage.pageNum, listPage.pageSize, String(props.optionCheckedValue)).then((res: any) => {
+    getDrawRecordList(Number(props.activeId), listPage.pageNum, listPage.pageSize, String(props.optionCheckedValue), 1).then((res: any) => {
       let i = 1
+      console.warn(res)
       res.rows.forEach((item: any) => {
         const recordInfo: RecordInfo = {
           id: i,
@@ -68,8 +69,9 @@ const onLoad = () => {
     })
   }
   else {
-    getVoteRecordList(Number(props.activeId), listPage.pageNum, listPage.pageSize).then((res: any) => {
+    getVoteRecordList(Number(props.activeId), listPage.pageNum, listPage.pageSize, 1).then((res: any) => {
       let i = 1
+      console.warn(res)
       res.data.rows.forEach((item: any) => {
         const recordInfo: RecordInfo = {
           id: i,
