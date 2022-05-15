@@ -249,9 +249,11 @@ const toVoteRecord = () => {
         </van-button>
       </div>
       <div class="flex justify-left my-5 text-sm">
-        <span class="border border-gray-300 bg-white p-5">
-          <div />
-          <div @click="toVoteRecord()">投票记录</div>
+        <span class="border border-gray-300 bg-white p-4 w-30">
+          <div @click="toVoteRecord()">
+            <van-icon name="records" size="2rem" class="mb-2" />
+            <div>投票记录</div>
+          </div>
         </span>
         <modify-time :vote-date="props.endDate" :vote-time="props.endTime" :vote-id="voteId" />
       </div>

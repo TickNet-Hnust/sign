@@ -200,13 +200,17 @@ const toDrawModify = () => {
       </van-button>
     </div>
     <div class="flex justify-left my-5 text-sm">
-      <span class="border border-gray-300 bg-white p-5">
-        <div />
-        <div @click="toDrawRecord()">抽签记录</div>
-      </span>
-      <span class="border border-gray-300 bg-white p-5 ml-2">
-        <div />
-        <div @click="toDrawModify()">修改部分设置</div>
+      <div class="border-gray-300 bg-white p-4 w-30">
+        <div @click="toDrawRecord()">
+          <van-icon name="records" size="2rem" class="mb-2"/>
+          <div>抽签记录</div>
+        </div>
+      </div>
+      <span class="border-gray-300 bg-white p-4 ml-2 w-30">
+        <div @click="toDrawModify()">
+          <van-icon name="setting-o" size="2rem" class="mb-2" />
+          <div>修改部分设置</div>
+        </div>
       </span>
     </div>
     <van-dialog v-model:show="resultShow" title="抽取结果" confirm-button-color="#0033CC">
