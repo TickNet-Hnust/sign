@@ -2,15 +2,26 @@
  * @Description: 
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
- * @LastEditors: 张津瑞
- * @LastEditTime: 2022-05-13 11:38:12
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-14 13:11:52
 -->
 <script setup lang="ts">
 import { useUserStore } from '~/stores/user'
 const user = useUserStore()
 const router = useRouter()
-const jumpTargetPage = (targetPath: string) => {
-  router.push(targetPath)
+const jumpTargetPage = (targetPath: any) => {
+  if(targetPath.link !== 'record') {
+    router.push(targetPath.link)
+  }
+  else {
+    const admin = targetPath.name === '发起记录' ?'1':'0'
+    router.push({
+      path: targetPath.link,
+      query: {
+        admin: admin
+      }
+    })
+  }
 }
 const list = reactive([
   {
@@ -31,7 +42,7 @@ const list = reactive([
   {
     name: '我要参与',
     icon: 'i-carbon-arrival',
-    link: 'join',
+    link: 'record',
   },
   {
     name: '我的空间',
@@ -64,7 +75,7 @@ user.login()
       hover:bg="green-600/90"
       flex="~ col"
       justify="center"
-      @click="jumpTargetPage(item.link)"
+      @click="jumpTargetPage(item)"
     >
       <div h="12" text="center">
         <div class="boxIcon" text="2xl" color="green-600" m="auto" :class="item.icon" />

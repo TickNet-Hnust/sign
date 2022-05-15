@@ -3,7 +3,7 @@
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-13 21:30:35
+ * @LastEditTime: 2022-05-14 12:44:25
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -264,7 +264,7 @@ const onConfirmStudent = (index, value) => {
 }
 </script>
 <template>
-  <div class="bg-gray-500/8 p-3 h-screen">
+  <div class="bg-gray-500/8 p-3 min-h-screen">
     <div class="text-left text-hex-aaa text-xs ml-3">空间信息</div>
     <div class="bg-hex-fff rounded px-5 pt-2 text-hex-666 border border-hex-ccc">
       <div class="flex justify-between border-b border-hex-ccc text-14px py-2">
@@ -338,11 +338,11 @@ const onConfirmStudent = (index, value) => {
       <van-tab title="概况">
         <div class="text-left text-hex-aaa text-xs ml-3 mt-3">应用</div>
         <div class="bg-white p-3 py-5 rounded border border-hex-10AA62">
-          <div class="flex flex-wrap justify-around">
+          <div grid="~ cols-3">
             <div
               v-for="item in details_list"
               :key="item"
-              class="mb-5 mx-5 inline-block text-hex-666 w-15vw h-15vw"
+              class="mb-5 mx-auto inline-block text-hex-666 w-20vw h-20vw"
               @click="jumpPage(item,id)"
             >
               <div class="mt-2" text="2xl" color="green-600" m="auto" :class="item.icon" />

@@ -1,18 +1,25 @@
 
 <script setup lang="ts">
-import { signStuList, detailSignRecord, changeSignMsg } from '~/api/record/signRecord'
-
-// 已签到学生列表
-const clist = ref([]);
+import { detailSignRecord, changeSignMsg } from '~/api/record/signRecord'
+import stuList from '~/components/recordList/stuList.vue'
 // 签到活动id
 const route = useRoute()
 const signId = route.query.id
+
+/**
+ * attend表示查询的是已签到列表还是未签到列表
+ * attend=1已签到
+ * attend=0未签到
+ */
+const attend = ref('1')
+
 // 详细信息
 const detailMsg = ref({
   signName: '',// 签到名
   signCode: '',// 签到码
   createTime: '',// 创建日期
-  createUserName: ''// 创建人
+  createUserName: '',// 创建人
+  spaceName: '', // 所属空间 如果是非空间的签到则为null
 })
 // 跳转到辅助签到页面
 const router = useRouter()
@@ -45,62 +52,7 @@ const changeShow = () => {
     console.log(err)
   })
 }
-// 请求已签到学生列表
-const pageNum = ref(1)
-const loading = ref(false);
-const finished = ref(false);
-const request = reactive({
-  signId: signId,
-  pageNum: pageNum.value,
-  pageSize: 10
-})
-const totalRecord = ref(0) // 成功签到次数
-const getStuList = () => {
-  signStuList(request).then((res: any) => {
-    if(res.code === 200) {
-      const rows = res.rows
-      clist.value = clist.value.concat(rows)
-      totalRecord.value = res.total
-      pageNum.value++;
-      loading.value = false
-      if(clist.value.length >= res.total) {
-        console.log('数据加载完毕')
-        finished.value = true
-      }
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
-}
-// 获取未签到列表
 
-/**
- * 切换tab
- * 将列表变成空
- * 判断是查看未签到列表还是已签到列表
- * 重新加载列表
- */
-const activeName = ref('checked')
-const changeTab = () => {
-  clist.value = []
-  pageNum.value = 1
-  if(activeName.value === 'checked') {
-    getStuList()
-  }
-  else {
-
-  }
-}
-const onLoad = () => {
-  setTimeout(() => {
-    if(activeName.value === 'checked') {
-      getStuList()
-    }
-    else {
-      
-    }
-  }, 500);
-};
 // 初始化数据
 onMounted(()=>{
   detailSignRecord(signId).then((res: any) => {
@@ -113,7 +65,6 @@ onMounted(()=>{
   }).catch((err) => {
     console.log(err)
   })
-  getStuList()
 })
 // 编辑签到名
 const signName = ref('')
@@ -139,8 +90,8 @@ const onCancel = () => {
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
       >
         <span class="bg-hex-D7D7D7 text-hex-222 rounded px-2 py-1">
-          <span><van-icon name="setting" /></span>
-          <span class="text-sm ml-2">基本配置</span>
+          <span><van-icon name="column" /></span>
+          <span class="text-sm ml-2">签到信息</span>
         </span>
       </div>
       <div
@@ -162,7 +113,7 @@ const onCancel = () => {
       >
         <span class="flex items-center">
           <span class="text-sm w-5em text-left inline-block">签到名称</span>
-          <span class="text-left text-sm ml-10 w-12em" style="word-break:break-all;">{{detailMsg.signName}}</span>
+          <span class="text-left text-sm ml-10 w-9em" style="word-break:break-all;">{{detailMsg.signName}}</span>
         </span>
         <span
           class="mr-3 text-xl border text-center text-hex-10AA62 h-28px w-28px rounded-14px"
@@ -212,42 +163,14 @@ const onCancel = () => {
     >
       <van-field v-model="signName" placeholder="请输入活动名称" />
     </van-dialog>
-    <div class="text-left bg-hex-E1FBE3 border border-hex-8FC798 rounded mt-5 p-4">
-      <span>共成功签到了{{totalRecord}}次</span>
-    </div>
-    <van-tabs v-model:active="activeName" class="mt-3" color="rgb(40,182,72)" @change="changeTab">
-      <van-tab title="已签到" name="checked">
+    <van-tabs v-if="detailMsg.spaceName !== '无' " v-model:active="attend" class="mt-3" color="rgb(40,182,72)">
+      <van-tab title="已签到" name="1">
       </van-tab>
-      <van-tab title="未签到" name="checking">
+      <van-tab title="未签到" name="0">
       </van-tab>
     </van-tabs>
-    <div class="bg-white border border-hex-D9DADB rounded p-3 mt-3 border-t-2 border-t-hex-41B062">
-      <van-list
-        :immediate-check="false"
-        v-model:loading="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        loading-text="——上拉加载更多——"
-        @load="onLoad"
-      >
-        <ul class="flex py-2 border-b border-hex-E4E4E4 text-sm">
-          <span class="flex-1">学号/工号<van-icon name="sort" /></span>
-          <span class="flex-1">姓名</span>
-          <span class="flex-1">
-            <span v-if="activeName === 'checked' ">时间</span>
-            <span v-else>状态</span>
-          </span>
-        </ul>
-        <ul v-for="item in clist" :key="item" class="flex items-center py-2 border-b border-hex-E4E4E4 text-sm">
-          <span class="flex-1">{{ item.createUserId }}</span>
-          <span class="flex-1">{{ item.createUserName }}</span>
-          <span class="flex-1">
-            <span v-if="activeName === 'checked' ">{{ item.createTime }}</span>
-            <span v-else>{{ item.status }}</span>
-          </span>
-        </ul>
-      </van-list>
-    </div>
+    <stu-list v-if="attend === '1' " :signId="signId" attend="1"></stu-list>
+    <stu-list v-if="attend === '0' " :signId="signId" attend="0"></stu-list>
   </div>
 </template>
 <route lang="yaml">
