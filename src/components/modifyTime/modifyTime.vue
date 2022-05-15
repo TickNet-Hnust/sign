@@ -118,8 +118,9 @@ const modifyTime = () => {
 </script>
 
 <template>
-  <div class="border border-gray-300 bg-white p-5 ml-2" @click="init()">
-    修改投票时间
+  <div class="border border-gray-300 bg-white p-4 ml-2 w-30" @click="init()">
+    <van-icon name="setting-o" size="2rem" class="mb-2" />
+    <div>修改投票时间</div>
   </div>
   <van-dialog v-model:show="dialogShow" show-cancel-button confirm-button-color="#0066CC" @confirm="modifyTime()">
     <div class="p-1rem font-600 text-lg">
