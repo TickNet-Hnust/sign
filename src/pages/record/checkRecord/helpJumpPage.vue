@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-07 15:08:29
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-11 20:18:50
+ * @LastEditTime: 2022-05-15 17:19:56
 -->
 <script lang="ts" setup>
 import { sign } from '~/api/record/index'
@@ -38,19 +38,23 @@ const helpSign = () => {
           message: '签到成功',
           position: 'top'
         })
+        router.replace({
+          path: '/record/checkRecord',
+          query: { id: request.signId }
+        })
       } else {
         Toast.fail({
           message: '签到失败，请重试',
           position: 'top'
         })
+        router.replace({
+          path: '/'
+        })
       }
     }).catch((err) => {
       console.log(err)
     })
-    router.replace({
-      path: '/record/checkRecord',
-      query: { id: request.signId }
-    })
+    
   },2000)
 }
 helpSign()

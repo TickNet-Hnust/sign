@@ -2,8 +2,6 @@
 import { Notify } from 'vant'
 import { getSignSpace, quitSignSpace } from '~/api/mySpace/index'
 import { getSpaceMemberList } from '~/api/mySpace/spaceMember'
-const loading = ref(false)
-const finished = ref(true)
 const route = useRoute()
 const router = useRouter()
 // 初始化成员列表
@@ -49,7 +47,9 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100vh">
-    <div class="text-left text-hex-aaa text-xs ml-3">空间信息</div>
+    <div class="text-left text-hex-aaa text-xs ml-3">
+      空间信息
+    </div>
     <div class="bg-hex-fff rounded px-5 pt-2 text-hex-666 border border-hex-ccc">
       <div class="flex justify-between border-b border-hex-ccc text-14px py-2">
         <span>空间名称</span>
@@ -64,29 +64,21 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
           {{ member_list.length }}人
         </span>
       </div>
-      <!-- <div class="flex justify-between text-14px py-2 items-center">
-        <span>操作</span>
-        <span @click="showQuit = true" class="bg-hex-10AA62 rounded text-white text-13px p-1">退出空间</span>
-      </div> -->
       <van-dialog
         v-model:show="showQuit"
-        title="是否删除空间"
+        title="是否退出空间"
         confirm-button-color="rgb(63,133,255)"
         show-cancel-button
         @confirm="quitSpace()"
       />
     </div>
-    <div class="text-left mt-5 text-hex-aaa text-xs ml-3 mt-3">成员</div>
+    <div class="text-left mt-5 text-hex-aaa text-xs ml-3 mt-3">
+      成员
+    </div>
     <div
       class="bg-hex-fff px-2 border border-hex-ccc rounded"
     >
-      <van-list
-        v-model:loading="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        loading-text="——下拉加载更多——"
-        @load="onLoad"
-      >
+      <van-list>
         <ul
           class="
             flex
@@ -100,7 +92,7 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
         >
           <span class="flex-1">学号/工号</span>
           <span class="flex-1">姓名</span>
-          <span class="flex-1">身份</span>
+          <span class="flex-1">角色</span>
         </ul>
         <ul
           v-for="item in member_list"
@@ -110,14 +102,16 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
           <span class="flex-1">{{ item.userId }}</span>
           <span class="flex-1">{{ item.name }}</span>
           <span class="flex-1">
-            <van-tag plain v-if="item.memberRank===2" color="#ef4444">负责人</van-tag>
-            <van-tag plain v-if="item.memberRank===1" color="#10b981">管理员</van-tag>
-            <van-tag plain v-if="item.memberRank===0" color="#78716c">成员</van-tag>
+            <van-tag v-if="item.memberRank===2" color="#38bdf8">负责人</van-tag>
+            <van-tag v-if="item.memberRank===1" color="#10b981">管理员</van-tag>
+            <van-tag v-if="item.memberRank===0" plain color="#78716c">成员</van-tag>
           </span>
         </ul>
       </van-list>
     </div>
-    <div class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600">退出空间</div>
+    <div class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600" @click="showQuit = true">
+      退出空间
+    </div>
   </div>
 </template>
 <route lang="yaml">

@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-01 20:32:16
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-15 09:57:49
+ * @LastEditTime: 2022-05-15 19:52:47
  */
 import request from '~/utils/request'
 
@@ -56,5 +56,32 @@ export function spaceSignList(data: any) {
     method: 'get',
     url: '/sign/space/signList',
     params: data
+  })
+}
+
+// 获取空间二维码
+export function spaceQRcode(data: any) {
+  return request({
+    method: 'get',
+    url: '/sign/space/QRCode',
+    params: data
+  })
+}
+
+// 二维码入群
+export function enterSpaceByCode(data: any) {
+  return request({
+    method: 'post',
+    url: '/sign/space/member/enterSpaceByCode',
+    data: data
+  })
+}
+
+// 新建投票
+export function newVote(data: any) {
+  return request({
+    method: 'post',
+    url: '/signff/vote',
+    data: data
   })
 }
