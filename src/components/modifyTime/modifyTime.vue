@@ -3,14 +3,17 @@ import { modifyVoteTime } from '~/api/myJoin/vote'
 
 // 投票日期修改 数据类型
 interface VoteTime{
+  nowTime: string
   // 日期选择器
   voteDate: string
-  maxDate: object
-  minDate: object
+  maxDate: Date
+  minDate: Date
   // 时间选择器
   voteTime: string
   minHour: string|number
   maxHour: string|number
+  minMinute: string|number
+  maxMinute: string|number
 }
 
 // 接受父组件相关参数
@@ -32,17 +35,37 @@ const currentTime = ref(' ')
 const timePopupShow = ref(false)
 
 const voteTime: VoteTime = reactive({
+  nowTime: '',
   voteDate: '',
   maxDate: new Date(2025, 0, 1),
   minDate: new Date(2021, 10, 1),
   voteTime: '',
-  minHour: 0,
+  minHour: computed(() => {
+    return voteTime.voteDate === voteTime.nowTime ? voteTime.minDate.getHours() : 0
+  }),
   maxHour: 23,
+  minMinute: computed(() => {
+    return voteTime.voteDate === voteTime.nowTime ? voteTime.minDate.getMinutes() : 0
+  }),
+  maxMinute: 59,
 })
 
 const init = () => {
+  const dateArr = String(props.voteDate).split('-')
+  const nowTime = new Date()
+  const year = nowTime.getFullYear()
+  let month: number|string = nowTime.getMonth() + 1
+  let day: number|string = nowTime.getDate()
+  if (month >= 1 && month <= 9)
+    month = `0${month}`
+  if (day >= 1 && day <= 9)
+    day = `0${day}`
+  voteTime.nowTime = `${year}-${month}-${day}`
   voteTime.voteDate = String(props.voteDate)
   voteTime.voteTime = String(props.voteTime)
+  voteTime.minDate = new Date()
+  currentTime.value = String(props.voteTime)
+  currentDate.value = new Date(Number(dateArr[0]), Number(dateArr[1]) - 1, Number(dateArr[2]))
   dialogShow.value = true
 }
 
@@ -81,7 +104,6 @@ const confirmPickerDate = (val: any) => {
 const confirmPickerTime = () => {
   voteTime.voteTime = currentTime.value
   timePopupShow.value = false
-  console.warn(voteTime.voteTime)
 }
 
 // 提交信息
@@ -96,8 +118,9 @@ const modifyTime = () => {
 </script>
 
 <template>
-  <div class="border border-gray-300 bg-white p-5 ml-2" @click="init()">
-    修改投票时间
+  <div class="border border-gray-300 bg-white p-4 ml-2 w-30" @click="init()">
+    <van-icon name="setting-o" size="2rem" class="mb-2" />
+    <div>修改投票时间</div>
   </div>
   <van-dialog v-model:show="dialogShow" show-cancel-button confirm-button-color="#0066CC" @confirm="modifyTime()">
     <div class="p-1rem font-600 text-lg">
@@ -135,6 +158,8 @@ const modifyTime = () => {
       title="选择时间"
       :min-hour="voteTime.minHour"
       :max-hour="voteTime.maxHour"
+      :min-minute="voteTime.minMinute"
+      :max-minute="voteTime.maxMinute"
       @cancel="timePopupShow = false"
       @confirm="confirmPickerTime"
     />

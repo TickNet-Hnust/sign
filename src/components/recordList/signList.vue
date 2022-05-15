@@ -25,11 +25,13 @@ const request = reactive({
     signName: '',
     admin: props.admin
 })
+const showLoading = ref(true)
 const getList = () => {
   request.pageNum = pageCnt.value
   getSignList(request).then((res: any) => {
     if(res.code === 200) {
       list.push(...res.rows)
+      showLoading.value = false
       pageCnt.value++;
       loading.value = false
       if(list.length >= res.total) {
@@ -63,20 +65,28 @@ const router = useRouter()
 const jumpDetail = (item: any) => {
   /**
    * 首先判断用户身份
-   * 如果是发起者，则判断是否是空间内的签到
-   *    如果是空间内的签到，则跳转到空间内签到的签到记录
-   *    如果是非空间的签到，则跳转到发起记录下的签到记录 // 这个暂时不用
+   * 如果是发起者, 则跳转到发起记录下的签到记录
    * 如果是参与者，则判断用户是否已经参与过该活动
    *   如果没有参与过，则跳转到我要参与下的我要签到
    *   如果已经参与了，则跳转到我要参与下的签到记录
    */
   if( Number(props.admin) === 1 ) {
-    router.push({
-      path: "/record/checkRecord",
-      query: {
-        id:  item.id,
-      }
-    })
+    // if(item.spaceName === '无' || item.spaceName === '') {
+    //   router.push({
+    //     path: "/record/checkRecord",
+    //     query: {
+    //       id:  item.id,
+    //     }
+    //   })
+    // } else {
+      router.push({
+        path: "/record/checkRecord",
+        query: {
+          id:  item.id,
+        }
+      })
+    // }
+    
     
   } else {
     if( item.attend ) {
@@ -97,6 +107,13 @@ const jumpDetail = (item: any) => {
 </script>
 
 <template>
+  <van-loading
+    color="#666"
+    type="spinner"
+    class="mt-5"
+    size="24px"
+    v-if="showLoading"
+    vertical>加载中...</van-loading>
   <van-empty v-if="list.length === 0" description="" />
   <van-list
     :immediate-check="false"
@@ -147,7 +164,7 @@ const jumpDetail = (item: any) => {
       ></div>
       <div style="display: flex; justify-content: space-between">
         <span
-          class="text-base font-semibold w-15em text-left"
+          class="text-base font-semibold w-48vw text-left"
            style="word-break:break-all;"
         >
           {{ item.activityName }}

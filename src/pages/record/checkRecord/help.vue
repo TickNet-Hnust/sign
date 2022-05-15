@@ -18,9 +18,14 @@ const QRRequest = reactive({
   signId: signId,
   path: 'http://localhost:3333/sign/record/checkRecord/helpJumpPage'
 })
+const loadingImg = ref(true)
 const getQRCode = () => {
   signQRCode(QRRequest).then((res: any) => {
-    QRUrl.value = res.data.url
+    if(res.code === 200) {
+      QRUrl.value = res.data.url
+      loadingImg.value = false
+    }
+   
   }).catch((err) => {
     console.log(err)
   })
@@ -39,7 +44,7 @@ const changeTab = () => {
 }
 </script>
 <template>
-  <div class="p-3">
+  <div class="p-3 bg-gray-100 min-h-100vh">
     <div
       class="p-3 text-xs text-left rounded"
       style="
@@ -59,7 +64,7 @@ const changeTab = () => {
     <div class="m-t-4">
       <van-tabs color="rgb(0,51,255)" title-active-color="rgb(0,51,255)" @change="changeTab()" v-model:active="activeTab">
         <van-tab title="直接补录" name="byName">
-          <div class="text-left mt-6 border-1 p-4 border-gray-500/50 rounded">
+          <div class="text-left mt-6 border-1 p-4 border-gray-500/50 rounded bg-white">
             <van-cell-group border="false">
               <van-field
                 v-model="stuMsg.stuNum"
@@ -80,10 +85,13 @@ const changeTab = () => {
           </div>
         </van-tab>
         <van-tab title="生成二维码" name="byCode">
-          <div class="mt-6 border-1 p-4 border-gray-500/50 font-semibold rounded">
+          <div class="mt-6 border-1 p-4 border-gray-500/50 font-semibold rounded bg-white">
             辅助扫码签到（
             <span style="color: rgb(0, 102, 255)" @click="refresh()">刷新</span>
             ）
+            <div class="mt-5" v-if="loadingImg">
+              <van-loading color="#999" type="spinner" size="30px" class="text-14px font-400">加载中...</van-loading>
+            </div>
             <img
               class="px-10 py-5"
               :src="QRUrl"

@@ -3,44 +3,81 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-13 21:55:41
+ * @LastEditTime: 2022-05-15 11:13:30
 -->
 <script lang="ts" setup>
-import { getRecord } from '~/api/record/index'
+import { spaceSignRecord, spaceSignList } from '~/api/record/index'
 interface RecordList {
   userId: String //学号/工号
   userName: String //用户名
   number: String //用户当前获取积分
   total: String //总积分
 }
+interface SignList {
+  name: String //签到名
+  id: String // 签到活动id
+  createTime: String //签到发起时间
+}
 // 获取空间id
 const route = useRoute()
 const spaceId = route.query.id
 const recordList: Array<RecordList> = reactive([])
-// 该空间发起过的签到列表
-const signList = reactive([
-  {title: '签到1', createTime: '2022-05-06 12:45:02'},
-  {title: '签到2', createTime: '2022-05-06 12:45:02'},
-  {title: '签到3', createTime: '2022-05-06 12:45:02'},
-  {title: '签到4', createTime: '2022-05-06 12:45:02'},
-  {title: '签到5', createTime: '2022-05-06 12:45:02'}
-])
-const dialogShow = ref(false)
-const changeShow = () => {
-  dialogShow.value = true
-}
-// 初始化数据
-onMounted(() => {
-  getRecord({
-    spaceId: spaceId
-  }).then((res: any) => {
+// 获取签到统计列表
+const recordRequest = reactive({
+  spaceId: spaceId,
+  signId: ''
+})
+const getSpaceSignRecord = () => {
+  // 先将列表数据清零
+  recordList.length = 0
+  spaceSignRecord(recordRequest).then((res: any) => {
     if(res.code === 200) {
       recordList.push(...res.data)
     }
   }).catch((err) => {
     console.log(err)
   })
+}
+// 该空间发起过的签到列表
+const signList: Array<SignList> = reactive([])
+// 初始化数据
+onMounted(() => {
+  // 获取所有签到统计
+  getSpaceSignRecord()
+  // 获取该空间发起过的签到列表
+  spaceSignList({
+    spaceId: spaceId
+  }).then((res: any) => {
+    if(res.code === 200) {
+      signList.push(...res.data)
+      console.log(signList)
+      if(signList.length !==0 ) {
+        signList.push({
+          name: '所有记录',
+          id: '',
+          createTime: ''
+        })
+      }
+    }
+  })
 })
+
+// 筛选签到
+const dialogShow = ref(false)
+const changeShow = () => {
+  // 弹出框
+  dialogShow.value = true
+}
+const checkedId = ref('') // 选中的签到id
+const onCancel = () => {
+  // 点击取消按钮
+  checkedId.value = recordRequest.signId
+}
+const searchSign = () => {
+  // 点击确定按钮
+  recordRequest.signId = checkedId.value
+  getSpaceSignRecord()
+}
 </script>
 
 <template>
@@ -67,7 +104,7 @@ onMounted(() => {
           • 说明
         </div>
         <div class="text-13px text-hex-41AA62">
-          积分统计方式：成员积分/总积分
+          统计方式：成员积分/总积分
         </div>
       </li>
     </div>
@@ -94,17 +131,27 @@ onMounted(() => {
       title="筛选"
       show-cancel-button
       confirm-button-color="rgb(63,133,255)"
+      @confirm="searchSign"
+      @cancel="onCancel"
     >
-      <van-checkbox-group class="p-3">
-        <van-checkbox v-for="item in signList" :key="item">
-          <div class="my-2">{{item.title}}</div>
-        </van-checkbox>
-      </van-checkbox-group>
+      <van-empty v-if="signList.length===0" description="该空间暂时没有发起过签到" />
+      <van-radio-group class="p-3" v-model="checkedId" checked-color="#10AA62">
+        <van-radio
+          v-for="item in signList" 
+          :key="item" :name="item.id" shape="square" icon-size="15px"
+          class="flex items-center"
+        >
+          <div class="my-2 text-left">
+            <span class="text-14px text-hex-666">{{item.name}}</span>
+            <span v-if="item.createTime!=='' " class="text-12px text-hex-999">（{{item.createTime}}）</span>
+          </div>
+        </van-radio>
+      </van-radio-group>
     </van-dialog>
   </div>
 </template>
 <route lang="yaml">
 meta:
   layout: default
-  title: 积分详情
+  title: 签到统计
 </route>

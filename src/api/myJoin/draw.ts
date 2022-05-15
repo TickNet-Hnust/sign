@@ -12,7 +12,7 @@ export function getDrawNum(drawId: number) {
 }
 
 // 分页查询抽签人员记录
-export function getDrawRecordList(drawId: number, pageNum: number, pageSize: number, optionCheckedValue: string) {
+export function getDrawRecordList(drawId: number, pageNum: number, pageSize: number, optionCheckedValue: string, attend: number) {
   return request({
     method: 'get',
     url: '/signff/drawRecord/list',
@@ -21,6 +21,7 @@ export function getDrawRecordList(drawId: number, pageNum: number, pageSize: num
       pageNum,
       pageSize,
       optionId: optionCheckedValue,
+      attend,
     },
   })
 }

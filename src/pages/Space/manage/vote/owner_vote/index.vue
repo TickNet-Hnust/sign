@@ -131,9 +131,9 @@ const toVoteRecord = () => {
 </script>
 
 <template>
-  <div class=" w-screen h-screen bg-gray-500/8">
-    <div class="p-6">
-      <div class="p-4 text-left border border-gray-200 bg-white  ">
+  <div class="w-screen h-screen ">
+    <div class="p-3 bg-gray-500/8">
+      <div class="p-3 text-left border border-gray-200 bg-white  rounded">
         <div class="mb-2">
           {{ voteData.question }}
         </div>
@@ -153,7 +153,7 @@ const toVoteRecord = () => {
           <!-- 未投票 -->
           <div
             v-if="voteData.isVote === 0"
-            class="mt-6 border-gray-200 border p-10px bg-white"
+            class="mt-4 border-gray-200 border p-10px bg-white rounded text-sm"
           >
             <van-checkbox
               :name="item.id"
@@ -168,7 +168,7 @@ const toVoteRecord = () => {
             <!-- 被选中的选项样式 -->
             <div
               v-if="optionCheck(item.id)"
-              class="mt-6 h-42px bg-light-50 border"
+              class="mt-4 h-42px bg-light-50 border rounded"
               style="border-color:#1FA71F"
               @click="show = true"
             >
@@ -186,11 +186,11 @@ const toVoteRecord = () => {
                   size="1.25em"
                   class="relative left-10px leading-40px"
                 />
-                <span class="text-dark-900 left-3 relative flex">{{
-                  item.optionValue
-                }}</span>
+                <div class="text-dark-900 left-3 relative w-40px leading-40px text-sm">
+                  {{ item.optionValue }}
+                </div>
                 <span
-                  class="absolute right-50px leading-40px text-sm text-cool-gray-400"
+                  class="absolute right-50px leading-40px text-xs text-cool-gray-400"
                 >
                   {{ item.poll + "票" }}
                 </span>
@@ -199,7 +199,7 @@ const toVoteRecord = () => {
             <!-- 没有选上但是有票数的选项 -->
             <div
               v-else-if="item.poll > 0 && !optionCheck(item.id)"
-              class="mt-6 border-true-gray-200 border"
+              class="mt-4 border-true-gray-200 border rounded"
             >
               <div
                 class="border-none h-40px bg-gray-300 leading-40px text-left"
@@ -207,9 +207,11 @@ const toVoteRecord = () => {
                 style="white-space: nowrap"
               >
                 <!-- <van-icon name="checked" color="green" size="1.25em" class="relative left-10px  leading-40px" /> -->
-                <span class="text-dark-900 left-10px relative">{{
-                  item.optionValue
-                }}</span>
+                <div class="text-dark-900 left-10px relative w-40px leading-40px text-sm">
+                  {{
+                    item.optionValue
+                  }}
+                </div>
                 <span
                   class="absolute right-50px leading-40px text-sm text-cool-gray-400"
                 >
@@ -219,11 +221,11 @@ const toVoteRecord = () => {
             </div>
             <div
               v-else-if="item.poll === 0"
-              class="mt-6 border-true-gray-200 border h-42px  text-dark-900 text-left bg-light-50"
+              class="mt-4 border-true-gray-200 border h-42px  text-dark-900 text-left bg-light-50 rounded"
             >
-              <span class="leading-40px m-10px">{{ item.optionValue }}</span>
+              <span class="leading-40px m-10px text-sm">{{ item.optionValue }}</span>
               <span
-                class="absolute right-50px leading-20px text-sm text-cool-gray-400 pt-10px"
+                class="absolute right-50px leading-20px text-xs text-cool-gray-400 pt-10px"
               >
                 {{ item.poll + "票" }}
               </span>
@@ -239,7 +241,7 @@ const toVoteRecord = () => {
           type="primary"
           size="large"
           :color="voteData.isVote?'#9DD49D':'#1FA71F'"
-          class="my-10px"
+          class="my-10px rounded"
           :disabled="voteData.isVote===1"
           @click="isClick()"
         >
@@ -247,9 +249,11 @@ const toVoteRecord = () => {
         </van-button>
       </div>
       <div class="flex justify-left my-5 text-sm">
-        <span class="border border-gray-300 bg-white p-5">
-          <div />
-          <div @click="toVoteRecord()">投票记录</div>
+        <span class="border border-gray-300 bg-white p-4 w-30">
+          <div @click="toVoteRecord()">
+            <van-icon name="records" size="2rem" class="mb-2" />
+            <div>投票记录</div>
+          </div>
         </span>
         <modify-time :vote-date="props.endDate" :vote-time="props.endTime" :vote-id="voteId" />
       </div>

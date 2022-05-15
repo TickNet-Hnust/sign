@@ -27,10 +27,12 @@ const request = reactive({
   admin: props.admin,
   voteName: '',
 })
+const showLoading = ref(true)
 const getList = () => {
   request.pageNum = pageCnt.value
   getVoteList(request).then((res: any) => {
     if (res.code === 200) {
+      showLoading.value = false
       list.push(...res.rows)
       pageCnt.value++
       loading.value = false
@@ -86,6 +88,13 @@ const jumpDetail = (item: any) => {
 </script>
 
 <template>
+  <van-loading
+    color="#666"
+    type="spinner"
+    class="mt-5"
+    size="24px"
+    v-if="showLoading"
+    vertical>加载中...</van-loading>
   <van-empty v-if="list.length === 0" description="" />
   <van-list
     v-model:loading="loading"
@@ -136,7 +145,7 @@ const jumpDetail = (item: any) => {
       />
       <div style="display: flex; justify-content: space-between">
         <span
-          class="text-base font-semibold w-15em text-left"
+          class="text-base font-semibold w-48vw text-left"
           style="word-break:break-all;"
         >{{ item.activityName }}</span>
         <span class="text-xs w-5em">
