@@ -2,13 +2,13 @@
  * @Descipttion:
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-14 12:44:25
+ * @LastEditors: caojun
+ * @LastEditTime: 2022-05-15 21:46:00
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
 import src from '~/assets/1.png'
-import { deleteSignSpace, getSignSpace, updateSignSpace } from '~/api/mySpace/index'
+import { deleteSignSpace, getSignSpace, quitSignSpace, updateSignSpace } from '~/api/mySpace/index'
 import { deleteSpaceMember, getSpaceMemberList, updateSpaceMember } from '~/api/mySpace/spaceMember'
 const route = useRoute()
 const active = ref(0)
@@ -52,7 +52,7 @@ const router = useRouter()
 const finished = ref(true)
 const id = ref(route.query.id)
 const jumpPage = (item) => {
-  if(item.title !== '发起签到') {
+  if (item.title !== '发起签到') {
     router.push({
       path: `manage/${item.link}`,
       query: {
@@ -101,6 +101,11 @@ const deleteStudentData = reactive({
   userId: '',
   spaceId: 0,
 })
+// 管理员退出空间
+const quitSpaceData = reactive({
+  userId: '1905040121',
+  spaceId: 0,
+})
 // 获取当前操作者的权限 1为管理员 2为负责人
 const rank = ref(0)
 // 查询空间列表的参数
@@ -116,6 +121,7 @@ getSignSpace(id.value).then((res) => {
   deleteData.spaceId = res.data.id
   deleteStudentData.spaceId = res.data.id
   deleteStudentData.userId = res.data.id
+  quitSpaceData.spaceId = res.data.id
   console.log(rank.value)
 })
 // 获取空间成员列表
@@ -130,14 +136,15 @@ getSpaceMemberList(id.value).then((res) => {
 const updateSpaceName = () => {
   updateSignSpace(updateData).then((res) => {
     if (res.code === 200)
-      spaceList.spaceName = updateData.spaceName
+      console.log(111)
+    spaceList.spaceName = updateData.spaceName
   })
 }
-// 负责人删除空间
+// 负责人解散空间
 const deleteSpace = () => {
   deleteSignSpace(deleteData).then((res) => {
     if (res.code === 200) {
-      Notify({ type: 'primary', message: '删除成功' })
+      Notify({ type: 'primary', message: '解散成功' })
       router.push('/Space')
     }
   })
@@ -150,6 +157,7 @@ const showAdminChange = ref(false)// 是否显示操作管理员权限的弹出�
 const showStuChange = ref(false)// 是否显示操作学生权限的弹出层
 const showStudentChange = ref(false)// 是否显示管理员操作学生权限的弹出层
 const showDeleteStudent = ref(false)// 是否显示删除学生的弹窗
+const showQuit = ref(false)// 是否显示管理员退出空间的弹窗
 // 点击管理员的方法
 const changeAdmin = (item) => {
   if (rank.value === 2) {
@@ -257,30 +265,32 @@ const onConfirmStu = (index, value) => {
     showDeleteStu.value = true
   }
 }
-// 管理员确认删除学成员
+// 管理员确认删除成员
 const onConfirmStudent = (index, value) => {
   if (value === 0)
     showDeleteStudent.value = true// 展示是否删除成员弹窗
 }
+// 管理员退出空间的方法
+const quitSpace = () => {
+  quitSignSpace(quitSpaceData).then((res) => {
+    if (res.code === 200) {
+      Notify({ type: 'primary', message: '退出成功' })
+      router.push('/Space')
+    }
+  })
+}
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-screen">
-    <div class="text-left text-hex-aaa text-xs ml-3">空间信息</div>
+    <div class="text-left text-hex-aaa text-xs ml-3">
+      空间信息
+    </div>
     <div class="bg-hex-fff rounded px-5 pt-2 text-hex-666 border border-hex-ccc">
       <div class="flex justify-between border-b border-hex-ccc text-14px py-2">
         <span>空间名称</span>
         <span>
           {{ spaceList.spaceName }}
-          <span v-if="rank ===2" @click="showUpdate = true"><van-icon name="arrow" /></span>
-        </span>
-      </div>
-      <div class="flex justify-between border-b border-hex-ccc text-14px py-2 items-center">
-        <span>群聊二维码</span>
-        <span>
-          <span class="text-xl bg-hex-10AA62 text-white rounded-15px px-1">
-            <van-icon name="qr" />
-          </span>
-          <van-icon name="arrow" />
+          <span v-if="rank ===2" @click="showUpdate = true"><van-icon name="edit" /></span>
         </span>
       </div>
       <div class="flex justify-between text-14px py-2">
@@ -307,7 +317,7 @@ const onConfirmStudent = (index, value) => {
       </van-dialog>
       <van-dialog
         v-model:show="showDelete"
-        title="是否删除此空间"
+        title="是否解散此空间"
         confirm-button-color="rgb(63,133,255)"
         show-cancel-button
         @confirm="deleteSpace()"
@@ -333,10 +343,19 @@ const onConfirmStudent = (index, value) => {
         show-cancel-button
         @confirm="onConfirmDeleteStudent()"
       />
+      <van-dialog
+        v-model:show="showQuit"
+        title="是否退出空间"
+        confirm-button-color="rgb(63,133,255)"
+        show-cancel-button
+        @confirm="quitSpace()"
+      />
     </div>
-    <van-tabs class="mt-3" v-model:active="active" color="rgb(40,182,72)">
+    <van-tabs v-model:active="active" class="mt-3" color="rgb(40,182,72)">
       <van-tab title="概况">
-        <div class="text-left text-hex-aaa text-xs ml-3 mt-3">应用</div>
+        <div class="text-left text-hex-aaa text-xs ml-3 mt-3">
+          应用
+        </div>
         <div class="bg-white p-3 py-5 rounded border border-hex-10AA62">
           <div grid="~ cols-3">
             <div
@@ -354,18 +373,15 @@ const onConfirmStudent = (index, value) => {
         </div>
       </van-tab>
       <van-tab title="成员">
-        <div class="text-left mt-3 text-hex-aaa text-xs ml-3">成员</div>
+        <div class="text-left mt-3 text-hex-aaa text-xs ml-3">
+          成员
+        </div>
         <div class="bg-white rounded items-center p-1 border border-hex-ccc">
-          <van-list
-            v-model:loading="loading"
-            :finished="finished"
-            finished-text="没有更多了"
-            @load="onLoad"
-          >
+          <van-list>
             <div class="flex items-center text-sm py-2 border-b border-hex-ddd mt-2">
               <span class="flex-1">学号/工号</span>
               <span class="flex-1">姓名</span>
-              <span class="flex-1">身份</span>
+              <span class="flex-1">角色</span>
             </div>
             <div
               v-for="item in member_list" :key="item" class="flex items-center text-sm py-2 border-b border-hex-ddd mt-2 "
@@ -378,10 +394,10 @@ const onConfirmStudent = (index, value) => {
               </div>
               <div class="flex-1">
                 <span v-if="item.memberRank == 2">
-                  <van-tag plain color="#ef4444">负责人</van-tag>
+                  <van-tag color="#38bdf8">负责人</van-tag>
                 </span>
                 <span v-if="item.memberRank == 1" @click="changeAdmin(item)">
-                  <van-tag plain color="#10b981">管理员</van-tag>
+                  <van-tag color="#10b981">管理员</van-tag>
                 </span>
                 <span v-if="item.memberRank == 0" class="text-xs" @click="changeStu(item)">
                   <van-tag plain color="#78716c">成员</van-tag>
@@ -434,12 +450,17 @@ const onConfirmStudent = (index, value) => {
     <div
       v-if="rank===1"
       class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600"
-    >退出空间</div>
+      @click="showQuit = true"
+    >
+      退出空间
+    </div>
     <div
       v-if="rank===2"
-      @click="showDelete = true"
       class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600"
-    >解散空间</div>
+      @click="showDelete = true"
+    >
+      解散空间
+    </div>
   </div>
 </template>
 <route lang="yaml">

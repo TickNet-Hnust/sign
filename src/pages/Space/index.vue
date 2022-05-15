@@ -1,16 +1,18 @@
 <!-- 学生端 -->
 
 <script setup lang="ts">
-import { Notify, Popover } from 'vant'
-import { get } from 'vant/lib/utils'
+import { Notify } from 'vant'
 import { addAFTFSpace, signSpaceList } from '~/api/mySpace/index'
 const showJoinSpace = ref(false)// 在我参与的选项卡中显示面对面建群
 const showCreateSpace = ref(false)// 在我管理的选项卡中显示新增空间
 const router = useRouter()
 const isJoin = ref(false)// 控制用户点击是创建空间还是加入空间 TRUE为加入空间，FALSE为创建空间
-const showPopover = ref(false) // 控制弹窗显示
+const showPopover = ref(false) // 控制点击加号弹窗显示
+const value = ref('123')
+const errorInfo = ref('')
+const showKeyboard = ref(false)
 
-// 点击加号创建空间
+// 点击加号创建空间还是加入空间
 const popoverSelect = (action: any) => {
   if (action.text === '创建空间') {
     isJoin.value = false
@@ -27,39 +29,36 @@ const popoverSelect = (action: any) => {
 
 const active = ref(0)// 控制tab切换 0：我参与的 1：我管理的
 const spaceList = ref([])
+// 请求列表参数
 const request = ref({
   memberRank: active.value,
   spaceName: '',
   pageNum: 1,
   pageSize: 10,
 })
+// 请求列表的方法
 const getsignSpaceList = () => {
   request.value.memberRank = active.value
-  console.log(request.value)
-
   signSpaceList(request.value).then((res: any) => {
     if (res.code === 200)
       spaceList.value = spaceList.value.concat(res.rows)
-
-    // if (spaceList.value.length < res.total) {
-    //   request.value.pageNum++
-    //   getsignSpaceList()
-    // }
-  }).catch((err) => {
-    console.log(err)
+    if (spaceList.value.length < res.total) {
+      request.value.pageNum++
+      getsignSpaceList()
+    }
   })
 }
 getsignSpaceList()// 进入页面获取空间列表
-// 搜索空间的方法
+// 搜索空间的方法，为什么搜索进了这个方法，但要切换之后才有效果
 const searchList = () => {
-  console.log('搜索了')
-
+  request.value.pageNum = 1
   spaceList.value = []
   getsignSpaceList()
 }
 const tabChange = () => {
   spaceList.value = []
   request.value.pageNum = 1
+  request.value.spaceName = ''
   getsignSpaceList()
   console.log(active.value)
 }
@@ -91,13 +90,23 @@ const addAFTFSpaceData = reactive({
   code: '',
   longitude: 116.397128,
   latitude: 39.916527,
-  addAFTFSpaceData: isJoin.value,
+  join: isJoin.value,
   spaceName: '',
 })
-// 面对加入建群的方法
+// 面对面加入或建空间的方法
 const addFTFSpace = () => {
   if (isJoin.value === false) { // 创建空间
     addAFTFSpaceData.join = false
+    if (addAFTFSpaceData.spaceName === '') {
+      Notify({ type: 'warning', message: '请输入空间名称' })
+      router.push('/Space')
+      return
+    }
+    if (addAFTFSpaceData.code.length < 4) {
+      Notify({ type: 'warning', message: '请输入四位正确的空间码' })
+      router.push('/Space')
+      return
+    }
     addAFTFSpace(addAFTFSpaceData).then((res) => {
       console.log(addAFTFSpaceData)
       console.log(res)
@@ -106,27 +115,15 @@ const addFTFSpace = () => {
         Notify({ type: 'success', message: '创建成功' })
         router.push('/Space')
         addAFTFSpaceData.code = ''
-        active.value = 0
+        active.value = 1
         spaceList.value = []
         request.value.pageNum = 1
         getsignSpaceList()
       }
-      else if (res.code === 501) {
-        if (res.msg === '该空间名已存在，请勿重复命名！') {
-          addAFTFSpaceData.code = ''
-          Notify({ type: 'warning', message: '该空间名已存在，请勿重复命名！' })
-        }
-
-        else if (res.msg === '该空间码已存在！') {
-          addAFTFSpaceData.code = ''
-          Notify({ type: 'warning', message: '该空间码已存在！' })
-        }
-      }
-      else if (res.code === 500) {
-        if (res.msg === '只能包括逗号、下划线、汉字、数字、字母！') {
-          addAFTFSpaceData.code = ''
-          Notify({ type: 'warning', message: '只能包括逗号、下划线、汉字、数字、字母！' })
-        }
+      else {
+        Notify({ type: 'warning', message: res.msg })
+        addAFTFSpaceData.code = ''
+        router.push('/Space')
       }
     })
   }
@@ -144,39 +141,37 @@ const addFTFSpace = () => {
         request.value.pageNum = 1
         getsignSpaceList()
       }
-      else if (res.code === 501) {
-        if (res.msg === '该空间不存在！') {
-          Notify({ type: 'warning', message: '该空间不存在！' })
-          addAFTFSpaceData.code = ''
-          router.push('/Space')
-        }
-        else {
-          Notify({ type: 'warning', message: '您已经在空间里了，请勿重复加入' })
-          addAFTFSpaceData.code = ''
-          router.push('/Space')
-        }
-      }
-      else if (res.code === 500) {
-        Notify({ type: 'warning', message: '空间码不能为空' })
+      else {
+        Notify({ type: 'warning', message: res.msg })
         addAFTFSpaceData.code = ''
         router.push('/Space')
       }
     })
   }
 }
+const onCancel = () => {
+  addAFTFSpaceData.code = ''
+  router.push('/Space')
+}
+const nameRules = [
+  {
+    required: true,
+    message: '请输入空间名称',
+  },
+]
 
 </script>
 
 <template>
-  <div class="p-3 bg-gray-500/8 min-h-screen">
+  <div class="container p-3 bg-gray-500/8 min-h-screen">
     <div class="py-1 flex items-center bg-hex-fff rounded justify-between">
       <span class="w-85vw">
         <van-search
-          v-model.trim="request.spaceName"
+          v-model="request.spaceName"
           placeholder="请输入搜索关键词"
           left-icon="search"
-          @search="searchList"
           @clear="clear"
+          @search="searchList"
         />
       </span>
       <span>
@@ -199,14 +194,19 @@ const addFTFSpace = () => {
       title="面对面加入空间"
       confirm-button-color="rgb(63,133,255)"
       show-cancel-button
+      @cancel="onCancel()"
       @confirm="addFTFSpace()"
     >
-      <div class="mt-5 px-10">
-        <div class="text-14px text-hex-999">
-          和身边的朋友输入同样的四个数字，进入同一个空间
-        </div>
-        <van-field v-model.trim="addAFTFSpaceData.code" class="border-b border-hex-ccc mb-3" type="digit" maxlength="4" />
-      </div>
+      <van-password-input
+        class="mb-2 mt-2"
+        :value="addAFTFSpaceData.code"
+        :mask="false"
+        info="请输入四位空间码用于加入空间"
+        :error-info="errorInfo"
+        :length="4"
+        :focused="showKeyboard"
+        @focus="showKeyboard = true"
+      />
     </van-dialog>
     <!-- 面对面创建空间 -->
     <van-dialog
@@ -214,20 +214,36 @@ const addFTFSpace = () => {
       title="面对面创建空间"
       confirm-button-color="rgb(63,133,255)"
       show-cancel-button
+      @cancel="onCancel()"
       @confirm="addFTFSpace()"
     >
-      <div class="mt-5 px-5">
-        <div class="text-14px text-hex-999">
-          请输入要创建的空间名称
-        </div>
-        <van-field v-model.trim="addAFTFSpaceData.spaceName" class="border-b border-hex-ccc mb-3" />
-        <div class="text-14px text-hex-999">
-          请输入四位空间码供他人加入你创建的空间(空间码的有效时间为30分钟！)
-        </div>
-        <van-field v-model.trim="addAFTFSpaceData.code" class="border-b border-hex-ccc mb-3" type="digit" maxlength="4" />
+      <div class="createSpace mt-5 px-5">
+        <van-form>
+          <div class="text-14px text-hex-999">
+            请输入要创建的空间名称
+          </div>
+          <van-field v-model.trim="addAFTFSpaceData.spaceName" :center="true" input-align="center" maxlength="20" class="border-b border-hex-ccc mb-3" :rules="nameRules" />
+
+          <van-password-input
+            class="mb-2"
+            :value="addAFTFSpaceData.code"
+            :mask="false"
+            info="请输入四位空间码用于创建空间"
+            :error-info="errorInfo"
+            :length="4"
+            :focused="showKeyboard"
+            @focus="showKeyboard = true"
+          />
+        </van-form>
       </div>
     </van-dialog>
-    <div class="mt-8 border-1 border-hex-DEDEDE bg-hex-fff rounded py-3 px-5">
+    <van-number-keyboard
+      v-model="addAFTFSpaceData.code"
+      :show="showKeyboard"
+      safe-area-inset-bottom
+      @blur="showKeyboard = false"
+    />
+    <div class="mt-3 border-1 border-hex-DEDEDE bg-hex-fff rounded py-3 px-5">
       <van-tabs
         v-model:active="active"
         color="rgb(40,182,72)"
@@ -258,6 +274,19 @@ const addFTFSpace = () => {
     </div>
   </div>
 </template>
+<style scoped>
+  .van-number-keyboard{
+    z-index: 2300 !important;
+  }
+  .container  :deep(.van-dialog){
+    top:32% !important;
+  }
+  .createSpace :deep(.van-cell){
+    width: 80%;
+    margin: 0 auto !important;
+    margin-bottom: 10px !important;
+  }
+</style>
 <route lang="yaml">
 meta:
   layout: default
