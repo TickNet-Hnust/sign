@@ -13,6 +13,8 @@ import Inspect from 'vite-plugin-inspect'
 import Prism from 'markdown-it-prism'
 import LinkAttributes from 'markdown-it-link-attributes'
 import Unocss from 'unocss/vite'
+//引入vite-plugin-compression开启gzip压缩
+import viteCompression from 'vite-plugin-compression'
 
 const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 
@@ -124,8 +126,40 @@ export default defineConfig({
     // https://github.com/antfu/vite-plugin-inspect
     // Visit http://localhost:3333/__inspect/ to see the inspector
     Inspect(),
+    //使用vire-plugin-compression开启gzip压缩
+    viteCompression({
+      verbose: true,
+      disable: false,
+      threshold: 10240,
+      algorithm: 'gzip',
+      ext: '.gz',
+    })
   ],
-
+  //esbuild去除console
+  esbuild: {
+    pure: ["console.log"],
+    minify: true,
+  },
+  build:{
+    assetsDir: './static',
+    //css代码分离
+    cssCodeSplit: true,
+    //terser去除console
+    // minify:'terser',
+    // terserOptions: {
+    //   compress: {
+    //     drop_console: true
+    //   }
+    // },
+    //静态资源分类打包，不然js,css全打包在assets里面
+    rollupOptions: {
+      output: { 
+        chunkFileNames: 'static/js/[name]-[hash].js',
+        entryFileNames: 'static/js/[name]-[hash].js',
+        assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
+      }
+    }
+  },
   // https://github.com/antfu/vite-ssg
   ssgOptions: {
     script: 'async',
