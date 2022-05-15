@@ -3,12 +3,9 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-14 13:15:12
+ * @LastEditTime: 2022-05-15 11:36:36
 -->
 <script setup lang="ts">
-import signList from '~/components/recordList/signList.vue'
-import drawList from '~/components/recordList/drawList.vue'
-import voteList from '~/components/recordList/voteList.vue'
 const searchValue = ref('')
 const activeName = ref('sign')
 const signlist = ref(null)

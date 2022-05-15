@@ -1,7 +1,6 @@
 
 <script setup lang="ts">
 import { detailSignRecord, changeSignMsg } from '~/api/record/signRecord'
-import stuList from '~/components/recordList/stuList.vue'
 // 签到活动id
 const route = useRoute()
 const signId = route.query.id

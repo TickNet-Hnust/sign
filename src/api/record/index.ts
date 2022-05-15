@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-01 20:32:16
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-12 16:40:35
+ * @LastEditTime: 2022-05-15 09:57:49
  */
 import request from '~/utils/request'
 
@@ -41,11 +41,20 @@ export function sign(data: any) {
   })
 }
 
-// 查询空间活动记录
-export function getRecord(data: any) {
+// 查询空间签到记录
+export function spaceSignRecord(data: any) {
   return request({
     method: 'get',
     url: '/sign/space/getRecord',
+    params: data
+  })
+}
+
+// 查询某空间发起过的签到列表
+export function spaceSignList(data: any) {
+  return request({
+    method: 'get',
+    url: '/sign/space/signList',
     params: data
   })
 }

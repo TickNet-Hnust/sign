@@ -3,12 +3,11 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-14 16:15:01
+ * @LastEditTime: 2022-05-15 12:28:33
 -->
 
 <script setup lang="ts">
 import { detailSignRecord } from '~/api/record/signRecord'
-import stuList from '~/components/recordList/stuList.vue'
 const route = useRoute()
 const signId = route.query.id
 const detailMsg = ref({})
@@ -24,7 +23,7 @@ onMounted( () => {
 })
 </script>
 <template>
-  <div class="bg-gray-500/8 p-3 min-h-100ch">
+  <div class="bg-gray-500/8 p-3 min-h-100vh">
     <div
       class="bg-white border border-t-2 border-hex-D9DADB border-t-hex-41B062 rounded">
       <div

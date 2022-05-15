@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { getDetailVote, voteStuList } from '~/api/record/voteRecord'
-import signList from '~/components/recordList/stuList.vue'
 interface Choer {
   createUserId: String //学号
   createUserName: String //姓名
@@ -14,7 +13,8 @@ interface ChoList {
 }
 // 已投票列表
 const cho_list: Array<ChoList> = reactive([])
-const voteCount = ref() // 已抽签人数
+const voteCount = ref() // 已投票人数
+const notVote = ref() // 未投票人数
 // 展示不同子列表
 const changeShow = (item: any) => {
   if(!item.isShow) {
@@ -67,12 +67,23 @@ onMounted(() => {
   }).catch((err) => {
     console.log(err)
   })
+  // 获取未投票人数
+  voteStuList({
+    voteId: voteId,
+    attend: 0,
+    pageNum: 1,
+    pageSize: 10
+  }).then((res: any) => {
+    if(res.code === 200) {
+      notVote.value = res.data.total
+    }
+  })
 })
-// 获取子组件传过来的未投票人数
-const notSign = ref(0)
-const getTotal = (total: any) => {
-  notSign.value = total
-}
+// // 获取子组件传过来的未投票人数
+// const notSign = ref(0)
+// const getTotal = (total: any) => {
+//   notSign.value = total
+// }
 </script>
 
 <template>
@@ -138,9 +149,9 @@ const getTotal = (total: any) => {
         <van-tab>
           <template #title>
             <span class="text-sm">未投票</span>
-            <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 ml-2">{{notSign}}人</span>
+            <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 ml-2">{{notVote}}人</span>
           </template>
-          <stu-list @getTotal="getTotal" action="vote" :activityId="voteId" attend="0"></stu-list>
+          <stu-list action="vote" :activityId="voteId" attend="0"></stu-list>
         </van-tab>
       </van-tabs>
     </div>

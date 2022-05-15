@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { getDetailDraw, drawStuList, drawRecordCount } from '~/api/record/drawRecord'
-import signList from '~/components/recordList/stuList.vue'
 interface Choer {
   createUserId: String //学号
   createUserName: String //姓名
@@ -16,6 +15,7 @@ interface ChoList {
 // 如果抽签结果可见则展示这个数组
 const cho_list: Array<ChoList> = reactive([])
 const drawCount = ref() // 已抽签人数
+const notDraw = ref() // 未抽签人数
 // 展示某个子菜单
 const changeShow = (item) => {
   if(!item.isShow) {
@@ -69,6 +69,7 @@ onMounted(() => {
   }).catch((err) => {
     console.log(err)
   })
+  // 获取已抽签人数
   drawRecordCount(drawId).then((res: any) => {
     if(res.code === 200) {
       drawCount.value = res.data
@@ -76,12 +77,23 @@ onMounted(() => {
   }).catch((err) => {
     console.log(err)
   })
+  // 获取未抽签人数
+  drawStuList({
+    drawId: drawId,
+    attend: 0,
+    pageNum: 1,
+    pageSize: 10
+  }).then((res: any) => {
+    if(res.code === 200) {
+      notDraw.value = res.total
+    }
+  })
 })
-// 获取子组件传过来的未抽签人数
-const notDraw = ref(0)
-const getTotal = (total: any) => {
-  notDraw.value = total
-}
+// // 获取子组件传过来的未抽签人数
+// const notDraw = ref(0)
+// const getTotal = (total: any) => {
+//   notDraw.value = total
+// }
 </script>
 
 <template>
@@ -152,7 +164,7 @@ const getTotal = (total: any) => {
             <span class="text-sm">未抽签</span>
             <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 ml-2">{{notDraw}}人</span>
           </template>
-          <stu-list @getTotal="getTotal" action="draw" :activityId="drawId" attend="0"></stu-list>
+          <stu-list action="draw" :activityId="drawId" attend="0"></stu-list>
         </van-tab>
       </van-tabs>
     </div>
