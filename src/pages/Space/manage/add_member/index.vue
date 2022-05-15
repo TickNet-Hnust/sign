@@ -1,3 +1,30 @@
+<!--
+ * @Descipttion: 
+ * @Author: 刘晴
+ * @Date: 2022-04-20 21:46:45
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-15 17:15:49
+-->
+<script setup lang="ts">
+import { spaceQRcode } from '~/api/record/index'
+// 空间id
+const route = useRoute()
+const spaceId = route.query.id
+const QRUrl = ref('')
+const loadingImg = ref(true)
+// 获取空间二维码
+onMounted(() => {
+  spaceQRcode({
+    spaceId: spaceId,
+    path: 'http://localhost:3333/sign/space/manage/add_member/addJumpPage'
+  }).then((res: any) => {
+    if(res.code === 200) {
+      QRUrl.value = res.data.url
+      loadingImg.value = false
+    }
+  })
+})
+</script>
 <template>
   <div class="bg-gray-500/8 p-3 h-screen">
     <div class="bg-white p-5 rounded">
@@ -9,9 +36,12 @@
           扫码追加成员（<span style="color: rgb(0, 102, 255)">刷新</span>）
         </div>
         <div>
+          <div class="mt-5" v-if="loadingImg">
+            <van-loading color="#999" type="spinner" size="30px" class="text-14px font-400">加载中...</van-loading>
+          </div>
           <img
             class="mt-4 mx-auto w-240px"
-            src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2Ff26f5ed0d000c3413c9a4250f2c22bcb86a9494e2b2a-Gw0bYT_fw658&refer=http%3A%2F%2Fhbimg.b0.upaiyun.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1649495467&t=ce9ebbe0f7270b03850a7a05fa695c33"
+            :src="QRUrl"
           />
         </div>
       </div>
@@ -23,6 +53,3 @@ meta:
   layout: default
   title: 成员追加
 </route>
-<style scoped>
-
-</style>

@@ -64,10 +64,6 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
           {{ member_list.length }}人
         </span>
       </div>
-      <!-- <div class="flex justify-between text-14px py-2 items-center">
-        <span>操作</span>
-        <span @click="showQuit = true" class="bg-hex-10AA62 rounded text-white text-13px p-1">退出空间</span>
-      </div> -->
       <van-dialog
         v-model:show="showQuit"
         title="是否删除空间"
