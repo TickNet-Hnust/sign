@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // 定义投票数据类型接口
 import { onMounted } from 'vue'
+import { Dialog } from 'vant'
 import { addVoteRecord } from '~/api/myJoin/vote'
 import { getVote } from '~/api/myJoin/record'
 
@@ -17,6 +18,8 @@ interface VoteData {
   isVote: number // 是否投票，1表示已参与，0表示未参与
   option: Array<OptionData> // 选项具体数据
   allPollNum: number
+  status: number
+  text: string
   optionWidth: Array<string> // 确定选项染色的宽度
 }
 
@@ -34,12 +37,24 @@ const props = reactive({
 
 const voteData: VoteData = reactive({
   type: '投票',
+  status: 1,
   question: '',
   voteNumLimit: 1,
   endTime: '',
   isVote: 0,
   optionChecked: [],
   option: [],
+  text: computed(() => {
+    if (voteData.isVote) {
+      return '已投票'
+    }
+    else {
+      if (voteData.status)
+        return '已结束'
+      else
+        return '开始投票'
+    }
+  }),
   optionWidth: computed(() => {
     const arr: Array<string> = []
     voteData.option.forEach((item) => {
@@ -62,6 +77,7 @@ onMounted(() => {
     voteData.question = res.data.voteName
     voteData.endTime = res.data.endTime
     voteData.isVote = res.data.attend
+    voteData.voteNumLimit = res.data.voteNumLimit
     props.endDate = voteData.endTime.split(' ')[0]
     props.endTime = `${voteData.endTime.split(' ')[1].split(':')[0]}:${voteData.endTime.split(' ')[1].split(':')[1]}`
     console.warn(props)
@@ -108,21 +124,30 @@ const optionCheck = function(optionId: number) {
 const isClick = () => {
   const voteOption: Array<string> = []
   console.warn(voteData.optionChecked)
-  voteData.optionChecked.forEach((item) => {
-    const option = voteData.option[item - 1].optionValue
-    voteOption.push(option)
-  })
-  addVoteRecord(voteId, voteOption).then((res) => {
-    voteData.isVote = 1
-  })
+  if (voteData.optionChecked.length === 0) {
+    Dialog.alert({
+      message: '请至少选择一个选项！',
+    }).then(() => {
+      // on close
+    })
+  }
+  else {
+    voteData.optionChecked.forEach((item) => {
+      const option = voteData.option[item - 1].optionValue
+      voteOption.push(option)
+    })
+    addVoteRecord(voteId, voteOption).then((res) => {
+      voteData.isVote = 1
+    })
+  }
 }
 
 </script>
 
 <template>
-  <div class=" w-screen h-screen bg-gray-500/8">
-    <div class="p-3">
-      <div class="p-3 text-left border border-gray-200 bg-white  rounded ">
+  <div class="w-screen h-screen ">
+    <div class="p-3 bg-gray-500/8">
+      <div class="p-3 text-left border border-gray-200 bg-white  rounded">
         <div class="mb-2">
           {{ voteData.question }}
         </div>
@@ -141,7 +166,7 @@ const isClick = () => {
           <!-- 判断是否已经投票 -->
           <!-- 未投票 -->
           <div
-            v-if="voteData.isVote === 0"
+            v-if="voteData.isVote === 0 && voteData.status === 0"
             class="mt-4 border-gray-200 border p-10px bg-white rounded text-sm"
           >
             <van-checkbox
@@ -196,9 +221,11 @@ const isClick = () => {
                 style="white-space: nowrap"
               >
                 <!-- <van-icon name="checked" color="green" size="1.25em" class="relative left-10px  leading-40px" /> -->
-                <div class="text-dark-900 left-10px relative w-40px leading-40px text-sm">{{
-                  item.optionValue
-                }}</div>
+                <div class="text-dark-900 left-10px relative w-40px leading-40px text-sm">
+                  {{
+                    item.optionValue
+                  }}
+                </div>
                 <span
                   class="absolute right-50px leading-40px text-sm text-cool-gray-400"
                 >
@@ -227,12 +254,12 @@ const isClick = () => {
         <van-button
           type="primary"
           size="large"
-          :color="voteData.isVote?'#9DD49D':'#1FA71F'"
+          :color="voteData.isVote||voteData.status?'#9DD49D':'#1FA71F'"
           class="my-10px rounded"
-          :disabled="voteData.isVote===1"
+          :disabled="voteData.isVote===1 || voteData.status ===1"
           @click="isClick()"
         >
-          {{ voteData.isVote?'已投票':'开始投票' }}
+          {{ voteData.text }}
         </van-button>
       </div>
     </div>
