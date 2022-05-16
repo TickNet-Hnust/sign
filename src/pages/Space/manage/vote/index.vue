@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-15 21:52:36
+ * @LastEditTime: 2022-05-16 10:18:12
 -->
 <script setup lang="ts">
 import { newVote } from '~/api/record/index'
@@ -32,11 +32,13 @@ const OptionsText = ref('')
 const voteOptions = ref([
   {value:''},{value:''},
 ])
+// 增加选项
 const addOption = () => {
   voteOptions.value.push({
     value: ''
   })
 }
+// 删除选项
 const deleteOption = (index: any) => {
   if(voteOptions.value.length>2) {
     voteOptions.value.splice(index,1)
@@ -73,6 +75,7 @@ const showTypePicker = ref(false)
 const showTimePicker = ref(false)
 const voteType = ref('单选')
 const durationTime = ref('60分钟')
+// 时间选择器
 const onTimeConfirm = (currentValue: any) => {
   durationTime.value = ''
   for(var i=0;i<3;i++) {
@@ -95,6 +98,7 @@ const onTimeConfirm = (currentValue: any) => {
 const onTimeCancel = () => {
   showTimePicker.value = false
 }
+// 单多选选择器
 const onTypeConfirm = (currentValue: any) => {
   voteType.value = currentValue.text
   showTypePicker.value = false
@@ -102,7 +106,7 @@ const onTypeConfirm = (currentValue: any) => {
 const onTypeCancel = () => {
   showTypePicker.value = false
 }
-
+// 最多可选控制
 const currentCount = ref(2)
 const subCount = () => {
   if(currentCount.value > 2) {
@@ -114,7 +118,9 @@ const addCount = () => {
     currentCount.value++
   }
 }
+// 是否匿名
 const anonymity = ref(true)
+// 表单验证
 const voteForm = ref<FormInstance>()
 const validatorMessage = (val: any) => {
   if( val === '') {
@@ -123,6 +129,7 @@ const validatorMessage = (val: any) => {
     return '只能包括下划线、汉字、数字、字母！'
   }
 }
+// 发起投票
 const beginVote = async () => {
   voteForm.value?.validate().then(() => {
     voteMsg.voteOption.length = 0
