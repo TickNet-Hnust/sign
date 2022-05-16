@@ -3,7 +3,7 @@
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: caojun
- * @LastEditTime: 2022-05-16 11:05:20
+ * @LastEditTime: 2022-05-16 15:19:53
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -140,7 +140,7 @@ const deleteSpace = () => {
   deleteSignSpace(deleteData).then((res) => {
     if (res.code === 200) {
       Notify({ type: 'primary', message: '解散成功' })
-      router.push('/Space')
+      router.replace('/Space')
     }
   })
 }
@@ -281,7 +281,7 @@ const quitSpace = () => {
   quitSignSpace(quitSpaceData).then((res) => {
     if (res.code === 200) {
       Notify({ type: 'primary', message: '退出成功' })
-      router.push('/Space')
+      router.replace('/Space')
     }
   })
 }
