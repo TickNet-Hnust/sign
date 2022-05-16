@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-01 20:32:16
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-16 13:19:40
+ * @LastEditTime: 2022-05-16 14:05:11
  */
 import request from '~/utils/request'
 
@@ -25,10 +25,10 @@ export function signQRCode(data: any) {
 }
 
 // 签到
-export function sign(data: any) {
+export function signByQRCode(data: any) {
   return request({
     method: 'post',
-    url: '/signff/signRecord',
+    url: '/signff/signRecord/ByQRCode',
     data: data
   })
 }

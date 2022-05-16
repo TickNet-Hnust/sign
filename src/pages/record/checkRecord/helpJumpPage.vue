@@ -3,24 +3,19 @@
  * @Author: 刘晴
  * @Date: 2022-05-07 15:08:29
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-15 17:19:56
+ * @LastEditTime: 2022-05-16 14:05:15
 -->
 <script lang="ts" setup>
-import { sign } from '~/api/record/index'
+import { signByQRCode } from '~/api/record/index'
 import { Toast } from 'vant'
 const router = useRouter()
 const route = useRoute()
 const request = reactive({
-  longitude: null,
-  latitude: null,
-  signCode: '',
   ip: '',
   browser: '',
   os: '',
   signId: route.query.signId,
   code: route.query.code,
-  userId: '',
-  userName: ''
 })
 const helpSign = () => {
   Toast.loading({
@@ -31,7 +26,7 @@ const helpSign = () => {
   });
 
   setTimeout(() => {
-    sign(request).then((res: any) => {
+    signByQRCode(request).then((res: any) => {
       if(res.code === 200) {
         console.log('签到成功')
         Toast.success({
