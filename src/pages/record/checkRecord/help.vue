@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { assistSignIn, signQRCode } from '~/api/record/index'
-const stuMsg = ref({
+import { signByUser, signQRCode } from '~/api/record/index'
+import { Toast } from 'vant'
+const stuMsg = reactive({
   stuNum: '',
   stuName: ''
 })
@@ -8,8 +9,25 @@ const route = useRoute()
 const signId = route.query.id
 const QRUrl = ref('')
 const helpSign = () => {
-  assistSignIn(stuMsg.value).then((res: any) => {
-    console.log(res)
+  const request = reactive({
+    signId: signId,
+    userId: stuMsg.stuNum,
+    userName: stuMsg.stuName
+  })
+  signByUser(request).then((res: any) => {
+    if(res.code === 200){
+      Toast.success({
+        message: '补录成功',
+        duration: 700
+      })
+      stuMsg.stuNum = '',
+      stuMsg.stuName = ''
+    } else {
+      Toast.fail({
+        message: res.msg,
+        duration: 700
+      })
+    }
   }).catch((err) => {
     console.log(err)
   })
@@ -25,7 +43,6 @@ const getQRCode = () => {
       QRUrl.value = res.data.url
       loadingImg.value = false
     }
-   
   }).catch((err) => {
     console.log(err)
   })

@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-15 12:28:33
+ * @LastEditTime: 2022-05-16 12:24:12
 -->
 
 <script setup lang="ts">
@@ -30,8 +30,8 @@ onMounted( () => {
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
       >
         <span class="bg-hex-D7D7D7 text-hex-222 rounded px-2 py-1">
-          <span><van-icon name="setting" /></span>
-          <span class="text-sm ml-2">基本配置</span>
+          <span><van-icon name="column" /></span>
+          <span class="text-sm ml-2">签到信息</span>
         </span>
       </div>
       <div
