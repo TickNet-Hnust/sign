@@ -1,5 +1,14 @@
 import request from '~/utils/request'
 
+// 新建抽签
+export function draw(data: any) {
+  return request({
+    method: 'post',
+    url: '/signff/draw',
+    data,
+  })
+}
+
 // 获取某个选项剩余的签数
 export function getDrawNum(drawId: number) {
   return request({
