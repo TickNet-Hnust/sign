@@ -2,14 +2,15 @@
  * @Description: 
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
- * @LastEditors: 张津瑞
- * @LastEditTime: 2022-05-13 16:44:49
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-16 21:52:12
 -->
 <script setup lang="ts">
-import { Notify } from 'vant';
+import { Notify, Toast } from 'vant';
 import {sign} from '~/api/launchSign/index'
 //nanoid产生唯一id
-import {nanoid} from  'nanoid'
+import { customAlphabet } from  'nanoid'
+const nanoid = customAlphabet('1234567890abcdef', 5)
 const router = useRouter()
 const route = useRoute()
 //百度地图获取定位方法
@@ -50,7 +51,6 @@ const signShow = ref(true)
 const signRequestData = reactive({
     longitude:0,
     latitude:0,
-    //目前是随机名字 这地方记得使用uuid
     signName:'',
     //下面的数据都是默认写好
     os:'windows10',
@@ -82,6 +82,10 @@ const spaceId  = typeof route.query.spaceId === 'undefined' ? 0 : +route.query.s
 console.log(spaceId,'spaceId')
 //发起签到方法
 const  launchSign = function(){
+  Toast.loading({
+    message: '发起中...',
+    duration: 2000
+  })
   console.log(canSee.value,'签到列表是否可见')
   console.log(inputName.value,'签到名')
   console.log(durationTime.value,'活动时长字符串')

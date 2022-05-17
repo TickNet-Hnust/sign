@@ -7,6 +7,7 @@ const stuMsg = reactive({
 })
 const route = useRoute()
 const signId = route.query.id
+const spaceName = route.query.spaceName
 const QRUrl = ref('')
 const helpSign = () => {
   const request = reactive({
@@ -80,7 +81,8 @@ const changeTab = () => {
     </div>
     <div class="m-t-4">
       <van-tabs color="rgb(0,51,255)" title-active-color="rgb(0,51,255)" @change="changeTab()" v-model:active="activeTab">
-        <van-tab title="直接补录" name="byName">
+        <!-- 如果是非空间的签到则不展示学号姓名补录 -->
+        <van-tab v-if="spaceName !== '无' " title="直接补录" name="byName">
           <div class="text-left mt-6 border-1 p-4 border-gray-500/50 rounded bg-white">
             <van-cell-group border="false">
               <van-field

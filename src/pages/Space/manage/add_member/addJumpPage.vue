@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-07 15:08:29
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-15 17:08:06
+ * @LastEditTime: 2022-05-16 21:59:21
 -->
 <script lang="ts" setup>
 import { enterSpaceByCode } from '~/api/record/index'
@@ -45,7 +45,7 @@ const joinSpace = () => {
         })
       } else {
         Toast.fail({
-          message: '加入失败，请重试',
+          message: res.msg,
           duration: 1000
         })
         router.replace({

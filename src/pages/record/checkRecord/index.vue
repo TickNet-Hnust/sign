@@ -79,9 +79,9 @@ const changeDialogShow = () => {
 const nameForm = ref<FormInstance>()
 const validatorMessage = (val: any) => {
   if( val === '') {
-    return '输入内容不能为空'
-  } else if(!/^[\u4E00-\u9FA5A-Za-z0-9_]+$/.test(val)){
-    return '只能包括下划线、汉字、数字、字母！'
+    return '提示：输入内容不能为空'
+  } else if(!/^[\u4E00-\u9FA5A-Za-z0-9\,\(\)\[\]_\"\'\u2018\u2019\u201C\u201D\u3010\u3011\uFF08\uFF09\u3001\uFF0C]+$/.test(val)){
+    return '提示：不能有空格等特殊符号'
   }
 }
 const onBeforeClose = async (action, done) => {
@@ -181,11 +181,12 @@ const editSignName = async () => {
       show-cancel-button
       :before-close="onBeforeClose"
     >
-      <van-form ref="nameForm">
+      <van-form ref="nameForm" error-message-align="center">
         <van-field
           :rules="[{ validator: validatorMessage}]"
           v-model="signName"
           placeholder="请输入活动名称"
+          input-align="center"
         />
       </van-form>
     </van-dialog>
