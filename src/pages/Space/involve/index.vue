@@ -40,7 +40,7 @@ const quitSpace = () => {
   quitSignSpace(quitData).then((res) => {
     if (res.code === 200) {
       Notify({ type: 'primary', message: '退出成功' })
-      router.push('/Space')
+      router.replace('/Space')
     }
   })
 }

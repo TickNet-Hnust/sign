@@ -1,13 +1,12 @@
 <script setup lang="ts">
-  import {signRecord} from '~/api/launchSign/index'
-  import { Toast } from 'vant'
+  import { Notify, Toast } from 'vant';
+  import {signRecordByCode} from '~/api/launchSign/index'
   const pattern = /^\d{4}$/ // 用户输入的签到码正则匹配规则
   const router = useRouter()
   const inputValue = ref('')
   const canCheck = ref(false) // 是否可以开始签到
   const checkShow = ref(true)
   const showKeyboard = ref(false)
-  import { Notify } from 'vant';
   const titleText = ref(
     computed( () => {
       if(!pattern.test(inputValue.value)) {
@@ -74,7 +73,7 @@ const joinCheck = () => {
       message: '签到...',
       duration: 1000
     })
-    signRecord(signRecordRequestData).then((res)=>{
+    signRecordByCode(signRecordRequestData).then((res)=>{
       console.log(res,'签到请求传来的数据')
       let {msg,code} = res
       if(code===500){
