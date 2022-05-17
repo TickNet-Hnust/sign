@@ -19,7 +19,7 @@ interface VoteData {
   isVote: number // 是否投票，1表示已参与，0表示未参与
   option: Array<OptionData> // 选项具体数据
   allPollNum: number
-  status: number
+  status: number // 1表示已经结束
   text: string
   optionWidth: Array<string> // 确定选项染色的宽度
 }
@@ -76,6 +76,7 @@ onMounted(() => {
   getVote(voteId).then((res) => {
     console.warn(res.data)
     voteData.question = res.data.voteName
+    voteData.status = res.data.status
     voteData.endTime = res.data.endTime
     voteData.isVote = res.data.attend
     voteData.voteNumLimit = res.data.voteNumLimit
