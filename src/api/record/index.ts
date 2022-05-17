@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-01 20:32:16
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-15 19:52:47
+ * @LastEditTime: 2022-05-16 14:05:11
  */
 import request from '~/utils/request'
 
@@ -12,14 +12,6 @@ export function getTotalRecord() {
   return request({
     method: 'get',
     url: '/sign/record/total'
-  })
-}
-// 辅助签到
-export function assistSignIn(data: any) {
-  return request({
-    method: 'post',
-    url: '/signff/sign/assistSignIn',
-    data: data
   })
 }
 
@@ -33,10 +25,19 @@ export function signQRCode(data: any) {
 }
 
 // 签到
-export function sign(data: any) {
+export function signByQRCode(data: any) {
   return request({
     method: 'post',
-    url: '/signff/signRecord',
+    url: '/signff/signRecord/ByQRCode',
+    data: data
+  })
+}
+
+// 学号姓名辅助签到
+export function signByUser(data: any) {
+  return request({
+    method: 'post',
+    url:'/signff/signRecord/ByUser',
     data: data
   })
 }

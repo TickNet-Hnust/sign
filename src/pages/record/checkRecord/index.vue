@@ -1,6 +1,7 @@
 
 <script setup lang="ts">
 import { detailSignRecord, changeSignMsg } from '~/api/record/signRecord'
+import { FormInstance } from 'vant'
 // 签到活动id
 const route = useRoute()
 const signId = route.query.id
@@ -51,7 +52,6 @@ const changeShow = () => {
 }
 // 初始化数据
 const totalRecord = ref(0)
-const stulist = ref(null)
 onMounted(()=>{
   detailSignRecord(signId).then((res: any) => {
     if(res.code === 200) {
@@ -75,15 +75,33 @@ const showDialog = ref(false)
 const changeDialogShow = () => {
   showDialog.value = true
 }
-const editSignName = () => {
-  // 更改名字与更改用户是否可见用的是同一个接口，直接调用更改名字的方法即可
-  if(signName.value !== detailMsg.value.signName) {
-    detailMsg.value.signName = signName.value
-    changeShow()
+// 表单验证
+const nameForm = ref<FormInstance>()
+const validatorMessage = (val: any) => {
+  if( val === '') {
+    return '提示：输入内容不能为空'
+  } else if(!/^[\u4E00-\u9FA5A-Za-z0-9\,\(\)\[\]_\"\'\u2018\u2019\u201C\u201D\u3010\u3011\uFF08\uFF09\u3001\uFF0C]+$/.test(val)){
+    return '提示：不能有空格等特殊符号'
   }
 }
-const onCancel = () => {
-  signName.value = detailMsg.value.signName
+const onBeforeClose = async (action, done) => {
+  if(action === 'confirm') {
+    editSignName()
+  } else {
+    signName.value = detailMsg.value.signName
+    showDialog.value = false
+  }
+}
+const editSignName = async () => {
+  // 验证是否符合规则
+  nameForm.value.validate().then(() => {
+    // 更改名字与更改用户是否可见用的是同一个接口，直接调用更改名字的方法即可
+    if(signName.value !== detailMsg.value.signName) {
+      detailMsg.value.signName = signName.value
+      changeShow()
+    }
+    showDialog.value = false
+  })
 }
 </script>
 <template>
@@ -161,13 +179,20 @@ const onCancel = () => {
       title="编辑签到名称"
       confirm-button-color="rgb(63,133,255)"
       show-cancel-button
-      @confirm="editSignName"
-      @cancel="onCancel"
+      :before-close="onBeforeClose"
     >
-      <van-field v-model="signName" placeholder="请输入活动名称" />
+      <van-form ref="nameForm" error-message-align="center">
+        <van-field
+          :rules="[{ validator: validatorMessage}]"
+          v-model="signName"
+          placeholder="请输入活动名称"
+          input-align="center"
+        />
+      </van-form>
     </van-dialog>
-    <div class="text-left bg-hex-E1FBE3 border border-hex-8FC798 rounded mt-5 p-4">
-      <span>共成功签到了{{totalRecord}}次</span>
+    <div class="bg-hex-E1FBE3 border border-hex-8FC798 rounded mt-5 p-4">
+      <span v-if="attend === '1' ">共成功签到了{{totalRecord}}次</span>
+      <span v-if="attend === '0' ">还有{{totalRecord}}人未签到</span>
     </div>
     <van-tabs v-if="detailMsg.spaceName !== '无' " v-model:active="attend" class="mt-3" color="rgb(40,182,72)">
       <van-tab title="已签到" name="1">
@@ -176,7 +201,7 @@ const onCancel = () => {
       </van-tab>
     </van-tabs>
     <stu-list @getTotal="getTotal" v-if="attend === '1' " :activityId="signId" attend="1" action="sign"></stu-list>
-    <stu-list v-if="attend === '0' " :activityId="signId" attend="0" action="sign"></stu-list>
+    <stu-list @getTotal="getTotal" v-if="attend === '0' " :activityId="signId" attend="0" action="sign"></stu-list>
   </div>
 </template>
 <route lang="yaml">

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-  import {signRecord} from '~/api/launchSign/index'
+  import { Notify, Toast } from 'vant';
+  import {signRecordByCode} from '~/api/launchSign/index'
   const pattern = /^\d{4}$/ // 用户输入的签到码正则匹配规则
   const router = useRouter()
   const inputValue = ref('')
   const canCheck = ref(false) // 是否可以开始签到
   const checkShow = ref(true)
-  import { Notify } from 'vant';
+  const showKeyboard = ref(false)
   const titleText = ref(
     computed( () => {
       if(!pattern.test(inputValue.value)) {
@@ -68,7 +69,11 @@ const joinCheck = () => {
     signRecordRequestData.latitude = latitude.value
     signRecordRequestData.signCode = inputValue.value
     console.log(signRecordRequestData,'签到请求传去的数据')
-    signRecord(signRecordRequestData).then((res)=>{
+    Toast.loading({
+      message: '签到...',
+      duration: 1000
+    })
+    signRecordByCode(signRecordRequestData).then((res)=>{
       console.log(res,'签到请求传来的数据')
       let {msg,code} = res
       if(code===500){
@@ -115,8 +120,20 @@ const jumpRecord = function() {
     <div class="bg-hex-F2EFF6 p-3">
       <div class="text-sm p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB mt-3">{{ titleText }}</div>
       <div v-show="checkShow">
-        <div class="w-133px mt-6 mx-auto">
-          <van-field v-model="inputValue" placeholder="输入签到码" class="text-xl" />
+        <div class="mt-6">
+          <van-password-input
+            :value="inputValue"
+            :mask="false"
+            :length="4"
+            :gutter="5"
+            :focused="showKeyboard"
+            @focus="showKeyboard = true"
+          />
+          <van-number-keyboard
+            v-model="inputValue"
+            :show="showKeyboard"
+            @blur="showKeyboard = false"
+          />
         </div>
         <div
           class="my-6 border w-200px mx-auto py-3 text-base rounded border-hex-4FC09C text-hex-4FC09C"

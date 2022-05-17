@@ -97,8 +97,8 @@ const addAFTFSpaceData = reactive({
 const addFTFSpace = () => {
   if (isJoin.value === false) { // 创建空间
     addAFTFSpaceData.join = false
-    if (addAFTFSpaceData.spaceName === '') {
-      Notify({ type: 'warning', message: '请输入空间名称' })
+    if (!/^[\u4E00-\u9FA5A-Za-z0-9\,\(\)\[\]_\"\'\u2018\u2019\u201C\u201D\u3010\u3011\uFF08\uFF09\u3001\uFF0C]+$/.test(addAFTFSpaceData.spaceName)) {
+      Notify({ type: 'warning', message: '只能包括逗号、顿号、括号、引号、减号、下划线、汉字、数字、字母！' })
       router.push('/Space')
       return
     }
@@ -115,6 +115,7 @@ const addFTFSpace = () => {
         Notify({ type: 'success', message: '创建成功' })
         router.push('/Space')
         addAFTFSpaceData.code = ''
+        addAFTFSpaceData.spaceName = ''
         active.value = 1
         spaceList.value = []
         request.value.pageNum = 1

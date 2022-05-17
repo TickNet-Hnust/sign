@@ -3,7 +3,7 @@
  * @Autor: 张津瑞
  * @Date: 2022-05-02 18:52:59
  * @LastEditors: 张津瑞
- * @LastEditTime: 2022-05-03 17:27:37
+ * @LastEditTime: 2022-05-16 14:49:29
  */
 import request from '~/utils/request'
 
@@ -26,10 +26,10 @@ export function signRecordList(data:any) {
 }
 
 //签到
-export function signRecord(data:any) {
+export function signRecordByCode(data:any) {
   return request({
     method: 'post',
-    url: '/signff/signRecord',
+    url: '/signff/signRecord/ByCode',
     data:data
   })
 }

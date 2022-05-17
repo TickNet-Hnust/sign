@@ -3,7 +3,7 @@
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: caojun
- * @LastEditTime: 2022-05-15 21:46:00
+ * @LastEditTime: 2022-05-17 19:56:09
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -110,7 +110,6 @@ const quitSpaceData = reactive({
 const rank = ref(0)
 // 查询空间列表的参数
 getSignSpace(id.value).then((res) => {
-  console.log(res.data)
   rank.value = res.data.memberRank
   spaceList.id = res.data.id
   spaceList.createTime = res.data.createTime
@@ -122,22 +121,25 @@ getSignSpace(id.value).then((res) => {
   deleteStudentData.spaceId = res.data.id
   deleteStudentData.userId = res.data.id
   quitSpaceData.spaceId = res.data.id
-  console.log(rank.value)
 })
 // 获取空间成员列表
 getSpaceMemberList(id.value).then((res) => {
-  if (res.code === 200) {
+  if (res.code === 200)
     member_list.value = res.rows
-    console.log(member_list.value)
-  }
 })
 
 // 负责人修改空间名称
 const updateSpaceName = () => {
   updateSignSpace(updateData).then((res) => {
-    if (res.code === 200)
-      console.log(111)
-    spaceList.spaceName = updateData.spaceName
+    if (res.code === 200) {
+      if (/^[\u4E00-\u9FA5A-Za-z0-9\,\(\)\[\]_\"\'\u2018\u2019\u201C\u201D\u3010\u3011\uFF08\uFF09\u3001\uFF0C]+$/.test(updateData.spaceName)) {
+        Toast('修改成功')
+        spaceList.spaceName = updateData.spaceName
+      }
+    }
+    else {
+      Notify({ type: 'warning', message: res.msg })
+    }
   })
 }
 // 负责人解散空间
@@ -145,7 +147,7 @@ const deleteSpace = () => {
   deleteSignSpace(deleteData).then((res) => {
     if (res.code === 200) {
       Notify({ type: 'primary', message: '解散成功' })
-      router.push('/Space')
+      router.replace('/Space')
     }
   })
 }
@@ -168,15 +170,26 @@ const changeAdmin = (item) => {
 }
 // 点击学生的方法
 const changeStu = (item) => {
-  if (rank.value === 2) {
-    showStuChange.value = true
-    changeStuData.userId = item.userId
-    changeStuData.spaceId = id
+
+}
+// 操作成员方法
+const changeMenber = (item) => {
+  if (item.memberRank === 1) {
+    showAdminChange.value = true
+    changeAdminData.userId = item.userId
+    changeAdminData.spaceId = id
   }
-  else if (rank.value === 1) {
-    showStudentChange.value = true
-    deleteStudentData.userId = item.userId
-    deleteStudentData.spaceId = id
+  else {
+    if (rank.value === 2) {
+      showStuChange.value = true
+      changeStuData.userId = item.userId
+      changeStuData.spaceId = id
+    }
+    else if (rank.value === 1) {
+      showStudentChange.value = true
+      deleteStudentData.userId = item.userId
+      deleteStudentData.spaceId = id
+    }
   }
 }
 // 操作管理员列表
@@ -275,7 +288,7 @@ const quitSpace = () => {
   quitSignSpace(quitSpaceData).then((res) => {
     if (res.code === 200) {
       Notify({ type: 'primary', message: '退出成功' })
-      router.push('/Space')
+      router.replace('/Space')
     }
   })
 }
@@ -371,6 +384,20 @@ const quitSpace = () => {
             </div>
           </div>
         </div>
+        <div
+          v-if="rank===1"
+          class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600"
+          @click="showQuit = true"
+        >
+          退出空间
+        </div>
+        <div
+          v-if="rank===2"
+          class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600"
+          @click="showDelete = true"
+        >
+          解散空间
+        </div>
       </van-tab>
       <van-tab title="成员">
         <div class="text-left mt-3 text-hex-aaa text-xs ml-3">
@@ -378,13 +405,13 @@ const quitSpace = () => {
         </div>
         <div class="bg-white rounded items-center p-1 border border-hex-ccc">
           <van-list>
-            <div class="flex items-center text-sm py-2 border-b border-hex-ddd mt-2">
+            <div class="flex items-center text-sm py-2">
               <span class="flex-1">学号/工号</span>
               <span class="flex-1">姓名</span>
               <span class="flex-1">角色</span>
             </div>
             <div
-              v-for="item in member_list" :key="item" class="flex items-center text-sm py-2 border-b border-hex-ddd mt-2 "
+              v-for="item in member_list" :key="item" class="flex items-center text-sm py-2 border-t border-hex-ddd "
             >
               <div class="flex-1 font-sans">
                 {{ item.userId }}
@@ -396,13 +423,16 @@ const quitSpace = () => {
                 <span v-if="item.memberRank == 2">
                   <van-tag color="#38bdf8">负责人</van-tag>
                 </span>
-                <span v-if="item.memberRank == 1" @click="changeAdmin(item)">
+                <span v-if="item.memberRank == 1">
                   <van-tag color="#10b981">管理员</van-tag>
                 </span>
-                <span v-if="item.memberRank == 0" class="text-xs" @click="changeStu(item)">
+                <span v-if="item.memberRank == 0" class="text-xs">
                   <van-tag plain color="#78716c">成员</van-tag>
                 </span>
               </div>
+              <span style="transform: rotate(90deg);position: absolute; right: 1em">
+                <van-icon v-if="item.memberRank<rank" name="ellipsis" @click="changeMenber(item)" />
+              </span>
             </div>
           </van-list>
         </div>
@@ -410,7 +440,7 @@ const quitSpace = () => {
       <van-popup
         v-model:show="showAdminChange"
         position="bottom"
-        :style="{ height: '80%' }"
+        :style="{ height: '50%' }"
       >
         <van-picker
           class="mt-10"
@@ -423,7 +453,7 @@ const quitSpace = () => {
       <van-popup
         v-model:show="showStuChange"
         position="bottom"
-        :style="{ height: '80%' }"
+        :style="{ height: '50%' }"
       >
         <van-picker
           class="mt-10"
@@ -436,7 +466,7 @@ const quitSpace = () => {
       <van-popup
         v-model:show="showStudentChange"
         position="bottom"
-        :style="{ height: '80%' }"
+        :style="{ height: '50%' }"
       >
         <van-picker
           class="mt-10"
@@ -447,20 +477,6 @@ const quitSpace = () => {
         />
       </van-popup>
     </van-tabs>
-    <div
-      v-if="rank===1"
-      class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600"
-      @click="showQuit = true"
-    >
-      退出空间
-    </div>
-    <div
-      v-if="rank===2"
-      class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600"
-      @click="showDelete = true"
-    >
-      解散空间
-    </div>
   </div>
 </template>
 <route lang="yaml">

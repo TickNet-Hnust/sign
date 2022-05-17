@@ -2,6 +2,8 @@
 import { Notify } from 'vant'
 import { getSignSpace, quitSignSpace } from '~/api/mySpace/index'
 import { getSpaceMemberList } from '~/api/mySpace/spaceMember'
+import { useUserStore } from '~/stores/user'
+const user = useUserStore()
 const route = useRoute()
 const router = useRouter()
 // 初始化成员列表
@@ -18,7 +20,7 @@ const spaceList = reactive({
 const id = ref(route.query.id)
 // 退出空间的参数
 const quitData = reactive({
-  userId: '1905040121',
+  userId: user.userId,
   spaceId: 0,
 })
 // 获取我参与的空间的列表
@@ -38,7 +40,7 @@ const quitSpace = () => {
   quitSignSpace(quitData).then((res) => {
     if (res.code === 200) {
       Notify({ type: 'primary', message: '退出成功' })
-      router.push('/Space')
+      router.replace('/Space')
     }
   })
 }
