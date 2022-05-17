@@ -3,7 +3,7 @@
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: caojun
- * @LastEditTime: 2022-05-16 15:19:53
+ * @LastEditTime: 2022-05-17 19:56:09
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -131,8 +131,15 @@ getSpaceMemberList(id.value).then((res) => {
 // 负责人修改空间名称
 const updateSpaceName = () => {
   updateSignSpace(updateData).then((res) => {
-    if (res.code === 200)
-      spaceList.spaceName = updateData.spaceName
+    if (res.code === 200) {
+      if (/^[\u4E00-\u9FA5A-Za-z0-9\,\(\)\[\]_\"\'\u2018\u2019\u201C\u201D\u3010\u3011\uFF08\uFF09\u3001\uFF0C]+$/.test(updateData.spaceName)) {
+        Toast('修改成功')
+        spaceList.spaceName = updateData.spaceName
+      }
+    }
+    else {
+      Notify({ type: 'warning', message: res.msg })
+    }
   })
 }
 // 负责人解散空间
