@@ -3,6 +3,7 @@ import { Dialog } from 'vant'
 import { draw } from '~/api/myJoin/draw'
 
 const route = useRoute()
+const router = useRouter()
 
 interface Draw{
   drawName: string
@@ -123,14 +124,22 @@ const commitDrawInfo = () => {
   })
   draw(newDrawData).then((res: any) => {
     console.warn(res)
-    if (res.code === 500) {
+    if (res.code === 500 || res.code === 501) {
       Dialog.alert({
         message: res.msg,
       })
     }
     else if (res.code === 200) {
+      const id = res.data
       Dialog.alert({
         message: '创建成功',
+      }).then(() => {
+        router.push({
+          path: '/space/manage/draw/owner_draw',
+          query: {
+            id,
+          },
+        })
       })
     }
   })
@@ -152,13 +161,13 @@ const commitDrawInfo = () => {
         <span>设置抽签选项</span>
       </div>
       <div v-for="(item,index) in drawInitData.option" :key="item.optionId" class=" flex justify-between items-center border-b-1 border-hex-C9C9C9 py-3">
-        <span>
+        <span class="inline-block w-140px">
           <i class="bg-red-500 rounded-1/2 text-white text-xs py-0.7 px-1 mr-2" @click="subOption(item,index)">
             <van-icon name="minus" />
           </i>
-          <input v-model="item.content" :placeholder="`选项${index + 1}`">
+          <input v-model="item.content" :placeholder="`选项${index + 1}`" class="w-100px">
         </span>
-        <span>
+        <span class="inline-block w-100px">
           <i class="bg-hex-D7D7D7 color-hex-633333 text-xs p-1" @click="subtraction(item)">
             <van-icon name="minus" />
           </i>
