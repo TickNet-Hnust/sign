@@ -108,8 +108,14 @@ onMounted(() => {
 
 // 是否显示投票详细数据
 const show = ref(false)
+const optionCheckedValue = ref('')
 const showChange = function() {
   show.value = !show
+}
+
+const handleClickOption = (id: number) => {
+  show.value = true
+  optionCheckedValue.value = voteData.option[id - 1].optionValue
 }
 
 // 检查选项是否选中，选中返回true，未选中返回false
@@ -140,6 +146,7 @@ const isClick = () => {
     })
     addVoteRecord(voteId, voteOption).then((res) => {
       voteData.isVote = 1
+      console.warn(res)
     })
   }
 }
@@ -157,8 +164,8 @@ const toVoteRecord = () => {
 </script>
 
 <template>
-  <div class="w-screen h-screen ">
-    <div class="p-3 bg-gray-500/8">
+  <div class="bg-gray-500/8">
+    <div class="p-3 ">
       <div class="p-3 text-left border border-gray-200 bg-white  rounded">
         <div class="mb-2">
           {{ voteData.question }}
@@ -196,7 +203,7 @@ const toVoteRecord = () => {
               v-if="optionCheck(item.id)"
               class="mt-4 h-42px bg-light-50 border rounded"
               style="border-color:#1FA71F"
-              @click="show = true"
+              @click="handleClickOption(item.id)"
             >
               <div
                 class="border-none h-40px leading-40px text-left flex"
@@ -285,7 +292,7 @@ const toVoteRecord = () => {
       </div>
     </div>
   </div>
-  <records-list :show="show" :type="voteData.type" :active-id="voteId" @show-change="showChange()" />
+  <records-list :show="show" :type="voteData.type" :active-id="voteId" :option-checked-value="optionCheckedValue" @show-change="showChange()" />
 </template>
 
 <route lang="yaml">

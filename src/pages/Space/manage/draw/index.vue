@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Dialog } from 'vant'
 import { draw } from '~/api/myJoin/draw'
 
 const route = useRoute()
@@ -120,8 +121,18 @@ const commitDrawInfo = () => {
     newDrawData.optionContent.push(item.content)
     newDrawData.optionNum.push(item.num)
   })
-  draw(newDrawData).then((res) => {
+  draw(newDrawData).then((res: any) => {
     console.warn(res)
+    if (res.code === 500) {
+      Dialog.alert({
+        message: res.msg,
+      })
+    }
+    else if (res.code === 200) {
+      Dialog.alert({
+        message: '创建成功',
+      })
+    }
   })
 }
 
