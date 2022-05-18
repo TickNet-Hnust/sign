@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-16 21:24:24
+ * @LastEditTime: 2022-05-18 13:28:13
 -->
 <script setup lang="ts">
 import { newVote } from '~/api/record/index'
@@ -159,6 +159,10 @@ const beginVote = async () => {
         router.push({
           path: '/space/manage/vote/owner_vote',
           query: {id: res.data}
+        })
+      } else {
+        Toast({
+          message: res.message
         })
       }
     })
