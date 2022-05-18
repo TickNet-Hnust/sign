@@ -13,7 +13,7 @@ export function addVoteRecord(voteId: number, voteOption: Array<string>) {
 }
 
 // 查询当前投票名单
-export function getVoteRecordList(voteId: number, pageNum: number, pageSize: number, attend: number) {
+export function getVoteRecordList(voteId: number, pageNum: number, pageSize: number, optionName: string, attend: number) {
   return request({
     method: 'get',
     url: '/signff/voteRecord/list',
@@ -21,11 +21,13 @@ export function getVoteRecordList(voteId: number, pageNum: number, pageSize: num
       voteId,
       pageNum,
       pageSize,
+      optionName,
       attend,
     },
   })
 }
 
+// 修改投票时间
 export function modifyVoteTime(voteId: number, endTime: string) {
   return request({
     method: 'put',

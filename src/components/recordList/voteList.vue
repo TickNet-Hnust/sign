@@ -123,7 +123,7 @@ const jumpDetail = (item: any) => {
            left: 0"
       />
       <div
-        v-if="!item.attend"
+        v-if="item.attend === 1"
         class="w-54px h-54px"
         style="
           position: absolute;

@@ -8,6 +8,7 @@ import { getVote } from '../../../../../api/myJoin/record'
 const route = useRoute()
 const router = useRouter()
 const voteId = Number(route.query.id)
+const loading = ref(true) // 控制数据加载完成，界面显示
 
 // 定义投票页面数据接口
 interface VoteData {
@@ -19,7 +20,7 @@ interface VoteData {
   isVote: number // 是否投票，1表示已参与，0表示未参与
   option: Array<OptionData> // 选项具体数据
   allPollNum: number
-  status: number
+  status: number // 1表示已经结束
   text: string
   optionWidth: Array<string> // 确定选项染色的宽度
 }
@@ -76,6 +77,7 @@ onMounted(() => {
   getVote(voteId).then((res) => {
     console.warn(res.data)
     voteData.question = res.data.voteName
+    voteData.status = res.data.status
     voteData.endTime = res.data.endTime
     voteData.isVote = res.data.attend
     voteData.voteNumLimit = res.data.voteNumLimit
@@ -102,13 +104,20 @@ onMounted(() => {
         }
       })
     }
+    loading.value = false
   })
 })
 
 // 是否显示投票详细数据
 const show = ref(false)
+const optionCheckedValue = ref('')
 const showChange = function() {
   show.value = !show
+}
+
+const handleClickOption = (id: number) => {
+  show.value = true
+  optionCheckedValue.value = voteData.option[id - 1].optionValue
 }
 
 // 检查选项是否选中，选中返回true，未选中返回false
@@ -139,6 +148,7 @@ const isClick = () => {
     })
     addVoteRecord(voteId, voteOption).then((res) => {
       voteData.isVote = 1
+      console.warn(res)
     })
   }
 }
@@ -156,8 +166,13 @@ const toVoteRecord = () => {
 </script>
 
 <template>
-  <div class="w-screen h-screen ">
-    <div class="p-3 bg-gray-500/8">
+  <div v-if="loading" class="bg-gray-500/8 p-3 h-full">
+    <van-loading size="24px">
+      加载中...
+    </van-loading>
+  </div>
+  <div v-else class="bg-gray-500/8 h-full">
+    <div class="p-3 ">
       <div class="p-3 text-left border border-gray-200 bg-white  rounded">
         <div class="mb-2">
           {{ voteData.question }}
@@ -195,7 +210,7 @@ const toVoteRecord = () => {
               v-if="optionCheck(item.id)"
               class="mt-4 h-42px bg-light-50 border rounded"
               style="border-color:#1FA71F"
-              @click="show = true"
+              @click="handleClickOption(item.id)"
             >
               <div
                 class="border-none h-40px leading-40px text-left flex"
@@ -284,7 +299,7 @@ const toVoteRecord = () => {
       </div>
     </div>
   </div>
-  <records-list :show="show" :type="voteData.type" :active-id="voteId" @show-change="showChange()" />
+  <records-list :show="show" :type="voteData.type" :active-id="voteId" :option-checked-value="optionCheckedValue" @show-change="showChange()" />
 </template>
 
 <route lang="yaml">

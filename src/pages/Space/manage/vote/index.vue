@@ -3,11 +3,11 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-16 10:18:12
+ * @LastEditTime: 2022-05-18 13:28:13
 -->
 <script setup lang="ts">
 import { newVote } from '~/api/record/index'
-import { FormInstance, Toast } from 'vant'
+import { FormInstance, Toast, Notify } from 'vant'
 interface VoteMsg {
   voteName: String // 投票名称
   voteNumLimit: Number // 可选的选项上限
@@ -92,8 +92,17 @@ const onTimeConfirm = (currentValue: any) => {
   console.log(hourToMin,'小时转换的分钟数')
   console.log(Min,'分钟数')
   console.log(res,'总分钟数')
-  voteMsg.duration = res
-  showTimePicker.value = false
+  if(res !== 0) {
+    voteMsg.duration = res
+    showTimePicker.value = false
+  } else {
+    Notify({
+      type: 'warning',
+      message: '持续时间不能为0',
+      duration: 1000
+    })
+  }
+  
 }
 const onTimeCancel = () => {
   showTimePicker.value = false
@@ -125,8 +134,8 @@ const voteForm = ref<FormInstance>()
 const validatorMessage = (val: any) => {
   if( val === '') {
     return '输入内容不能为空'
-  } else if(!/^[\u4E00-\u9FA5A-Za-z0-9_]+$/.test(val)){
-    return '只能包括下划线、汉字、数字、字母！'
+  } else if(!/^[\u4E00-\u9FA5A-Za-z0-9\,\(\)\[\]_\"\'\u2018\u2019\u201C\u201D\u3010\u3011\uFF08\uFF09\u3001\uFF0C]+$/.test(val)){
+    return '只能包括逗号、顿号、括号、引号、减号、下划线、汉字、数字、字母！'
   }
 }
 // 发起投票
@@ -151,6 +160,10 @@ const beginVote = async () => {
           path: '/space/manage/vote/owner_vote',
           query: {id: res.data}
         })
+      } else {
+        Toast({
+          message: res.message
+        })
       }
     })
   })
@@ -160,8 +173,14 @@ const beginVote = async () => {
   <div class="bg-gray-500/8 p-3 min-h-100vh">
     <div class="bg-hex-fff rounded p-3">
       <van-form ref="voteForm">
-        <div class="flex justify-between border-b-1 border-hex-C9C9C9">
-          <span class="text-lg font-bold ml-5">
+        <div class="border-b-1 border-hex-C9C9C9">
+          <span class="flex items-center">
+            <i
+              class="border border-hex-30B648 rounded-1/2 text-hex-30B648 text-sm w-2.2em h-2em"   
+              style="line-height: 2em"
+              @click="deleteOption(index)">
+              <van-icon name="records" />
+            </i>
             <van-field
               class="text-lg" type="text"
               placeholder="投票标题"

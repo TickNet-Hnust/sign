@@ -1,11 +1,12 @@
 <script setup lang="ts">
-  import { Notify } from 'vant';
+  import { Notify, Toast } from 'vant';
   import {signRecordByCode} from '~/api/launchSign/index'
   const pattern = /^\d{4}$/ // 用户输入的签到码正则匹配规则
   const router = useRouter()
   const inputValue = ref('')
   const canCheck = ref(false) // 是否可以开始签到
   const checkShow = ref(true)
+  const showKeyboard = ref(false)
   const titleText = ref(
     computed( () => {
       if(!pattern.test(inputValue.value)) {
@@ -71,28 +72,17 @@ const joinCheck = () => {
     signRecordByCode(signRecordRequestData).then((res)=>{
       console.log(res,'签到请求传来的数据')
       let {msg,code} = res
-      if(code===500){
-        Notify({
+      if(code!==200){
+        Toast({
           message: msg,
-          color: '#fff',
-          background: 'rgba(0,0,0,.7)'
+          duration: 2000
         })
-      }else if(code===401){
-        Notify({
-          message: '身份验证失效!',
-          color: '#fff',
-          background: 'rgba(0,0,0,.7)',
-          // 展示时长
-          duration: 700,
-        })
-        router.push({ path: `/`})
       }else if(code===200){
-        Notify({
+        Toast({
           message: msg,
-          color: '#fff',
-          background: 'rgba(0,0,0,.7)'
+          duration: 1000
         })
-        signRecordResponseData.id = res.data.id
+        signRecordResponseData.id = res.data
         checkShow.value = false
       }
     })
@@ -101,7 +91,7 @@ const joinCheck = () => {
 
 //跳转到签到记录
 const jumpRecord = function() {
-  router.push({ path: `/record/checkRecord`,
+  router.push({ path: `/join/sign/detail`,
     query: { 
       id:signRecordResponseData.id,
     } 
@@ -115,8 +105,20 @@ const jumpRecord = function() {
     <div class="bg-hex-F2EFF6 p-3">
       <div class="text-sm p-2 bg-hex-E0FAFB text-hex-003399 border border-hex-A6DEFB mt-3">{{ titleText }}</div>
       <div v-show="checkShow">
-        <div class="w-133px mt-6 mx-auto">
-          <van-field v-model="inputValue" placeholder="输入签到码" class="text-xl" />
+        <div class="mt-6">
+          <van-password-input
+            :value="inputValue"
+            :mask="false"
+            :length="4"
+            :gutter="5"
+            :focused="showKeyboard"
+            @focus="showKeyboard = true"
+          />
+          <van-number-keyboard
+            v-model="inputValue"
+            :show="showKeyboard"
+            @blur="showKeyboard = false"
+          />
         </div>
         <div
           class="my-6 border w-200px mx-auto py-3 text-base rounded border-hex-4FC09C text-hex-4FC09C"

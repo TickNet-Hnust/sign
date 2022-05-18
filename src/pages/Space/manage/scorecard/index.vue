@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-15 11:13:30
+ * @LastEditTime: 2022-05-17 20:21:19
 -->
 <script lang="ts" setup>
 import { spaceSignRecord, spaceSignList } from '~/api/record/index'
@@ -141,9 +141,9 @@ const searchSign = () => {
           :key="item" :name="item.id" shape="square" icon-size="15px"
           class="flex items-center"
         >
-          <div class="my-2 text-left">
-            <span class="text-14px text-hex-666">{{item.name}}</span>
-            <span v-if="item.createTime!=='' " class="text-12px text-hex-999">（{{item.createTime}}）</span>
+          <div class="my-2 text-center">
+            <div class="text-14px text-hex-666">{{item.name}}</div>
+            <div v-if="item.createTime!=='' " class="text-12px text-hex-999">（{{item.createTime}}）</div>
           </div>
         </van-radio>
       </van-radio-group>

@@ -2,7 +2,7 @@
 import { addDrawRecord, getDrawNum } from '~/api/myJoin/draw'
 import { getDraw } from '~/api/myJoin/record'
 const route = useRoute()
-
+const loading = ref(true) // 控制数据加载完成，界面显示
 // 定义投票数据类型接口
 interface DrawData {
   type: string // 抽签或者投票
@@ -94,6 +94,7 @@ onMounted(() => {
     getDrawNum(drawId).then((res) => {
       for (let i = 0; i < res.data.length; i++)
         drawData.option[i].lastPoll = res.data[i]
+      loading.value = false
     })
   })
 })
@@ -126,7 +127,12 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
 </script>
 
 <template>
-  <div class="bg-gray-500/8 w-screen h-screen p-3">
+  <div v-if="loading" class="bg-gray-500/8 w-screen h-screen p-3">
+    <van-loading size="24px">
+      加载中...
+    </van-loading>
+  </div>
+  <div v-else class="bg-gray-500/8 w-screen h-screen p-3">
     <div class="border-gray-200 border p-3 bg-white text-left rounded">
       <div class="mb-3">
         {{ drawData.question }}
@@ -140,7 +146,7 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
     </div>
     <div v-if="drawData.isVisible">
       <div v-for="item in drawData.option" :key="item.optionId">
-        <div class="mt-4 text-left border p-2 text-sm rounded" :name="item.optionId" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.optionId===drawData.optionChecked?show = true:''">
+        <div class="mt-4 text-left border p-2.5 text-sm rounded" :name="item.optionId" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.optionId===drawData.optionChecked?show = true:''">
           <div v-if="drawData.optionChecked !== item.optionId">
             <span>{{ item.optionValue }}</span>
             <span class="float-right text-gray-500 ">&times;{{ item.lastPoll }}</span>
@@ -154,13 +160,13 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
     </div>
     <div v-else>
       <div v-for="item in drawData.option" :key="item.optionId">
-        <div v-if="drawData.isDrawing === 0" class="mt-4 text-left border p-2 text-sm rounded" :name="item.optionId" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.optionId===drawData.optionChecked?show = true:''">
+        <div v-if="drawData.isDrawing === 0" class="mt-4 text-left border p-2.5 text-sm rounded" :name="item.optionId" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.optionId===drawData.optionChecked?show = true:''">
           <div>
             <span>选项{{ item.optionId }}</span>
             <span class="float-right text-gray-500">&times;{{ item.lastPoll }}</span>
           </div>
         </div>
-        <div v-else-if="drawData.optionChecked === item.optionId" class="mt-4 text-left border p-2 text-sm rounded" :name="item.optionId" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.optionId===drawData.optionChecked?show = true:''">
+        <div v-else-if="drawData.optionChecked === item.optionId" class="mt-4 text-left border p-2.5 text-sm rounded" :name="item.optionId" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.optionId===drawData.optionChecked?show = true:''">
           <div>
             <span>{{ item.optionValue }}</span>
             <span class="float-right text-gray-500">已抽中该项</span>

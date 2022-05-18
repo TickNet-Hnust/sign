@@ -3,7 +3,7 @@ import { addDrawRecord, getDrawNum } from '~/api/myJoin/draw'
 import { getDraw } from '~/api/myJoin/record'
 const route = useRoute()
 const router = useRouter()
-
+const loading = ref(true)
 // 定义投票数据类型接口
 interface DrawData {
   type: string // 抽签或者投票
@@ -70,6 +70,7 @@ const drawData: DrawData = reactive({
 
 onMounted(() => {
   getDraw(drawId).then((res) => {
+    console.warn(res)
     drawData.question = res.data.drawName
     drawData.endTime = res.data.endTime
     drawData.status = res.data.status
@@ -95,6 +96,7 @@ onMounted(() => {
     getDrawNum(drawId).then((res) => {
       for (let i = 0; i < res.data.length; i++)
         drawData.option[i].lastPoll = res.data[i]
+      loading.value = false
     })
   })
 })
@@ -147,7 +149,12 @@ const toDrawModify = () => {
 </script>
 
 <template>
-  <div class="bg-gray-500/8 w-screen h-screen p-3">
+  <div v-if="loading" class="bg-gray-500/8 w-screen h-screen p-3">
+    <van-loading size="24px">
+      加载中...
+    </van-loading>
+  </div>
+  <div v-else class="bg-gray-500/8 w-screen h-screen p-3">
     <div class="border-gray-200 border p-3 bg-white text-left rounded">
       <div class="mb-3">
         {{ drawData.question }}
@@ -202,7 +209,7 @@ const toDrawModify = () => {
     <div class="flex justify-left my-5 text-sm">
       <div class="border-gray-300 bg-white p-4 w-30">
         <div @click="toDrawRecord()">
-          <van-icon name="records" size="2rem" class="mb-2"/>
+          <van-icon name="records" size="2rem" class="mb-2" />
           <div>抽签记录</div>
         </div>
       </div>

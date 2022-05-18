@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-13 17:40:33
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-14 17:49:04
+ * @LastEditTime: 2022-05-18 10:59:52
 -->
 <script lang="ts" setup>
 import { signStuList } from '~/api/record/signRecord'
@@ -19,6 +19,7 @@ const props = defineProps({
   activityId: String, // 活动id
   attend: String, //1表示已签到，0表示未签到
   action: String,// sign：签到，draw：抽签，vote：投票
+  optionName: String //选项名，用于抽签记录和投票记录的选中具体某个选项的学生列表
 })
 // 已签到学生列表
 const clist:Array<StuList> = reactive([])
@@ -61,6 +62,7 @@ const getStuList = () => {
       drawId: props.activityId,
       attend: props.attend,
       pageNum: pageNum.value,
+      optionId: props.optionName,
       pageSize: 10
     })
     drawStuList(drawRequest).then((res: any) => {
@@ -85,15 +87,16 @@ const getStuList = () => {
       voteId: props.activityId,
       attend: props.attend,
       pageNum: pageNum.value,
-      pageSize: 10
+      pageSize: 10,
+      optionName: props.optionName
     })
     voteStuList(voteRequest).then((res: any) => {
       if(res.code === 200) {
-        clist.push(...res.data.rows)
-        totalRecord.value = res.data.total
+        clist.push(...res.rows)
+        totalRecord.value = res.total
         pageNum.value++
         loading.value = false
-        if(clist.length >= res.data.total) {
+        if(clist.length >= res.total) {
           console.log('数据加载完毕')
           finished.value = true
         }
@@ -123,7 +126,6 @@ emit('getTotal', totalRecord)
       :immediate-check="false"
       v-model:loading="loading"
       :finished="finished"
-      finished-text="没有更多了"
       loading-text="——上拉加载更多——"
       @load="onLoad"
     >

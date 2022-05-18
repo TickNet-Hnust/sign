@@ -7,6 +7,7 @@ import { getVote } from '~/api/myJoin/record'
 
 const route = useRoute()
 const voteId = Number(route.query.id)
+const loading = ref(true) // 控制数据加载完成，界面显示
 
 // 定义投票页面数据接口
 interface VoteData {
@@ -18,7 +19,7 @@ interface VoteData {
   isVote: number // 是否投票，1表示已参与，0表示未参与
   option: Array<OptionData> // 选项具体数据
   allPollNum: number
-  status: number
+  status: number // 1表示已经结束
   text: string
   optionWidth: Array<string> // 确定选项染色的宽度
 }
@@ -75,6 +76,7 @@ onMounted(() => {
   getVote(voteId).then((res) => {
     console.warn(res.data)
     voteData.question = res.data.voteName
+    voteData.status = res.data.status
     voteData.endTime = res.data.endTime
     voteData.isVote = res.data.attend
     voteData.voteNumLimit = res.data.voteNumLimit
@@ -101,6 +103,7 @@ onMounted(() => {
         }
       })
     }
+    loading.value = false
   })
 })
 
@@ -145,7 +148,12 @@ const isClick = () => {
 </script>
 
 <template>
-  <div class="w-screen h-screen ">
+  <div v-if="loading" class="w-screen h-screen bg-gray-500/8 p-3">
+    <van-loading size="24px">
+      加载中...
+    </van-loading>
+  </div>
+  <div v-else class="w-screen h-screen ">
     <div class="p-3 bg-gray-500/8">
       <div class="p-3 text-left border border-gray-200 bg-white  rounded">
         <div class="mb-2">

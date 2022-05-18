@@ -25,7 +25,8 @@ const jumpPage = () => {
   router.push({
     path: '/record/checkRecord/help',
     query: {
-      id: signId
+      id: signId,
+      spaceName: detailMsg.value.spaceName
     }
   })
 }
@@ -52,7 +53,8 @@ const changeShow = () => {
 }
 // 初始化数据
 const totalRecord = ref(0)
-onMounted(()=>{
+onMounted(() => {
+  window.scrollTo(0,0)
   detailSignRecord(signId).then((res: any) => {
     if(res.code === 200) {
       detailMsg.value = res.data
@@ -79,9 +81,9 @@ const changeDialogShow = () => {
 const nameForm = ref<FormInstance>()
 const validatorMessage = (val: any) => {
   if( val === '') {
-    return '输入内容不能为空'
-  } else if(!/^[\u4E00-\u9FA5A-Za-z0-9_]+$/.test(val)){
-    return '只能包括下划线、汉字、数字、字母！'
+    return '提示：输入内容不能为空'
+  } else if(!/^[\u4E00-\u9FA5A-Za-z0-9\,\(\)\[\]_\"\'\u2018\u2019\u201C\u201D\u3010\u3011\uFF08\uFF09\u3001\uFF0C]+$/.test(val)){
+    return '提示：不能有空格等特殊符号'
   }
 }
 const onBeforeClose = async (action, done) => {
@@ -94,7 +96,7 @@ const onBeforeClose = async (action, done) => {
 }
 const editSignName = async () => {
   // 验证是否符合规则
-  nameForm.value.validate().then(() => {
+  nameForm.value?.validate().then(() => {
     // 更改名字与更改用户是否可见用的是同一个接口，直接调用更改名字的方法即可
     if(signName.value !== detailMsg.value.signName) {
       detailMsg.value.signName = signName.value
@@ -181,11 +183,12 @@ const editSignName = async () => {
       show-cancel-button
       :before-close="onBeforeClose"
     >
-      <van-form ref="nameForm">
+      <van-form ref="nameForm" error-message-align="center">
         <van-field
           :rules="[{ validator: validatorMessage}]"
           v-model="signName"
           placeholder="请输入活动名称"
+          input-align="center"
         />
       </van-form>
     </van-dialog>
