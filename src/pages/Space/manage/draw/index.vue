@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { draw } from '~/api/myJoin/draw'
+
+const route = useRoute()
 
 interface Draw{
   drawName: string
@@ -30,7 +33,7 @@ const drawInitData: Draw = reactive({
   drawNum: 1,
   anonymous: 0,
   visible: computed(() => {
-    return hide_checked.value ? 1 : 0
+    return hide_checked.value ? 0 : 1
   }),
   describe: '',
   duration: 30,
@@ -99,6 +102,27 @@ const confirmAnonymous = (value: string, index: number) => {
   drawInitData.anonymous = index
   defaultIndex.value = index
   anonymousPopup.value = false
+}
+
+const commitDrawInfo = () => {
+  const newDrawData = {
+    drawName: drawInitData.drawName,
+    visible: drawInitData.visible,
+    duration: drawInitData.duration,
+    spaceId: route.query.id,
+    anonymity: drawInitData.anonymous,
+    optionContent: [''],
+    optionNum: [0],
+  }
+  newDrawData.optionContent.pop()
+  newDrawData.optionNum.pop()
+  drawInitData.option.forEach((item: Option) => {
+    newDrawData.optionContent.push(item.content)
+    newDrawData.optionNum.push(item.num)
+  })
+  draw(newDrawData).then((res) => {
+    console.warn(res)
+  })
 }
 
 </script>
@@ -196,7 +220,7 @@ const confirmAnonymous = (value: string, index: number) => {
       1&lt;=每人可参与抽签次数&lt;抽签总数
     </div>
     <div class="my-5">
-      <van-button type="primary" size="large" color="rgb(40,182,72)">
+      <van-button type="primary" size="large" color="rgb(40,182,72)" @click="commitDrawInfo()">
         发起抽签
       </van-button>
     </div>

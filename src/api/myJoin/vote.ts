@@ -26,6 +26,7 @@ export function getVoteRecordList(voteId: number, pageNum: number, pageSize: num
   })
 }
 
+// 修改投票时间
 export function modifyVoteTime(voteId: number, endTime: string) {
   return request({
     method: 'put',
