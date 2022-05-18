@@ -69,10 +69,10 @@ const onLoad = () => {
     })
   }
   else {
-    getVoteRecordList(Number(props.activeId), listPage.pageNum, listPage.pageSize, 1).then((res: any) => {
+    getVoteRecordList(Number(props.activeId), listPage.pageNum, listPage.pageSize, String(props.optionCheckedValue), 1).then((res: any) => {
       let i = 1
       console.warn(res)
-      res.data.rows.forEach((item: any) => {
+      res.rows.forEach((item: any) => {
         const recordInfo: RecordInfo = {
           id: i,
           createUserId: item.createUserId,
@@ -82,7 +82,7 @@ const onLoad = () => {
         recordList.push(recordInfo)
         i = i + 1
       })
-      if (res.data.rows.length < listPage.pageSize)
+      if (res.rows.length < listPage.pageSize)
         listPage.finished = true
       else
         listPage.pageNum = listPage.pageNum + 1

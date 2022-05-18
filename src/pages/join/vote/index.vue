@@ -7,6 +7,7 @@ import { getVote } from '~/api/myJoin/record'
 
 const route = useRoute()
 const voteId = Number(route.query.id)
+const loading = ref(true) // 控制数据加载完成，界面显示
 
 // 定义投票页面数据接口
 interface VoteData {
@@ -102,6 +103,7 @@ onMounted(() => {
         }
       })
     }
+    loading.value = false
   })
 })
 
@@ -146,7 +148,12 @@ const isClick = () => {
 </script>
 
 <template>
-  <div class="w-screen h-screen ">
+  <div v-if="loading" class="w-screen h-screen bg-gray-500/8 p-3">
+    <van-loading size="24px">
+      加载中...
+    </van-loading>
+  </div>
+  <div v-else class="w-screen h-screen ">
     <div class="p-3 bg-gray-500/8">
       <div class="p-3 text-left border border-gray-200 bg-white  rounded">
         <div class="mb-2">
