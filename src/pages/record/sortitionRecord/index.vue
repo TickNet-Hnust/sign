@@ -13,6 +13,10 @@ const drawCount = ref() // 已抽签人数
 const notDraw = ref() // 未抽签人数
 // 展示某个子菜单
 const changeShow = (index: any) => {
+  // 如果当前列表为空则不展示
+  if(!detailRecord.currentNum[index]) {
+    return 
+  }
   if(!detailRecord.isShow[index]) {
     detailRecord.isShow[index] = true;
   } else {

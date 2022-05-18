@@ -12,6 +12,10 @@ const voteCount = ref() // 已投票人数
 const notVote = ref() // 未投票人数
 // 展示不同子列表
 const changeShow = (index: any) => {
+  // 如果当前列表为空则不展示
+  if(!detailRecord.currentNum[index]) {
+    return 
+  }
   if(!detailRecord.isShow[index]) {
     detailRecord.isShow[index] = true;
   } else {
