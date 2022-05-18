@@ -53,7 +53,8 @@ const changeShow = () => {
 }
 // 初始化数据
 const totalRecord = ref(0)
-onMounted(()=>{
+onMounted(() => {
+  window.scrollTo(0,0)
   detailSignRecord(signId).then((res: any) => {
     if(res.code === 200) {
       detailMsg.value = res.data
@@ -95,7 +96,7 @@ const onBeforeClose = async (action, done) => {
 }
 const editSignName = async () => {
   // 验证是否符合规则
-  nameForm.value.validate().then(() => {
+  nameForm.value?.validate().then(() => {
     // 更改名字与更改用户是否可见用的是同一个接口，直接调用更改名字的方法即可
     if(signName.value !== detailMsg.value.signName) {
       detailMsg.value.signName = signName.value

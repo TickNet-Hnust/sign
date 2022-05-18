@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-13 17:40:33
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-16 21:00:12
+ * @LastEditTime: 2022-05-18 10:59:52
 -->
 <script lang="ts" setup>
 import { signStuList } from '~/api/record/signRecord'
@@ -126,7 +126,6 @@ emit('getTotal', totalRecord)
       :immediate-check="false"
       v-model:loading="loading"
       :finished="finished"
-      finished-text="没有更多了"
       loading-text="——上拉加载更多——"
       @load="onLoad"
     >
