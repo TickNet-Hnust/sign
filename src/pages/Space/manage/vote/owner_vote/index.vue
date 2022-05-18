@@ -8,6 +8,7 @@ import { getVote } from '../../../../../api/myJoin/record'
 const route = useRoute()
 const router = useRouter()
 const voteId = Number(route.query.id)
+const loading = ref(true) // 控制数据加载完成，界面显示
 
 // 定义投票页面数据接口
 interface VoteData {
@@ -103,6 +104,7 @@ onMounted(() => {
         }
       })
     }
+    loading.value = false
   })
 })
 
@@ -164,7 +166,12 @@ const toVoteRecord = () => {
 </script>
 
 <template>
-  <div class="bg-gray-500/8">
+  <div v-if="loading" class="bg-gray-500/8 p-3 h-full">
+    <van-loading size="24px">
+      加载中...
+    </van-loading>
+  </div>
+  <div v-else class="bg-gray-500/8 h-full">
     <div class="p-3 ">
       <div class="p-3 text-left border border-gray-200 bg-white  rounded">
         <div class="mb-2">
