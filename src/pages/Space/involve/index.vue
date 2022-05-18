@@ -35,6 +35,9 @@ getSignSpace(id.value).then((res) => {
 getSpaceMemberList(id.value).then((res: any) => {
   member_list.push(...res.rows)
 })
+onMounted(() => {
+  window.scrollTo(0,0)
+})
 // 退出空间的方法
 const quitSpace = () => {
   quitSignSpace(quitData).then((res) => {
