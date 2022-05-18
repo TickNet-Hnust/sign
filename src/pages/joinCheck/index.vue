@@ -69,35 +69,20 @@ const joinCheck = () => {
     signRecordRequestData.latitude = latitude.value
     signRecordRequestData.signCode = inputValue.value
     console.log(signRecordRequestData,'签到请求传去的数据')
-    Toast.loading({
-      message: '签到...',
-      duration: 1000
-    })
     signRecordByCode(signRecordRequestData).then((res)=>{
       console.log(res,'签到请求传来的数据')
       let {msg,code} = res
-      if(code===500){
-        Notify({
+      if(code!==200){
+        Toast({
           message: msg,
-          color: '#fff',
-          background: 'rgba(0,0,0,.7)'
+          duration: 2000
         })
-      }else if(code===401){
-        Notify({
-          message: '身份验证失效!',
-          color: '#fff',
-          background: 'rgba(0,0,0,.7)',
-          // 展示时长
-          duration: 700,
-        })
-        router.push({ path: `/`})
       }else if(code===200){
-        Notify({
+        Toast({
           message: msg,
-          color: '#fff',
-          background: 'rgba(0,0,0,.7)'
+          duration: 1000
         })
-        signRecordResponseData.id = res.data.id
+        signRecordResponseData.id = res.data
         checkShow.value = false
       }
     })
@@ -106,7 +91,7 @@ const joinCheck = () => {
 
 //跳转到签到记录
 const jumpRecord = function() {
-  router.push({ path: `/record/checkRecord`,
+  router.push({ path: `/join/sign/detail`,
     query: { 
       id:signRecordResponseData.id,
     } 

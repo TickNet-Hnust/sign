@@ -3,14 +3,14 @@
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-14 13:11:52
+ * @LastEditTime: 2022-05-18 10:23:55
 -->
 <script setup lang="ts">
 import { useUserStore } from '~/stores/user'
 const user = useUserStore()
 const router = useRouter()
 const jumpTargetPage = (targetPath: any) => {
-  if(targetPath.link !== 'record') {
+  if(targetPath.link !== 'record' && targetPath.link !== 'join') {
     router.push(targetPath.link)
   }
   else {
@@ -42,7 +42,7 @@ const list = reactive([
   {
     name: '我要参与',
     icon: 'i-carbon-arrival',
-    link: 'record',
+    link: 'join',
   },
   {
     name: '我的空间',
