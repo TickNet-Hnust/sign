@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-16 12:24:12
+ * @LastEditTime: 2022-05-18 10:55:12
 -->
 
 <script setup lang="ts">
@@ -12,6 +12,7 @@ const route = useRoute()
 const signId = route.query.id
 const detailMsg = ref({})
 onMounted( () => {
+  window.scrollTo(0,0)
   detailSignRecord(signId).then((res: any) => {
     console.log(res)
     if(res.code === 200) {

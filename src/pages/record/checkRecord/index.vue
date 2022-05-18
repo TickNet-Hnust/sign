@@ -54,6 +54,7 @@ const changeShow = () => {
 // 初始化数据
 const totalRecord = ref(0)
 onMounted(()=>{
+  window.scrollTo(0,0)
   detailSignRecord(signId).then((res: any) => {
     if(res.code === 200) {
       detailMsg.value = res.data
