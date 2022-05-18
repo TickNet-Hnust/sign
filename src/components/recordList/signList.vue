@@ -83,7 +83,6 @@ const jumpDetail = (item: any) => {
         path: "/record/checkRecord",
         query: {
           id:  item.id,
-          spaceName: item.spaceName
         }
       })
     // }

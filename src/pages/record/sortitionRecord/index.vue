@@ -6,6 +6,7 @@ interface DetailRecord{
   optionsNum: Array<Number> // 选项票数列表
   visible: Number // 是否为盲抽 0为盲抽
   isShow: Array<Boolean> // 是否展开某个选项列表
+  currentNum: Array<Number> // 当前选中人数
 }
 // 如果抽签结果可见则展示这个数组
 const drawCount = ref() // 已抽签人数
@@ -23,7 +24,8 @@ const detailRecord: DetailRecord = reactive({
   optionsList: [],
   optionsNum: [],
   visible: 1,
-  isShow: []
+  isShow: [],
+  currentNum: []
 })
 // 抽签活动id
 const route = useRoute()
@@ -36,6 +38,7 @@ onMounted(() => {
       detailRecord.optionsList = res.data.optionContent
       detailRecord.optionsNum = res.data.optionNum
       detailRecord.visible = res.data.visible
+      detailRecord.currentNum = res.data.currentNum
       detailRecord.optionsList.forEach((item, index) => {
         detailRecord.isShow[index] = false
       })
@@ -97,7 +100,7 @@ onMounted(() => {
                     <span>{{item}}</span>
                   </div>
                   <div>
-                    <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 mr-3">{{detailRecord.optionsNum[index]}} 票</span>
+                    <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 mr-3">{{detailRecord.currentNum[index]}} 票</span>
                     <span @click="changeShow(index)">
                       <van-icon v-show="!detailRecord.isShow[index]" name="arrow-down" />
                       <van-icon v-show="detailRecord.isShow[index]" name="arrow-up" />

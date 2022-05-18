@@ -25,7 +25,8 @@ const jumpPage = () => {
   router.push({
     path: '/record/checkRecord/help',
     query: {
-      id: signId
+      id: signId,
+      spaceName: detailMsg.value.spaceName
     }
   })
 }

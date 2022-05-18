@@ -3,7 +3,7 @@
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-16 21:52:12
+ * @LastEditTime: 2022-05-17 20:51:29
 -->
 <script setup lang="ts">
 import { Notify, Toast } from 'vant';
@@ -81,11 +81,10 @@ let requestDurationTime = ref(10)
 const spaceId  = typeof route.query.spaceId === 'undefined' ? 0 : +route.query.spaceId
 console.log(spaceId,'spaceId')
 //发起签到方法
+const launchLoading = ref(false) //发起签到后的延迟
 const  launchSign = function(){
-  Toast.loading({
-    message: '发起中...',
-    duration: 2000
-  })
+  launchLoading.value = true
+  locationLoading.value = true
   console.log(canSee.value,'签到列表是否可见')
   console.log(inputName.value,'签到名')
   console.log(durationTime.value,'活动时长字符串')
@@ -236,16 +235,22 @@ const onConfirm = (currentValue: any) => {
         <div class="text-center mb-5 mt-5">
           <span
             class="rounded bg-hex-41AA62 text-white p-3 px-7"
-            v-if="locationLoading"
+            v-if="locationLoading&&!launchLoading"
           >
             正在获取位置信息……
           </span>
           <div
             class="rounded bg-hex-41AA62 text-white p-3 px-7"
-            v-else
+            v-if="!locationLoading"
             @click="launchSign"
           >
             发起签到
+          </div>
+          <div
+            class="flex justify-center rounded bg-hex-99CDAC text-white p-3 px-7"
+            v-if="launchLoading"
+          >
+            <van-loading size="20px" type="spinner" />发起中...
           </div>
         </div>
       </div>
