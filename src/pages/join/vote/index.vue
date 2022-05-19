@@ -73,6 +73,7 @@ const voteData: VoteData = reactive({
 })
 
 onMounted(() => {
+  window.scrollTo(0,0)
   getVote(voteId).then((res) => {
     console.warn(res.data)
     voteData.question = res.data.voteName

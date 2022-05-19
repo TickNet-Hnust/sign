@@ -36,6 +36,7 @@ const route = useRoute()
 const drawId = route.query.id
 // 初始化数据
 onMounted(() => {
+  window.scrollTo(0,0)
   getDetailDraw(drawId).then((res: any) => {
     if(res.code === 200) {
       detailRecord.title = res.data.drawName

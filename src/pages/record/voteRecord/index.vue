@@ -13,7 +13,7 @@ const notVote = ref() // 未投票人数
 // 展示不同子列表
 const changeShow = (index: any) => {
   // 如果当前列表为空则不展示
-  if(!detailRecord.currentNum[index]) {
+  if(!detailRecord.optionsNum[index]) {
     return 
   }
   if(!detailRecord.isShow[index]) {
@@ -34,6 +34,7 @@ const route = useRoute()
 const voteId = route.query.id
 // 初始化数据
 onMounted(() => {
+  window.scrollTo(0,0)
   getDetailVote(voteId).then((res: any) => {
     if(res.code === 200) {
       detailRecord.title = res.data.voteName

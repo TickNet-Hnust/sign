@@ -2,8 +2,8 @@
  * @Descipttion:
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: caojun
- * @LastEditTime: 2022-05-17 19:56:09
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-18 20:09:10
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -292,6 +292,9 @@ const quitSpace = () => {
     }
   })
 }
+onMounted(() => {
+  window.scrollTo(0,0)
+})
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-screen">
