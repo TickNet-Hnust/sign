@@ -3,7 +3,7 @@
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-17 20:51:29
+ * @LastEditTime: 2022-05-19 12:51:58
 -->
 <script setup lang="ts">
 import { Notify, Toast } from 'vant';
@@ -188,10 +188,20 @@ const onConfirm = (currentValue: any) => {
   }
   console.log(currentValue,'时间数据')
   //将天小时全部转换为分钟
-  let dayToMin = currentValue[0][0] === '0' ? 0 : currentValue[0][0]*1440
-  let hourToMin = currentValue[1][0] === '0' ? 0 : currentValue[1][0]*60
-  let Min = currentValue[2][0] === '0' ? 0 : +currentValue[2][0]
-  let res = dayToMin + hourToMin + Min
+  let dayCnt = currentValue[0][0] === '0' ? 0 : currentValue[0][0]
+  let hourCnt = currentValue[1][0] === '0' ? 0 : currentValue[1][0]
+  let minCnt = currentValue[2][0] === '0' ? 0 : +currentValue[2][0]
+  if(currentValue[1][0] !== '0' && currentValue[1][1]!='小') {
+    hourCnt = hourCnt+currentValue[1][1]
+  }
+  if(currentValue[2][0] !== '0' && currentValue[2][1]!='分') {
+    minCnt = minCnt+currentValue[2][1]
+  }
+  console.log(dayCnt,hourCnt,minCnt)
+  let dayToMin = dayCnt*1440
+  let hourToMin = hourCnt*60
+  let Min = minCnt
+  let res = Number(dayToMin) + Number(hourToMin) + Number(Min)
   console.log(dayToMin,'天转换的分钟数')
   console.log(hourToMin,'小时转换的分钟数')
   console.log(Min,'分钟数')

@@ -98,7 +98,7 @@ const jumpDetail = (item: any) => {
     })
     } else {
       router.push({
-      path: "/join/sign",
+      path: "/joinCheck",
     })
     }
   }
