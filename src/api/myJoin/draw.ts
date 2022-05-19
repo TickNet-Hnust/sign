@@ -45,3 +45,16 @@ export function addDrawRecord(drawId: number) {
     },
   })
 }
+
+// 修改抽签信息
+export function modifyDraw(drawId: number, duration: number, anonymity: number) {
+  return request({
+    method: 'put',
+    url: '/signff/drawRecord',
+    data: {
+      drawId,
+      duration,
+      anonymity,
+    },
+  })
+}

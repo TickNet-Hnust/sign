@@ -7,10 +7,12 @@ const loading = ref(true)
 // 定义投票数据类型接口
 interface DrawData {
   type: string // 抽签或者投票
+  anonymity: number
   question: string
   allPollNum: number // 总票数
   drawingAlreadyNum: number // 已经抽签票数
   endTime: string
+  createTime: string
   optionChecked: number // 被选择的选项id
   optionCheckedValue: string
   status: number // 当前抽签进行状态,进行状态(0未结束，1已结束)
@@ -33,6 +35,7 @@ const drawId = Number(route.query.id)
 
 const drawData: DrawData = reactive({
   type: '抽签',
+  anonymity: 0,
   question: '',
   status: 0,
   allPollNum: computed(() => {
@@ -50,6 +53,7 @@ const drawData: DrawData = reactive({
     return drawData.allPollNum - result
   }),
   endTime: '',
+  createTime: '',
   optionChecked: 0,
   optionCheckedValue: '',
   isDrawing: 0,
@@ -72,6 +76,8 @@ onMounted(() => {
   getDraw(drawId).then((res) => {
     console.warn(res)
     drawData.question = res.data.drawName
+    drawData.anonymity = res.data.anonymity
+    drawData.createTime = res.data.createTime
     drawData.endTime = res.data.endTime
     drawData.status = res.data.status
     drawData.isVisible = res.data.visible
@@ -142,6 +148,7 @@ const toDrawModify = () => {
     path: '/space/manage/draw/owner_draw/modify',
     query: {
       id: drawId,
+      anonymity: drawData.anonymity,
     },
   })
 }
