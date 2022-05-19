@@ -73,7 +73,7 @@ const drawData: DrawData = reactive({
 })
 
 onMounted(() => {
-  window.scrollTo(0,0)
+  window.scrollTo(0, 0)
   getDraw(drawId).then((res) => {
     console.warn(res)
     drawData.question = res.data.drawName
