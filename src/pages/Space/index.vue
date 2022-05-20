@@ -30,7 +30,7 @@ const popoverSelect = (action: any) => {
 }
 // sss
 
-const active = ref(1)// 控制tab切换 0：我参与的 1：我管理的
+const active = ref(0)// 控制tab切换 0：我参与的 1：我管理的
 const spaceList = ref([])
 // 请求列表参数
 const request = ref({
