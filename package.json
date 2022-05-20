@@ -4,7 +4,8 @@
   "scripts": {
     "build": "rimraf dist && vite-ssg build",
     "dev": "vite --port 3333 --open",
-    "deploy": "gh-pages -d dist",
+    "deploy_github": "gh-pages -d dist",
+    "deploy_prod": ".\\deploy.sh",
     "lint": "eslint .",
     "preview": "vite preview",
     "preview-https": "serve dist",
