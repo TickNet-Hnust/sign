@@ -80,7 +80,7 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
       <div class="flex justify-between text-14px py-2">
         <span>成员</span>
         <span>
-          {{ member_list.length }}人
+          {{ spaceList.count }}人
         </span>
       </div>
       <van-dialog
