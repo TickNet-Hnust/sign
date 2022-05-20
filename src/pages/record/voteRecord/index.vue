@@ -89,14 +89,16 @@ onMounted(() => {
               v-for="(item, index) in detailRecord.optionsList"
               :key="item"
             >
-              <div class="bg-white mt-3 rounded flex justify-between p-3 text-14px">
+              <div class="bg-white mt-3 rounded flex justify-between p-3 text-14px" @click="changeShow(index)">
                  <div>
                     <span>投票：</span>
                     <span>{{item}}</span>
                   </div>
                   <div>
-                    <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 mr-3">{{detailRecord.optionsNum[index]}} 票</span>
-                    <span @click="changeShow(index)">
+                    <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 mr-3">
+                      {{detailRecord.optionsNum[index]}} 票
+                    </span>
+                    <span>
                       <van-icon v-show="!detailRecord.isShow[index]" name="arrow-down" />
                       <van-icon v-show="detailRecord.isShow[index]" name="arrow-up" />
                     </span>
