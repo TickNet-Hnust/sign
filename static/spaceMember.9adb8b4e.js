@@ -1,0 +1,1 @@
+import{v as t}from"./app.0ce71bde.js";function a(e){return t({method:"get",url:"/sign/space/member/list",params:{spaceId:e}})}function m(e){return t({method:"put",url:"/sign/space/member",data:e})}function s(e){return t({method:"delete",url:"/sign/space/member",data:e})}export{s as d,a as g,m as u};

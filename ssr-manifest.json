@@ -15,10 +15,12 @@
   "locales/tr.yml": [],
   "locales/vi.yml": [],
   "locales/zh-CN.yml": [],
-  "node_modules/.pnpm/@intlify+shared@9.1.9/node_modules/@intlify/shared/dist/shared.esm-bundler.js": [],
+  "node_modules/.pnpm/vue-i18n@9.1.9_vue@3.2.33/node_modules/vue-i18n/node_modules/@intlify/shared/dist/shared.esm-bundler.js": [],
+  "node_modules/.pnpm/@intlify+core-base@9.1.9/node_modules/@intlify/core-base/node_modules/@intlify/shared/dist/shared.esm-bundler.js": [],
   "node_modules/.pnpm/@intlify+message-resolver@9.1.9/node_modules/@intlify/message-resolver/dist/message-resolver.esm-bundler.js": [],
+  "node_modules/.pnpm/@intlify+runtime@9.1.9/node_modules/@intlify/runtime/node_modules/@intlify/shared/dist/shared.esm-bundler.js": [],
   "node_modules/.pnpm/@intlify+runtime@9.1.9/node_modules/@intlify/runtime/dist/runtime.esm-bundler.js": [],
-  "node_modules/.pnpm/@intlify+message-compiler@9.1.9/node_modules/@intlify/message-compiler/dist/message-compiler.esm-bundler.js": [],
+  "node_modules/.pnpm/registry.npmmirror.com+@intlify+message-compiler@9.1.9/node_modules/@intlify/message-compiler/dist/message-compiler.esm-bundler.js": [],
   "node_modules/.pnpm/@intlify+devtools-if@9.1.9/node_modules/@intlify/devtools-if/dist/devtools-if.esm-bundler.js": [],
   "node_modules/.pnpm/@intlify+core-base@9.1.9/node_modules/@intlify/core-base/dist/core-base.esm-bundler.js": [],
   "node_modules/.pnpm/@vue+shared@3.2.33/node_modules/@vue/shared/dist/shared.esm-bundler.js": [],
@@ -28,7 +30,7 @@
   "node_modules/.pnpm/vue-i18n@9.1.9_vue@3.2.33/node_modules/vue-i18n/dist/vue-i18n.runtime.esm-bundler.js": [],
   "src/modules/i18n.ts": [],
   "\u0000commonjsHelpers.js": [],
-  "\u0000D:/VscodeItems/sign/node_modules/.pnpm/nprogress@0.2.0/node_modules/nprogress/nprogress.js?commonjs-module": [],
+  "\u0000C:/phpstudy_pro/WWW/sign/node_modules/.pnpm/nprogress@0.2.0/node_modules/nprogress/nprogress.js?commonjs-module": [],
   "node_modules/.pnpm/nprogress@0.2.0/node_modules/nprogress/nprogress.js": [],
   "src/modules/nprogress.ts": [],
   "node_modules/.pnpm/vue-demi@0.12.5_vue@3.2.33/node_modules/vue-demi/lib/index.mjs": [],
@@ -270,343 +272,442 @@
   "node_modules/.pnpm/vite-ssg@0.19.2_eacfe4bd4e3401e3e0916bc5279e5ce7/node_modules/vite-ssg/dist/chunks/state.mjs": [],
   "node_modules/.pnpm/vite-ssg@0.19.2_eacfe4bd4e3401e3e0916bc5279e5ce7/node_modules/vite-ssg/dist/chunks/ClientOnly.mjs": [],
   "node_modules/.pnpm/vite-ssg@0.19.2_eacfe4bd4e3401e3e0916bc5279e5ce7/node_modules/vite-ssg/dist/index.mjs": [],
+  "\u0000C:/phpstudy_pro/WWW/sign/node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/axios.js?commonjs-module": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/helpers/bind.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/utils.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/helpers/buildURL.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/core/InterceptorManager.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/helpers/normalizeHeaderName.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/core/enhanceError.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/defaults/transitional.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/core/createError.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/core/settle.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/helpers/cookies.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/helpers/isAbsoluteURL.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/helpers/combineURLs.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/core/buildFullPath.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/helpers/parseHeaders.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/helpers/isURLSameOrigin.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/cancel/Cancel.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/adapters/xhr.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/defaults/index.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/core/transformData.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/cancel/isCancel.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/core/dispatchRequest.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/core/mergeConfig.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/env/data.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/helpers/validator.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/core/Axios.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/cancel/CancelToken.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/helpers/spread.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/helpers/isAxiosError.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/lib/axios.js": [],
+  "node_modules/.pnpm/axios@0.26.1/node_modules/axios/index.js": [],
+  "node_modules/.pnpm/registry.npmmirror.com+js-cookie@3.0.1/node_modules/js-cookie/dist/js.cookie.mjs": [],
+  "src/utils/cookies.ts": [],
+  "src/utils/request.ts": [],
+  "src/api/system.ts": [],
   "src/stores/user.ts": [],
   "src/pages/index.vue?vue&type=style&index=0&lang.css": [],
-  "../../@vite-plugin-pages/route-block": [],
+  "../../../@vite-plugin-pages/route-block": [],
   "src/pages/index.vue": [],
-  "../../@vite-plugin-pages/generated-pages": [],
+  "../../../@vite-plugin-pages/generated-pages": [],
   "src/layouts/default.vue": [],
-  "../../@vite-plugin-vue-layouts/generated-layouts": [],
+  "../../../@vite-plugin-vue-layouts/generated-layouts": [],
   "src/App.vue": [],
   "node_modules/.pnpm/@unocss+reset@0.30.13/node_modules/@unocss/reset/tailwind.css": [],
   "src/styles/main.css": [],
-  "../../__uno.css": [],
+  "../../../__uno.css": [],
   "src/main.ts": [],
   "index.html": [],
-  "assets/app.235124e5.js-unocss-hash.css": [],
+  "static/app.0ce71bde.js-unocss-hash.css": [],
   "node_modules/.pnpm/workbox-window@6.5.3/node_modules/workbox-window/build/workbox-window.prod.es5.mjs": [
-    "/sign/assets/virtual_pwa-register.d9d562b7.js"
+    "/static/virtual_pwa-register.0a442bd2.js"
   ],
-  "../../@vite-plugin-pwa/virtual:pwa-register": [
-    "/sign/assets/virtual_pwa-register.d9d562b7.js"
+  "../../../@vite-plugin-pwa/virtual:pwa-register": [
+    "/static/virtual_pwa-register.0a442bd2.js"
   ],
   "src/pages/[...all].vue": [
-    "/sign/assets/_...all_.0debfe54.js",
-    "/sign/assets/_...all_.993e7f23.css"
+    "/static/_...all_.742416c3.js",
+    "/static/_...all_.e8ca79c2.css"
   ],
-  "assets/_...all_.0debfe54.js-unocss-hash.css": [
-    "/sign/assets/_...all_.0debfe54.js",
-    "/sign/assets/_...all_.993e7f23.css"
+  "static/_...all_.742416c3.js-unocss-hash.css": [
+    "/static/_...all_.742416c3.js",
+    "/static/_...all_.e8ca79c2.css"
   ],
   "src/pages/hi/[name].vue": [
-    "/sign/assets/_name_.c33e5b49.js",
-    "/sign/assets/_name_.1a8bcb71.css"
+    "/static/_name_.d4029a2f.js",
+    "/static/_name_.d9f3681b.css"
   ],
-  "assets/_name_.c33e5b49.js-unocss-hash.css": [
-    "/sign/assets/_name_.c33e5b49.js",
-    "/sign/assets/_name_.1a8bcb71.css"
-  ],
-  "src/pages/join/index.vue?vue&type=style&index=0&lang.css": [
-    "/sign/assets/index.2fd9deaa.js",
-    "/sign/assets/index.8c2f787a.css"
+  "static/_name_.d4029a2f.js-unocss-hash.css": [
+    "/static/_name_.d4029a2f.js",
+    "/static/_name_.d9f3681b.css"
   ],
   "src/pages/join/index.vue": [
-    "/sign/assets/index.2fd9deaa.js",
-    "/sign/assets/index.8c2f787a.css"
+    "/static/index.611af7ff.js",
+    "/static/index.dc9251da.css"
   ],
-  "assets/index.2fd9deaa.js-unocss-hash.css": [
-    "/sign/assets/index.2fd9deaa.js",
-    "/sign/assets/index.8c2f787a.css"
+  "static/index.611af7ff.js-unocss-hash.css": [
+    "/static/index.611af7ff.js",
+    "/static/index.dc9251da.css"
+  ],
+  "src/components/recordList/signList.vue": [
+    "/static/voteList.4981b629.js",
+    "/static/voteList.69860a1e.css"
+  ],
+  "src/components/recordList/drawList.vue": [
+    "/static/voteList.4981b629.js",
+    "/static/voteList.69860a1e.css"
+  ],
+  "src/components/recordList/voteList.vue": [
+    "/static/voteList.4981b629.js",
+    "/static/voteList.69860a1e.css"
+  ],
+  "static/voteList.4981b629.js-unocss-hash.css": [
+    "/static/voteList.4981b629.js",
+    "/static/voteList.69860a1e.css"
+  ],
+  "src/api/record/signRecord.ts": [
+    "/static/voteRecord.ed76fc82.js"
+  ],
+  "src/api/record/drawRecord.ts": [
+    "/static/voteRecord.ed76fc82.js"
+  ],
+  "src/api/record/voteRecord.ts": [
+    "/static/voteRecord.ed76fc82.js"
   ],
   "src/pages/joinCheck/index.vue": [
-    "/sign/assets/index.f7ef9f6c.js",
-    "/sign/assets/index.6260ec15.css"
+    "/static/index.b400f54f.js",
+    "/static/index.25f08fc6.css"
   ],
-  "assets/index.f7ef9f6c.js-unocss-hash.css": [
-    "/sign/assets/index.f7ef9f6c.js",
-    "/sign/assets/index.6260ec15.css"
+  "static/index.b400f54f.js-unocss-hash.css": [
+    "/static/index.b400f54f.js",
+    "/static/index.25f08fc6.css"
+  ],
+  "src/api/launchSign/index.ts": [
+    "/static/index.17bc6917.js"
+  ],
+  "node_modules/_nanoid@3.3.4@nanoid/index.browser.js": [
+    "/static/index.76995110.js",
+    "/static/index.b8d2fc3a.css"
   ],
   "src/pages/launch/index.vue": [
-    "/sign/assets/index.04212948.js",
-    "/sign/assets/index.44781762.css"
+    "/static/index.76995110.js",
+    "/static/index.b8d2fc3a.css"
   ],
-  "assets/index.04212948.js-unocss-hash.css": [
-    "/sign/assets/index.04212948.js",
-    "/sign/assets/index.44781762.css"
-  ],
-  "src/pages/record/index.vue?vue&type=style&index=0&lang.css": [
-    "/sign/assets/index.0a441e24.js",
-    "/sign/assets/index.8c2f787a.css"
+  "static/index.76995110.js-unocss-hash.css": [
+    "/static/index.76995110.js",
+    "/static/index.b8d2fc3a.css"
   ],
   "src/pages/record/index.vue": [
-    "/sign/assets/index.0a441e24.js",
-    "/sign/assets/index.8c2f787a.css"
+    "/static/index.f6b465fc.js",
+    "/static/index.dc9251da.css"
   ],
-  "assets/index.0a441e24.js-unocss-hash.css": [
-    "/sign/assets/index.0a441e24.js",
-    "/sign/assets/index.8c2f787a.css"
+  "static/index.f6b465fc.js-unocss-hash.css": [
+    "/static/index.f6b465fc.js",
+    "/static/index.dc9251da.css"
+  ],
+  "src/pages/Space/index.vue?vue&type=style&index=0&scoped=true&lang.css": [
+    "/static/index.6f056252.js",
+    "/static/index.3cc93700.css"
   ],
   "src/pages/Space/index.vue": [
-    "/sign/assets/index.74112147.js",
-    "/sign/assets/index.78c43b59.css"
+    "/static/index.6f056252.js",
+    "/static/index.3cc93700.css"
   ],
-  "assets/index.74112147.js-unocss-hash.css": [
-    "/sign/assets/index.74112147.js",
-    "/sign/assets/index.78c43b59.css"
+  "static/index.6f056252.js-unocss-hash.css": [
+    "/static/index.6f056252.js",
+    "/static/index.3cc93700.css"
   ],
-  "src/pages/Space/teacher_space.vue": [
-    "/sign/assets/teacher_space.3de4650c.js",
-    "/sign/assets/teacher_space.05ab921c.css"
-  ],
-  "assets/teacher_space.3de4650c.js-unocss-hash.css": [
-    "/sign/assets/teacher_space.3de4650c.js",
-    "/sign/assets/teacher_space.05ab921c.css"
-  ],
-  "src/pages/join/drawing/index.vue": [
-    "/sign/assets/index.e8ca1e4a.js",
-    "/sign/assets/index.5c51608b.css"
-  ],
-  "assets/index.e8ca1e4a.js-unocss-hash.css": [
-    "/sign/assets/index.e8ca1e4a.js",
-    "/sign/assets/index.5c51608b.css"
-  ],
-  "src/components/records/RecordsList.vue": [
-    "/sign/assets/RecordsList.87ebf93d.js",
-    "/sign/assets/RecordsList.476c95f1.css"
-  ],
-  "assets/RecordsList.87ebf93d.js-unocss-hash.css": [
-    "/sign/assets/RecordsList.87ebf93d.js",
-    "/sign/assets/RecordsList.476c95f1.css"
-  ],
-  "src/pages/join/drawing/recording.vue": [
-    "/sign/assets/recording.e47d1b9f.js",
-    "/sign/assets/recording.c249b582.css"
-  ],
-  "assets/recording.e47d1b9f.js-unocss-hash.css": [
-    "/sign/assets/recording.e47d1b9f.js",
-    "/sign/assets/recording.c249b582.css"
-  ],
-  "src/pages/join/sign/assist.vue": [
-    "/sign/assets/assist.88d9a8bc.js",
-    "/sign/assets/assist.80f6bd5e.css"
-  ],
-  "assets/assist.88d9a8bc.js-unocss-hash.css": [
-    "/sign/assets/assist.88d9a8bc.js",
-    "/sign/assets/assist.80f6bd5e.css"
-  ],
-  "src/pages/join/sign/detail.vue?vue&type=style&index=0&scoped=true&lang.css": [
-    "/sign/assets/detail.93e92fad.js",
-    "/sign/assets/detail.d0bdf83a.css"
-  ],
-  "src/pages/join/sign/detail.vue": [
-    "/sign/assets/detail.93e92fad.js",
-    "/sign/assets/detail.d0bdf83a.css"
-  ],
-  "assets/detail.93e92fad.js-unocss-hash.css": [
-    "/sign/assets/detail.93e92fad.js",
-    "/sign/assets/detail.d0bdf83a.css"
+  "src/api/mySpace/index.ts": [
+    "/static/index.0854e187.js"
   ],
   "plugin-vue:export-helper": [
-    "/sign/assets/plugin-vue_export-helper.21dcd24c.js"
+    "/static/plugin-vue_export-helper.db4a78ed.js"
+  ],
+  "src/pages/Space/teacher_space.vue": [
+    "/static/teacher_space.eddf1a46.js",
+    "/static/teacher_space.475c8d4c.css"
+  ],
+  "static/teacher_space.eddf1a46.js-unocss-hash.css": [
+    "/static/teacher_space.eddf1a46.js",
+    "/static/teacher_space.475c8d4c.css"
+  ],
+  "src/pages/join/drawing/index.vue": [
+    "/static/index.3763c5d8.js",
+    "/static/index.543c8f38.css"
+  ],
+  "static/index.3763c5d8.js-unocss-hash.css": [
+    "/static/index.3763c5d8.js",
+    "/static/index.543c8f38.css"
+  ],
+  "src/api/myJoin/vote.ts": [
+    "/static/record.f0f9792f.js",
+    "/static/record.6a8d9522.css"
+  ],
+  "src/components/records/RecordsList.vue": [
+    "/static/record.f0f9792f.js",
+    "/static/record.6a8d9522.css"
+  ],
+  "src/api/myJoin/record.ts": [
+    "/static/record.f0f9792f.js",
+    "/static/record.6a8d9522.css"
+  ],
+  "static/record.f0f9792f.js-unocss-hash.css": [
+    "/static/record.f0f9792f.js",
+    "/static/record.6a8d9522.css"
+  ],
+  "src/api/myJoin/draw.ts": [
+    "/static/draw.ee1302d6.js"
+  ],
+  "src/pages/join/drawing/recording.vue": [
+    "/static/recording.a4322349.js",
+    "/static/recording.a59c3a3d.css"
+  ],
+  "static/recording.a4322349.js-unocss-hash.css": [
+    "/static/recording.a4322349.js",
+    "/static/recording.a59c3a3d.css"
+  ],
+  "src/pages/join/sign/assist.vue": [
+    "/static/assist.0bca0821.js",
+    "/static/assist.154755d2.css"
+  ],
+  "static/assist.0bca0821.js-unocss-hash.css": [
+    "/static/assist.0bca0821.js",
+    "/static/assist.154755d2.css"
+  ],
+  "src/pages/join/sign/detail.vue": [
+    "/static/detail.7bf88a08.js",
+    "/static/detail.cbf80ff9.css"
+  ],
+  "static/detail.7bf88a08.js-unocss-hash.css": [
+    "/static/detail.7bf88a08.js",
+    "/static/detail.cbf80ff9.css"
+  ],
+  "src/components/recordList/stuList.vue": [
+    "/static/stuList.e4fd83cd.js",
+    "/static/stuList.5eb8798e.css"
+  ],
+  "static/stuList.e4fd83cd.js-unocss-hash.css": [
+    "/static/stuList.e4fd83cd.js",
+    "/static/stuList.5eb8798e.css"
   ],
   "src/pages/join/sign/index.vue": [
-    "/sign/assets/index.c79660a9.js",
-    "/sign/assets/index.e99bf92f.css"
+    "/static/index.83b86e7c.js",
+    "/static/index.942d7ef2.css"
   ],
-  "assets/index.c79660a9.js-unocss-hash.css": [
-    "/sign/assets/index.c79660a9.js",
-    "/sign/assets/index.e99bf92f.css"
+  "static/index.83b86e7c.js-unocss-hash.css": [
+    "/static/index.83b86e7c.js",
+    "/static/index.942d7ef2.css"
   ],
   "src/pages/join/vote/index.vue": [
-    "/sign/assets/index.6ca3c07f.js",
-    "/sign/assets/index.11c6a253.css"
+    "/static/index.4e7a265a.js",
+    "/static/index.93fecd73.css"
   ],
-  "assets/index.6ca3c07f.js-unocss-hash.css": [
-    "/sign/assets/index.6ca3c07f.js",
-    "/sign/assets/index.11c6a253.css"
+  "static/index.4e7a265a.js-unocss-hash.css": [
+    "/static/index.4e7a265a.js",
+    "/static/index.93fecd73.css"
+  ],
+  "src/pages/join/vote/test.vue": [
+    "/static/test.cff4107e.js",
+    "/static/test.49f7972b.css"
+  ],
+  "static/test.cff4107e.js-unocss-hash.css": [
+    "/static/test.cff4107e.js",
+    "/static/test.49f7972b.css"
   ],
   "src/pages/record/checkRecord/help.vue": [
-    "/sign/assets/help.38c7f64a.js",
-    "/sign/assets/help.8b12900a.css"
+    "/static/help.a6bdf897.js",
+    "/static/help.d79f155c.css"
   ],
-  "assets/help.38c7f64a.js-unocss-hash.css": [
-    "/sign/assets/help.38c7f64a.js",
-    "/sign/assets/help.8b12900a.css"
+  "static/help.a6bdf897.js-unocss-hash.css": [
+    "/static/help.a6bdf897.js",
+    "/static/help.d79f155c.css"
+  ],
+  "src/api/record/index.ts": [
+    "/static/index.e852a593.js"
+  ],
+  "src/pages/record/checkRecord/helpJumpPage.vue": [
+    "/static/helpJumpPage.214bdff4.js",
+    "/static/_...all_.e8ca79c2.css"
+  ],
+  "static/helpJumpPage.214bdff4.js-unocss-hash.css": [
+    "/static/helpJumpPage.214bdff4.js",
+    "/static/_...all_.e8ca79c2.css"
   ],
   "src/pages/record/checkRecord/index.vue": [
-    "/sign/assets/index.3b9346c0.js",
-    "/sign/assets/index.5b0e5121.css"
+    "/static/index.b88257b4.js",
+    "/static/index.c1d3a996.css"
   ],
-  "assets/index.3b9346c0.js-unocss-hash.css": [
-    "/sign/assets/index.3b9346c0.js",
-    "/sign/assets/index.5b0e5121.css"
+  "static/index.b88257b4.js-unocss-hash.css": [
+    "/static/index.b88257b4.js",
+    "/static/index.c1d3a996.css"
   ],
   "src/pages/record/sortitionRecord/index.vue": [
-    "/sign/assets/index.6d45d2f0.js",
-    "/sign/assets/index.905e6813.css"
+    "/static/index.1ec76146.js",
+    "/static/index.2acb978b.css"
   ],
-  "assets/index.6d45d2f0.js-unocss-hash.css": [
-    "/sign/assets/index.6d45d2f0.js",
-    "/sign/assets/index.905e6813.css"
-  ],
-  "src/pages/record/sortitionRecord/random.vue": [
-    "/sign/assets/random.af9871c2.js",
-    "/sign/assets/random.46813512.css"
-  ],
-  "assets/random.af9871c2.js-unocss-hash.css": [
-    "/sign/assets/random.af9871c2.js",
-    "/sign/assets/random.46813512.css"
+  "static/index.1ec76146.js-unocss-hash.css": [
+    "/static/index.1ec76146.js",
+    "/static/index.2acb978b.css"
   ],
   "src/pages/record/voteRecord/index.vue": [
-    "/sign/assets/index.d84b588e.js",
-    "/sign/assets/index.905e6813.css"
+    "/static/index.c30cf431.js",
+    "/static/index.cc85a5dd.css"
   ],
-  "assets/index.d84b588e.js-unocss-hash.css": [
-    "/sign/assets/index.d84b588e.js",
-    "/sign/assets/index.905e6813.css"
+  "static/index.c30cf431.js-unocss-hash.css": [
+    "/static/index.c30cf431.js",
+    "/static/index.cc85a5dd.css"
   ],
   "src/pages/Space/involve/index.vue": [
-    "/sign/assets/index.5e2b26af.js",
-    "/sign/assets/index.7f4592a0.css"
+    "/static/index.87c8581e.js",
+    "/static/index.a56a24ac.css"
   ],
-  "assets/index.5e2b26af.js-unocss-hash.css": [
-    "/sign/assets/index.5e2b26af.js",
-    "/sign/assets/index.7f4592a0.css"
+  "static/index.87c8581e.js-unocss-hash.css": [
+    "/static/index.87c8581e.js",
+    "/static/index.a56a24ac.css"
+  ],
+  "src/api/mySpace/spaceMember.ts": [
+    "/static/spaceMember.9adb8b4e.js"
   ],
   "src/pages/Space/manage/index.vue": [
-    "/sign/assets/index.d23009ad.js",
-    "/sign/assets/index.81bf999a.css"
+    "/static/index.396d9646.js",
+    "/static/index.333b6f84.css"
   ],
-  "assets/index.d23009ad.js-unocss-hash.css": [
-    "/sign/assets/index.d23009ad.js",
-    "/sign/assets/index.81bf999a.css"
+  "static/index.396d9646.js-unocss-hash.css": [
+    "/static/index.396d9646.js",
+    "/static/index.333b6f84.css"
   ],
   "src/pages/join/vote/detail/index.vue": [
-    "/sign/assets/index.598ba517.js",
-    "/sign/assets/index.5340d4a4.css"
+    "/static/index.acbca541.js",
+    "/static/index.ee5a3aba.css"
   ],
-  "assets/index.598ba517.js-unocss-hash.css": [
-    "/sign/assets/index.598ba517.js",
-    "/sign/assets/index.5340d4a4.css"
+  "static/index.acbca541.js-unocss-hash.css": [
+    "/static/index.acbca541.js",
+    "/static/index.ee5a3aba.css"
   ],
-  "src/pages/Space/manage/details/index.vue": [
-    "/sign/assets/index.858c3dfe.js",
-    "/sign/assets/index.93c8339d.css"
+  "src/pages/Space/manage/add_member/addJumpPage.vue": [
+    "/static/addJumpPage.99427bba.js",
+    "/static/addJumpPage.3cb57e00.css"
   ],
-  "assets/index.858c3dfe.js-unocss-hash.css": [
-    "/sign/assets/index.858c3dfe.js",
-    "/sign/assets/index.93c8339d.css"
+  "static/addJumpPage.99427bba.js-unocss-hash.css": [
+    "/static/addJumpPage.99427bba.js",
+    "/static/addJumpPage.3cb57e00.css"
   ],
-  "src/pages/Space/manage/details/add_member/index.vue": [
-    "/sign/assets/index.04b1e0f4.js",
-    "/sign/assets/index.1db7c900.css"
+  "src/pages/Space/manage/add_member/index.vue": [
+    "/static/index.bdce3de2.js",
+    "/static/index.9788a3d5.css"
   ],
-  "assets/index.04b1e0f4.js-unocss-hash.css": [
-    "/sign/assets/index.04b1e0f4.js",
-    "/sign/assets/index.1db7c900.css"
+  "static/index.bdce3de2.js-unocss-hash.css": [
+    "/static/index.bdce3de2.js",
+    "/static/index.9788a3d5.css"
   ],
   "node_modules/.pnpm/@vueuse+shared@8.2.6_vue@3.2.33/node_modules/@vueuse/shared/index.mjs": [
-    "/sign/assets/index.825a5e30.js",
-    "/sign/assets/index.986415e4.css"
+    "/static/index.1b5bf0b6.js",
+    "/static/index.143d11d9.css"
   ],
-  "src/pages/Space/manage/details/call_the_roll/index.vue?vue&type=style&index=0&scoped=true&lang.css": [
-    "/sign/assets/index.825a5e30.js",
-    "/sign/assets/index.986415e4.css"
+  "src/pages/Space/manage/call_the_roll/index.vue?vue&type=style&index=0&scoped=true&lang.css": [
+    "/static/index.1b5bf0b6.js",
+    "/static/index.143d11d9.css"
   ],
-  "src/pages/Space/manage/details/call_the_roll/index.vue": [
-    "/sign/assets/index.825a5e30.js",
-    "/sign/assets/index.986415e4.css"
+  "src/pages/Space/manage/call_the_roll/index.vue": [
+    "/static/index.1b5bf0b6.js",
+    "/static/index.143d11d9.css"
   ],
-  "assets/index.825a5e30.js-unocss-hash.css": [
-    "/sign/assets/index.825a5e30.js",
-    "/sign/assets/index.986415e4.css"
+  "static/index.1b5bf0b6.js-unocss-hash.css": [
+    "/static/index.1b5bf0b6.js",
+    "/static/index.143d11d9.css"
   ],
-  "src/pages/Space/manage/details/checkIn/index.vue": [
-    "/sign/assets/index.caeb0716.js",
-    "/sign/assets/index.44781762.css"
+  "src/pages/Space/manage/checkIn/index.vue": [
+    "/static/index.42cf3256.js",
+    "/static/index.9331d7be.css"
   ],
-  "assets/index.caeb0716.js-unocss-hash.css": [
-    "/sign/assets/index.caeb0716.js",
-    "/sign/assets/index.44781762.css"
+  "static/index.42cf3256.js-unocss-hash.css": [
+    "/static/index.42cf3256.js",
+    "/static/index.9331d7be.css"
   ],
-  "src/pages/Space/manage/details/draw/index.vue?vue&type=style&index=0&scoped=true&lang.css": [
-    "/sign/assets/index.12fdc5a4.js",
-    "/sign/assets/index.87fe9158.css"
+  "src/pages/Space/manage/draw/index.vue": [
+    "/static/index.2aa4d561.js",
+    "/static/index.eb12a370.css"
   ],
-  "src/pages/Space/manage/details/draw/index.vue": [
-    "/sign/assets/index.12fdc5a4.js",
-    "/sign/assets/index.87fe9158.css"
+  "static/index.2aa4d561.js-unocss-hash.css": [
+    "/static/index.2aa4d561.js",
+    "/static/index.eb12a370.css"
   ],
-  "assets/index.12fdc5a4.js-unocss-hash.css": [
-    "/sign/assets/index.12fdc5a4.js",
-    "/sign/assets/index.87fe9158.css"
+  "src/pages/Space/manage/scorecard/index.vue": [
+    "/static/index.9f83ac6f.js",
+    "/static/index.d4ab7f8f.css"
   ],
-  "src/pages/Space/manage/details/scorecard/index.vue": [
-    "/sign/assets/index.29851952.js",
-    "/sign/assets/index.7f5fa88f.css"
+  "static/index.9f83ac6f.js-unocss-hash.css": [
+    "/static/index.9f83ac6f.js",
+    "/static/index.d4ab7f8f.css"
   ],
-  "assets/index.29851952.js-unocss-hash.css": [
-    "/sign/assets/index.29851952.js",
-    "/sign/assets/index.7f5fa88f.css"
+  "src/pages/Space/manage/vote/index.vue": [
+    "/static/index.ff351db2.js",
+    "/static/index.6ece155a.css"
   ],
-  "src/pages/Space/manage/details/vote/index.vue": [
-    "/sign/assets/index.041cbf08.js",
-    "/sign/assets/index.f81f5d33.css"
+  "static/index.ff351db2.js-unocss-hash.css": [
+    "/static/index.ff351db2.js",
+    "/static/index.6ece155a.css"
   ],
-  "assets/index.041cbf08.js-unocss-hash.css": [
-    "/sign/assets/index.041cbf08.js",
-    "/sign/assets/index.f81f5d33.css"
+  "src/pages/Space/manage/checkIn/checkList/index.vue": [
+    "/static/index.e1d882be.js",
+    "/static/index.7e16bdd1.css"
   ],
-  "src/pages/Space/manage/details/checkIn/checkList/index.vue": [
-    "/sign/assets/index.79de91ee.js",
-    "/sign/assets/index.5b0e5121.css"
+  "static/index.e1d882be.js-unocss-hash.css": [
+    "/static/index.e1d882be.js",
+    "/static/index.7e16bdd1.css"
   ],
-  "assets/index.79de91ee.js-unocss-hash.css": [
-    "/sign/assets/index.79de91ee.js",
-    "/sign/assets/index.5b0e5121.css"
+  "src/pages/Space/manage/draw/owner_draw/index.vue": [
+    "/static/index.1bc0d0fc.js",
+    "/static/index.dd936abb.css"
   ],
-  "src/pages/Space/manage/details/draw/owner_draw/index.vue": [
-    "/sign/assets/index.b4cdc2db.js",
-    "/sign/assets/index.397b99e9.css"
+  "static/index.1bc0d0fc.js-unocss-hash.css": [
+    "/static/index.1bc0d0fc.js",
+    "/static/index.dd936abb.css"
   ],
-  "assets/index.b4cdc2db.js-unocss-hash.css": [
-    "/sign/assets/index.b4cdc2db.js",
-    "/sign/assets/index.397b99e9.css"
+  "src/pages/Space/manage/draw/owner_draw/modify.vue": [
+    "/static/modify.1e9c1317.js",
+    "/static/modify.9bd0c3ee.css"
   ],
-  "src/pages/Space/manage/details/draw/owner_draw/modify.vue?vue&type=style&index=0&scoped=true&lang.css": [
-    "/sign/assets/modify.cd5612f1.js",
-    "/sign/assets/modify.0a57e944.css"
+  "static/modify.1e9c1317.js-unocss-hash.css": [
+    "/static/modify.1e9c1317.js",
+    "/static/modify.9bd0c3ee.css"
   ],
-  "src/pages/Space/manage/details/draw/owner_draw/modify.vue": [
-    "/sign/assets/modify.cd5612f1.js",
-    "/sign/assets/modify.0a57e944.css"
+  "src/pages/Space/manage/draw/owner_draw/random.vue": [
+    "/static/random.23012d63.js",
+    "/static/random.5e4a47d1.css"
   ],
-  "assets/modify.cd5612f1.js-unocss-hash.css": [
-    "/sign/assets/modify.cd5612f1.js",
-    "/sign/assets/modify.0a57e944.css"
+  "static/random.23012d63.js-unocss-hash.css": [
+    "/static/random.23012d63.js",
+    "/static/random.5e4a47d1.css"
   ],
-  "src/pages/Space/manage/details/draw/owner_draw/random.vue": [
-    "/sign/assets/random.a1be65d7.js",
-    "/sign/assets/index.397b99e9.css"
+  "src/components/modifyTime/modifyTime.vue": [
+    "/static/index.045137a2.js",
+    "/static/index.1a0005e9.css"
   ],
-  "assets/random.a1be65d7.js-unocss-hash.css": [
-    "/sign/assets/random.a1be65d7.js",
-    "/sign/assets/index.397b99e9.css"
+  "src/pages/Space/manage/vote/owner_vote/index.vue": [
+    "/static/index.045137a2.js",
+    "/static/index.1a0005e9.css"
+  ],
+  "static/index.045137a2.js-unocss-hash.css": [
+    "/static/index.045137a2.js",
+    "/static/index.1a0005e9.css"
   ],
   "src/layouts/404.vue": [
-    "/sign/assets/404.b0631c69.js",
-    "/sign/assets/404.a9d4f0d8.css"
+    "/static/404.2020045e.js",
+    "/static/404.d40d9366.css"
   ],
-  "assets/404.b0631c69.js-unocss-hash.css": [
-    "/sign/assets/404.b0631c69.js",
-    "/sign/assets/404.a9d4f0d8.css"
+  "static/404.2020045e.js-unocss-hash.css": [
+    "/static/404.2020045e.js",
+    "/static/404.d40d9366.css"
   ],
   "src/layouts/home.vue": [
-    "/sign/assets/home.1d6a0bad.js",
-    "/sign/assets/home.150c27e3.css"
+    "/static/home.129bd9df.js",
+    "/static/home.f31f3e2f.css"
   ],
-  "assets/home.1d6a0bad.js-unocss-hash.css": [
-    "/sign/assets/home.1d6a0bad.js",
-    "/sign/assets/home.150c27e3.css"
+  "static/home.129bd9df.js-unocss-hash.css": [
+    "/static/home.129bd9df.js",
+    "/static/home.f31f3e2f.css"
   ]
 }

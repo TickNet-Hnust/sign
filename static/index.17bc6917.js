@@ -1,0 +1,1 @@
+import{v as t}from"./app.0ce71bde.js";function s(o){return t({method:"post",url:"/signff/sign",data:o})}function r(o){return t({method:"post",url:"/signff/signRecord/ByCode",data:o})}export{s as a,r as s};

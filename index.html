@@ -1,11 +1,18 @@
+<!--
+ * @Description: 
+ * @Autor: 张津瑞
+ * @Date: 2022-04-20 16:18:10
+ * @LastEditors: 张津瑞
+ * @LastEditTime: 2022-05-13 11:37:52
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="/sign/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/sign/pwa-192x192.png">
-  <link rel="mask-icon" href="/sign/safari-pinned-tab.svg" color="#00aba9">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/pwa-192x192.png">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00aba9">
   <meta name="msapplication-TileColor" content="#00aba9">
   <meta name="theme-color" content="#ffffff">
   <script>
@@ -16,9 +23,11 @@
         document.documentElement.classList.toggle('dark', true)
     })()
   </script>
-  <script type="module" crossorigin src="/sign/assets/app.235124e5.js"></script>
-  <link rel="stylesheet" href="/sign/assets/app.0e14bfb0.css">
-<link rel="manifest" href="/sign/manifest.webmanifest"></head>
+  <!-- 引入百度地图sdk -->
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=ftDGweQMHmmHGCWfrMRDGU3dT65ZZg5H"></script>
+  <script type="module" crossorigin src="/static/app.0ce71bde.js"></script>
+  <link rel="stylesheet" href="/static/app.e7003a05.css">
+<link rel="manifest" href="/manifest.webmanifest"></head>
 <body class="font-sans">
   <div id="app"></div>
   
