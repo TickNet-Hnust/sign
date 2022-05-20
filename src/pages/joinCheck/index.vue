@@ -118,6 +118,7 @@ const jumpRecord = function() {
             v-model="inputValue"
             :show="showKeyboard"
             @blur="showKeyboard = false"
+            maxlength="4"
           />
         </div>
         <div
