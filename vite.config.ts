@@ -19,7 +19,7 @@ import viteCompression from 'vite-plugin-compression'
 const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 
 export default defineConfig({
-  base: '/sign/',
+  // base: '/sign/',
   // server: {
   //   https: true
   // },
@@ -151,14 +151,6 @@ export default defineConfig({
     //     drop_console: true
     //   }
     // },
-    //静态资源分类打包，不然js,css全打包在assets里面
-    rollupOptions: {
-      output: { 
-        chunkFileNames: 'static/js/[name]-[hash].js',
-        entryFileNames: 'static/js/[name]-[hash].js',
-        assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
-      }
-    }
   },
   // https://github.com/antfu/vite-ssg
   ssgOptions: {
