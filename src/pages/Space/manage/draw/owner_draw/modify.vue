@@ -46,10 +46,12 @@ const commitModifyInfo = () => {
     if (res.code === 200) {
       Toast.success({
         message: '抽签信息修改成功',
-      })
-      router.push({
-        path: '/space/manage/draw/owner_draw',
-        query: { id: drawId },
+        onClose() {
+          router.push({
+            path: '/space/manage/draw/owner_draw',
+            query: { id: drawId },
+          })
+        },
       })
     }
     else {

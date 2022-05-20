@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { addDrawRecord, getDrawNum } from '~/api/myJoin/draw'
+import { addDrawRecord, drawRecordCount, getDrawNum } from '~/api/myJoin/draw'
 import { getDraw } from '~/api/myJoin/record'
 const route = useRoute()
-const loading = ref(true) // 控制数据加载完成，界面显示
+const loading = ref(true)
 // 定义投票数据类型接口
 interface DrawData {
   type: string // 抽签或者投票
+  anonymity: number
   question: string
   allPollNum: number // 总票数
   drawingAlreadyNum: number // 已经抽签票数
   endTime: string
+  createTime: string
   optionChecked: number // 被选择的选项id
   optionCheckedValue: string
   status: number // 当前抽签进行状态,进行状态(0未结束，1已结束)
@@ -32,6 +34,7 @@ const drawId = Number(route.query.id)
 
 const drawData: DrawData = reactive({
   type: '抽签',
+  anonymity: 0,
   question: '',
   status: 0,
   allPollNum: computed(() => {
@@ -42,13 +45,14 @@ const drawData: DrawData = reactive({
     return result
   }),
   drawingAlreadyNum: computed(() => {
-    let result = 0
+    let result = drawData.allPollNum
     drawData.option.forEach((item) => {
-      result = result + item.lastPoll
+      result = result - item.lastPoll
     })
-    return drawData.allPollNum - result
+    return result
   }),
   endTime: '',
+  createTime: '',
   optionChecked: 0,
   optionCheckedValue: '',
   isDrawing: 0,
@@ -68,33 +72,36 @@ const drawData: DrawData = reactive({
 })
 
 onMounted(() => {
-  window.scrollTo(0,0)
+  window.scrollTo(0, 0)
   getDraw(drawId).then((res) => {
+    console.warn(res)
     drawData.question = res.data.drawName
+    drawData.anonymity = res.data.anonymity
+    drawData.createTime = res.data.createTime
     drawData.endTime = res.data.endTime
     drawData.status = res.data.status
     drawData.isVisible = res.data.visible
     drawData.isDrawing = res.data.attend
-    drawData.optionChecked = res.data.attend ? res.data.optionId : 0
+    drawData.optionChecked = res.data.attend ? res.data.optionName : 0
     drawData.option.pop()
     for (let i = 0; i < res.data.optionContent.length; i++) {
       const item = {
         optionId: i + 1,
         optionValue: res.data.optionContent[i],
-        allPoll: res.data.optionNum[i],
-        lastPoll: 0,
+        allPoll: 0,
+        lastPoll: res.data.optionNum[i],
       }
       drawData.option.push(item)
     }
     for (let i = 0; i < res.data.optionContent.length; i++) {
-      if (drawData.option[i].optionValue === res.data.optionId) {
+      if (drawData.option[i].optionValue === res.data.optionName) {
         drawData.optionChecked = i + 1
         drawData.optionCheckedValue = drawData.option[i].optionValue
       }
     }
-    getDrawNum(drawId).then((res) => {
+    drawRecordCount(drawId).then((res) => {
       for (let i = 0; i < res.data.length; i++)
-        drawData.option[i].lastPoll = res.data[i]
+        drawData.option[i].allPoll = drawData.option[i].lastPoll + res.data[i]
       loading.value = false
     })
   })
@@ -190,7 +197,7 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
         {{ drawData.optionCheckedValue }}
       </div>
     </van-dialog>
-    <records-list v-if="drawData.optionChecked" :show="show" :type="drawData.type" :active-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
+    <records-list v-if="drawData.optionChecked&&drawData.anonymity" :show="show" :type="drawData.type" :active-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
   </div>
 </template>
 

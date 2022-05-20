@@ -50,9 +50,9 @@ export function addDrawRecord(drawId: number) {
 export function modifyDraw(drawId: number, duration: number, anonymity: number) {
   return request({
     method: 'put',
-    url: '/signff/drawRecord',
+    url: '/signff/draw',
     data: {
-      drawId,
+      id: drawId,
       duration,
       anonymity,
     },
