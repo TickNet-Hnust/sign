@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-13 17:40:33
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-20 14:31:04
+ * @LastEditTime: 2022-05-20 20:45:42
 -->
 <script lang="ts" setup>
 import { signStuList } from '~/api/record/signRecord'
@@ -62,7 +62,7 @@ const getStuList = () => {
       drawId: props.activityId,
       attend: props.attend,
       pageNum: pageNum.value,
-      optionId: props.optionName,
+      optionName: props.optionName,
       pageSize: 10
     })
     drawStuList(drawRequest).then((res: any) => {

@@ -28,6 +28,7 @@ export function drawStuList(data: any) {
 export function drawRecordCount(id: any) {
   return request({
     method: 'get',
-    url: `/signff/drawRecord/count/${id}`
+    params: id,
+    url: '/signff/drawRecord/count'
   })
 }

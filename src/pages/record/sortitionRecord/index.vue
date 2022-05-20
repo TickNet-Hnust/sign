@@ -1,3 +1,10 @@
+<!--
+ * @Descipttion: 
+ * @Author: 刘晴
+ * @Date: 2022-04-20 21:46:45
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-20 20:44:50
+-->
 <script setup lang="ts">
 import { getDetailDraw, drawStuList, drawRecordCount } from '~/api/record/drawRecord'
 interface DetailRecord{
@@ -9,7 +16,7 @@ interface DetailRecord{
   currentNum: Array<Number> // 当前选中人数
 }
 // 如果抽签结果可见则展示这个数组
-const drawCount = ref() // 已抽签人数
+const drawCount = ref(0) // 已抽签人数
 const notDraw = ref() // 未抽签人数
 // 展示某个子菜单
 const changeShow = (index: any) => {
@@ -43,7 +50,6 @@ onMounted(() => {
       detailRecord.optionsList = res.data.optionContent
       detailRecord.optionsNum = res.data.optionNum
       detailRecord.visible = res.data.visible
-      detailRecord.currentNum = res.data.currentNum
       detailRecord.optionsList.forEach((item, index) => {
         detailRecord.isShow[index] = false
       })
@@ -52,9 +58,12 @@ onMounted(() => {
     console.log(err)
   })
   // 获取已抽签人数
-  drawRecordCount(drawId).then((res: any) => {
+  drawRecordCount({drawId: drawId}).then((res: any) => {
     if(res.code === 200) {
-      drawCount.value = res.data
+      detailRecord.currentNum = res.data
+      detailRecord.currentNum.forEach((item) => {
+        drawCount.value += Number(item)
+      })
     }
   }).catch((err) => {
     console.log(err)
