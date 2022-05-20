@@ -6,6 +6,7 @@ import { useUserStore } from '~/stores/user'
 const user = useUserStore()
 const route = useRoute()
 const router = useRouter()
+const showLoading = ref(true)
 // 初始化成员列表
 const member_list = reactive([
 
@@ -25,18 +26,22 @@ const quitData = reactive({
 })
 // 获取我参与的空间的列表
 getSignSpace(id.value).then((res) => {
-  spaceList.id = res.data.id
-  spaceList.createTime = res.data.createTime
-  spaceList.spaceName = res.data.spaceName
-  spaceList.count = res.data.count
-  quitData.spaceId = res.data.id
-  console.log(spaceList)
+  if (res.code === 200) {
+    setTimeout(() => {
+      showLoading.value = false
+    }, 500)
+    spaceList.id = res.data.id
+    spaceList.createTime = res.data.createTime
+    spaceList.spaceName = res.data.spaceName
+    spaceList.count = res.data.count
+    quitData.spaceId = res.data.id
+  }
 })
 getSpaceMemberList(id.value).then((res: any) => {
   member_list.push(...res.rows)
 })
 onMounted(() => {
-  window.scrollTo(0,0)
+  window.scrollTo(0, 0)
 })
 // 退出空间的方法
 const quitSpace = () => {
@@ -51,6 +56,15 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
 
 </script>
 <template>
+  <div style="position: absolute; top: 40vh;left: 45vw; z-index: 10">
+    <van-loading
+      v-if="showLoading"
+      type="spinner"
+      size="40px"
+      color="#333"
+      vertical
+    />
+  </div>
   <div class="bg-gray-500/8 p-3 min-h-100vh">
     <div class="text-left text-hex-aaa text-xs ml-3">
       空间信息
@@ -66,7 +80,7 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
       <div class="flex justify-between text-14px py-2">
         <span>成员</span>
         <span>
-          {{ member_list.length }}人
+          {{ spaceList.count }}人
         </span>
       </div>
       <van-dialog

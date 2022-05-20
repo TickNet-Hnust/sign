@@ -1,8 +1,5 @@
 <!-- 学生端 -->
 <script lang="ts">
-export default{
-  name: 'spaceList'
-}
 </script>
 
 <script setup lang="ts">
@@ -16,6 +13,7 @@ const showPopover = ref(false) // 控制点击加号弹窗显示
 const value = ref('123')
 const errorInfo = ref('')
 const showKeyboard = ref(false)
+const showLoading = ref(true)
 
 // 点击加号创建空间还是加入空间
 const popoverSelect = (action: any) => {
@@ -45,8 +43,11 @@ const request = ref({
 const getsignSpaceList = () => {
   request.value.memberRank = active.value
   signSpaceList(request.value).then((res: any) => {
-    if (res.code === 200)
+    if (res.code === 200) {
+      showLoading.value = false
       spaceList.value = spaceList.value.concat(res.rows)
+    }
+
     if (spaceList.value.length < res.total) {
       request.value.pageNum++
       getsignSpaceList()
@@ -56,11 +57,13 @@ const getsignSpaceList = () => {
 getsignSpaceList()// 进入页面获取空间列表
 // 搜索空间的方法，为什么搜索进了这个方法，但要切换之后才有效果
 const searchList = () => {
+  showLoading.value = true
   request.value.pageNum = 1
   spaceList.value = []
   getsignSpaceList()
 }
 const tabChange = () => {
+  showLoading.value = true
   spaceList.value = []
   request.value.pageNum = 1
   request.value.spaceName = ''
@@ -69,6 +72,7 @@ const tabChange = () => {
 }
 // 点击清除重新加载数据
 const clear = () => {
+  showLoading.value = true
   getsignSpaceList()
 }
 // 跳转指定空间
@@ -185,6 +189,7 @@ const nameRules = [
           v-model:show="showPopover"
           :actions="[{ text: '创建空间' }, { text: '加入空间' }]"
           placement="bottom-end"
+          theme="dark"
           @select="popoverSelect"
         >
           <template #reference>
@@ -259,6 +264,16 @@ const nameRules = [
         <van-tab title="我管理的" />
       </van-tabs>
       <van-list>
+        <van-loading
+          v-if="showLoading"
+          color="#666"
+          type="spinner"
+          class="mt-5"
+          size="24px"
+          vertical
+        >
+          加载中...
+        </van-loading>
         <ul
           v-for="item in spaceList"
           :key="item"

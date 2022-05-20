@@ -2,8 +2,8 @@
  * @Descipttion:
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-18 20:09:10
+ * @LastEditors: caojun
+ * @LastEditTime: 2022-05-20 15:23:48
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -14,6 +14,7 @@ const route = useRoute()
 const active = ref(0)
 const loading = ref(false)
 const fininshed = ref(true)
+const showLoading = ref(true)
 const details_list = reactive([
   {
     title: '发起签到',
@@ -110,17 +111,22 @@ const quitSpaceData = reactive({
 const rank = ref(0)
 // 查询空间列表的参数
 getSignSpace(id.value).then((res) => {
-  rank.value = res.data.memberRank
-  spaceList.id = res.data.id
-  spaceList.createTime = res.data.createTime
-  spaceList.spaceName = res.data.spaceName
-  spaceList.count = res.data.count
-  updateData.spaceName = res.data.spaceName
-  updateData.spaceId = res.data.id
-  deleteData.spaceId = res.data.id
-  deleteStudentData.spaceId = res.data.id
-  deleteStudentData.userId = res.data.id
-  quitSpaceData.spaceId = res.data.id
+  if (res.code === 200) {
+    setTimeout(() => {
+      showLoading.value = false
+    }, 500)
+    rank.value = res.data.memberRank
+    spaceList.id = res.data.id
+    spaceList.createTime = res.data.createTime
+    spaceList.spaceName = res.data.spaceName
+    spaceList.count = res.data.count
+    updateData.spaceName = res.data.spaceName
+    updateData.spaceId = res.data.id
+    deleteData.spaceId = res.data.id
+    deleteStudentData.spaceId = res.data.id
+    deleteStudentData.userId = res.data.id
+    quitSpaceData.spaceId = res.data.id
+  }
 })
 // 获取空间成员列表
 getSpaceMemberList(id.value).then((res) => {
@@ -266,7 +272,6 @@ const onConfirmStu = (index, value) => {
     updateSpaceMember(changeStuData).then((res) => {
       getSpaceMemberList(id.value).then((res) => {
         if (res.code === 200) {
-          console.log(res, '成员列表')
           member_list.value = res.rows
           showStuChange.value = false
           Notify({ type: 'success', message: '操作成功' })
@@ -293,18 +298,27 @@ const quitSpace = () => {
   })
 }
 onMounted(() => {
-  window.scrollTo(0,0)
+  window.scrollTo(0, 0)
 })
 </script>
 <template>
+  <div style="position: absolute; top: 40vh;left: 45vw; z-index: 10">
+    <van-loading
+      v-if="showLoading"
+      type="spinner"
+      size="40px"
+      color="#333"
+      vertical
+    />
+  </div>
   <div class="bg-gray-500/8 p-3 min-h-screen">
     <div class="text-left text-hex-aaa text-xs ml-3">
       空间信息
     </div>
     <div class="bg-hex-fff rounded px-5 pt-2 text-hex-666 border border-hex-ccc">
-      <div class="flex justify-between border-b border-hex-ccc text-14px py-2">
-        <span>空间名称</span>
-        <span>
+      <div class="flex justify-between border-b border-hex-ccc text-14px py-2 items-center">
+        <span class="w-20vw text-left">名称</span>
+        <span class="text-left flex justify-between items-center">
           {{ spaceList.spaceName }}
           <span v-if="rank ===2" @click="showUpdate = true"><van-icon name="edit" /></span>
         </span>
@@ -312,7 +326,7 @@ onMounted(() => {
       <div class="flex justify-between text-14px py-2">
         <span>成员</span>
         <span>
-          {{ member_list.length }}人
+          {{ spaceList.count }}人
         </span>
       </div>
       <van-dialog
@@ -327,6 +341,8 @@ onMounted(() => {
             v-model="updateData.spaceName"
             class="border-b border-hex-ccc mb-3"
             placeholder="请输入新的空间名称"
+            maxlength="30"
+            show-word-limit
             :rules="[{ required: true, message: '请输入新名称' }]"
           />
         </div>
