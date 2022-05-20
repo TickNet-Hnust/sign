@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-13 17:40:33
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-18 10:59:52
+ * @LastEditTime: 2022-05-20 14:31:04
 -->
 <script lang="ts" setup>
 import { signStuList } from '~/api/record/signRecord'
@@ -129,12 +129,13 @@ emit('getTotal', totalRecord)
       loading-text="——上拉加载更多——"
       @load="onLoad"
     >
-      <ul class="flex py-2 border-b border-hex-E4E4E4 text-sm">
+      <ul class="flex py-2 text-sm">
         <span class="flex-1">学号/工号<van-icon name="sort" /></span>
         <span class="flex-1">姓名</span>
         <span class="flex-1" v-if="props.attend === '1' ">时间</span>
       </ul>
-      <ul v-for="item in clist" :key="item" class="flex items-center py-2 border-b border-hex-E4E4E4 text-sm">
+      <van-empty v-if="clist.length === 0" image-size="7rem" description="空~" />
+      <ul v-for="item in clist" :key="item" class="flex items-center py-2 border-t border-hex-E4E4E4 text-sm">
         <span class="flex-1">{{ item.createUserId }}</span>
         <span class="flex-1">{{ item.createUserName }}</span>
         <span class="flex-1" v-if="props.attend === '1' ">{{ item.createTime }}</span>

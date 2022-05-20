@@ -35,10 +35,14 @@ const helpSign = () => {
 }
 const QRRequest = reactive({
   signId: signId,
-  path: 'http://localhost:3333/sign/record/checkRecord/helpJumpPage'
+  path: ''
 })
 const loadingImg = ref(true)
 const getQRCode = () => {
+  const currentHref = window.location.href
+  const index = currentHref.indexOf("/help")
+  QRRequest.path = currentHref.substr(0,index) + '/helpJumpPage'
+  console.log(QRRequest)
   signQRCode(QRRequest).then((res: any) => {
     if(res.code === 200) {
       QRUrl.value = res.data.url

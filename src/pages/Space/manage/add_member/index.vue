@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-15 17:15:49
+ * @LastEditTime: 2022-05-20 13:46:17
 -->
 <script setup lang="ts">
 import { spaceQRcode } from '~/api/record/index'
@@ -14,10 +14,14 @@ const QRUrl = ref('')
 const loadingImg = ref(true)
 // 获取空间二维码
 onMounted(() => {
-  spaceQRcode({
+  const QRRequest = reactive({
     spaceId: spaceId,
-    path: 'http://localhost:3333/sign/space/manage/add_member/addJumpPage'
-  }).then((res: any) => {
+    path: ''
+  })
+  const currentHref = window.location.href
+  const index = currentHref.indexOf("?")
+  QRRequest.path = currentHref.substr(0,index) + '/addJumpPage'
+  spaceQRcode(QRRequest).then((res: any) => {
     if(res.code === 200) {
       QRUrl.value = res.data.url
       loadingImg.value = false

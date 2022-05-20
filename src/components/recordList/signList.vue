@@ -170,20 +170,20 @@ const jumpDetail = (item: any) => {
           {{ item.activityName }}
         </span>
         <span class="text-xs w-5em">
-          <span class="bg-hex-41BD62 text-white px-2 py-1 rounded" v-if="!item.status">签到中</span>
+          <span class="bg-hex-41BD62 text-white px-2 py-1 rounded" v-if="!item.status">进行中</span>
           <span class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded" v-if="item.status">已结束</span>
         </span>
       </div>
-      <div class="text-xs text-gray-400 text-left mt-3">
-        <span v-if="Number(props.admin) === 1">
+      <div class="flex justify-between items-center text-xs text-gray-400 text-left mt-3">
+        <span class="w-43vw" v-if="Number(props.admin) === 1">
           所属空间：{{ item.spaceName }}
           <span v-if="item.spaceName === '' "> --- </span>
         </span>
-        <span v-if="Number(props.admin) !== 1">
+        <span class="w-43vw" v-if="Number(props.admin) !== 1">
           发起人：{{ item.createUserName }}
           <span v-if="item.createUserName === '' "> --- </span>
         </span>
-        <span class="ml-3">{{ item.createTime }}</span>
+        <span>{{ item.createTime }}</span>
       </div>
     </ul>
   </van-list>
