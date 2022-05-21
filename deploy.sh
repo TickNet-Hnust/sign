@@ -1,5 +1,4 @@
 #生产环境部署脚本
-set -e
 
 #先构建项目，生成dist目录
 pnpm run build
