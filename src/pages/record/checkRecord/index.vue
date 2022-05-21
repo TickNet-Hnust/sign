@@ -52,6 +52,7 @@ const changeShow = () => {
   })
 }
 // 初始化数据
+const showLoading = ref(true)
 const totalRecord = ref(0)
 onMounted(() => {
   window.scrollTo(0,0)
@@ -61,6 +62,9 @@ onMounted(() => {
       signName.value = detailMsg.value.signName
       if(res.data.visible === 1) isShow.value = 'yes'
       else isShow.value = 'no'
+      setTimeout(() => {
+        showLoading.value = false
+      }, 200)
     }
   }).catch((err) => {
     console.log(err)
@@ -107,7 +111,16 @@ const editSignName = async () => {
 }
 </script>
 <template>
-  <div class="bg-gray-500/8 p-3 min-h-100vh">
+  <div style="position: absolute; top: 40vh;left: 45vw; z-index: 10">
+    <van-loading
+      v-if="showLoading"
+      type="spinner"
+      size="24px"
+      color="#666"
+      vertical
+    />
+  </div>
+  <div v-if="!showLoading" class="bg-gray-500/8 p-3 min-h-100vh">
     <div class="bg-white border border-t-2 border-hex-D9DADB border-t-hex-41B062 rounded">
       <div
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"

@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-20 20:44:50
+ * @LastEditTime: 2022-05-21 18:33:27
 -->
 <script setup lang="ts">
 import { getDetailDraw, drawStuList, drawRecordCount } from '~/api/record/drawRecord'
@@ -42,6 +42,7 @@ const detailRecord: DetailRecord = reactive({
 const route = useRoute()
 const drawId = route.query.id
 // 初始化数据
+const showLoading = ref(true)
 onMounted(() => {
   window.scrollTo(0,0)
   getDetailDraw(drawId).then((res: any) => {
@@ -53,6 +54,9 @@ onMounted(() => {
       detailRecord.optionsList.forEach((item, index) => {
         detailRecord.isShow[index] = false
       })
+      setTimeout(() => {
+        showLoading.value = false
+      }, 100)
     }
   }).catch((err) => {
     console.log(err)
@@ -83,7 +87,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-gray-500/8 p-3 min-h-100vh">
+  <div style="position: absolute; top: 40vh;left: 45vw; z-index: 10">
+    <van-loading
+      v-if="showLoading"
+      type="spinner"
+      size="24px"
+      color="#666"
+      vertical
+    />
+  </div>
+  <div v-if="!showLoading" class="bg-gray-500/8 p-3 min-h-100vh">
     <div>
       <div class="text-left ml-3">
         <span class="text-sm">签数统计</span>
