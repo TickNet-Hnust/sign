@@ -2,8 +2,8 @@
  * @Descipttion:
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: caojun
- * @LastEditTime: 2022-05-20 15:23:48
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-21 11:29:21
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -318,9 +318,9 @@ onMounted(() => {
     <div class="bg-hex-fff rounded px-5 pt-2 text-hex-666 border border-hex-ccc">
       <div class="flex justify-between border-b border-hex-ccc text-14px py-2 items-center">
         <span class="w-20vw text-left">名称</span>
-        <span class="text-left flex justify-between items-center">
+        <span class="text-left flex justify-between items-center" @click="showUpdate = true">
           {{ spaceList.spaceName }}
-          <span v-if="rank ===2" @click="showUpdate = true"><van-icon name="edit" /></span>
+          <span v-if="rank ===2"><van-icon name="edit" /></span>
         </span>
       </div>
       <div class="flex justify-between text-14px py-2">
