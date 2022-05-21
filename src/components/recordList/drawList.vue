@@ -130,7 +130,7 @@ const jumpDetail = (item: any) => {
           position: absolute;
           top: 0;
           right: 84px;
-          background: url(/src/assets/join.png);
+          background: url(join.png);
           background-size: 100%"
       />
       <div
