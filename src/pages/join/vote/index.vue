@@ -2,7 +2,7 @@
 // 定义投票数据类型接口
 import { onMounted } from 'vue'
 import { Dialog } from 'vant'
-import { addVoteRecord } from '~/api/myJoin/vote'
+import { addVoteRecord, getAllVoteRecord } from '~/api/myJoin/vote'
 import { getVote } from '~/api/myJoin/record'
 
 const route = useRoute()
@@ -147,8 +147,16 @@ const isClick = () => {
       voteOption.push(option)
     })
     addVoteRecord(voteId, voteOption).then((res: any) => {
-      voteData.isVote = 1
-      console.warn(res)
+      getAllVoteRecord(voteId).then((res: any) => {
+        console.warn(res)
+        for (let i = 0; i < res.data.optionCount.length; i++) {
+          for (let j = 0; j < res.data.optionCount.length; j++) {
+            if (res.data.voteOption[i] === voteData.option[j].optionValue)
+              voteData.option[j].poll = res.data.optionCount[i]
+          }
+        }
+        voteData.isVote = 1
+      })
     })
   }
 }

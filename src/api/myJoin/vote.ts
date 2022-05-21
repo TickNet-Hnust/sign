@@ -38,3 +38,11 @@ export function modifyVoteTime(voteId: number, endTime: string) {
     },
   })
 }
+
+// 查询投票汇总记录
+export function getAllVoteRecord(voteId: number) {
+  return request({
+    method: 'get',
+    url: `/signff/voteRecord/${voteId}`,
+  })
+}

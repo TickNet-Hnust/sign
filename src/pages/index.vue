@@ -1,5 +1,5 @@
 <!--
- * @Description: 
+ * @Description:
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
  * @LastEditors: 刘晴
@@ -9,6 +9,14 @@
 import { useUserStore } from '~/stores/user'
 const user = useUserStore()
 const router = useRouter()
+
+// // 获取code
+// onMounted(() => {
+//   const corpid = 'ww0a8e41e741c02880'
+//   const redirect_uri = ''
+//   window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${corpid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
+// })
+
 const jumpTargetPage = (targetPath: any) => {
   router.push(targetPath.link)
 }
@@ -44,7 +52,7 @@ const list = reactive([
     link: '',
   },
 ])
-//用户登录
+// 用户登录
 user.login()
 </script>
 
