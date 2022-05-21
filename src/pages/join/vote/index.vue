@@ -73,8 +73,8 @@ const voteData: VoteData = reactive({
 })
 
 onMounted(() => {
-  window.scrollTo(0,0)
-  getVote(voteId).then((res) => {
+  window.scrollTo(0, 0)
+  getVote(voteId).then((res: any) => {
     console.warn(res.data)
     voteData.question = res.data.voteName
     voteData.status = res.data.status
@@ -110,8 +110,14 @@ onMounted(() => {
 
 // 是否显示投票详细数据
 const show = ref(false)
+const optionCheckedValue = ref('')
 const showChange = function() {
   show.value = !show
+}
+
+const handleClickOption = (id: number) => {
+  show.value = true
+  optionCheckedValue.value = voteData.option[id - 1].optionValue
 }
 
 // 检查选项是否选中，选中返回true，未选中返回false
@@ -140,8 +146,9 @@ const isClick = () => {
       const option = voteData.option[item - 1].optionValue
       voteOption.push(option)
     })
-    addVoteRecord(voteId, voteOption).then((res) => {
+    addVoteRecord(voteId, voteOption).then((res: any) => {
       voteData.isVote = 1
+      console.warn(res)
     })
   }
 }
@@ -149,19 +156,22 @@ const isClick = () => {
 </script>
 
 <template>
-  <div v-if="loading" class="w-screen h-screen bg-gray-500/8 p-3">
+  <div v-if="loading" class="bg-gray-500/8 p-3 h-full">
     <van-loading size="24px">
       加载中...
     </van-loading>
   </div>
-  <div v-else class="w-screen h-screen ">
-    <div class="p-3 bg-gray-500/8">
+  <div v-else class="bg-gray-500/8 h-full">
+    <div class="p-3 ">
       <div class="p-3 text-left border border-gray-200 bg-white  rounded">
         <div class="mb-2">
           {{ voteData.question }}
         </div>
-        <van-tag type="primary" color="#28B648" size="medium">
+        <van-tag type="primary" color="#28B648" size="medium" class="mr-3">
           {{ voteData.voteNumLimit>1?'多选':'单选' }}
+        </van-tag>
+        <van-tag type="primary" color="#66CCFF" size="medium">
+          {{ `${voteData.optionChecked.length} / ${voteData.voteNumLimit}` }}
         </van-tag>
       </div>
       <!-- 遍历选项 -->
@@ -193,7 +203,7 @@ const isClick = () => {
               v-if="optionCheck(item.id)"
               class="mt-4 h-42px bg-light-50 border rounded"
               style="border-color:#1FA71F"
-              @click="show = true"
+              @click="handleClickOption(item.id)"
             >
               <div
                 class="border-none h-40px leading-40px text-left flex"
@@ -273,7 +283,7 @@ const isClick = () => {
       </div>
     </div>
   </div>
-  <records-list :show="show" :type="voteData.type" :active-id="voteId" @show-change="showChange()" />
+  <records-list :show="show" :type="voteData.type" :active-id="voteId" :option-checked-value="optionCheckedValue" @show-change="showChange()" />
 </template>
 
 <route lang="yaml">

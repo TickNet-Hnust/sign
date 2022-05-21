@@ -74,7 +74,7 @@ const voteData: VoteData = reactive({
 })
 
 onMounted(() => {
-  window.scrollTo(0,0)
+  window.scrollTo(0, 0)
   getVote(voteId).then((res) => {
     console.warn(res.data)
     voteData.question = res.data.voteName
@@ -178,8 +178,11 @@ const toVoteRecord = () => {
         <div class="mb-2">
           {{ voteData.question }}
         </div>
-        <van-tag type="primary" color="#28B648" size="medium">
+        <van-tag type="primary" color="#28B648" size="medium" class="mr-3">
           {{ voteData.voteNumLimit>1?'多选':'单选' }}
+        </van-tag>
+        <van-tag type="primary" color="#66CCFF" size="medium">
+          {{ `${voteData.optionChecked.length} / ${voteData.voteNumLimit}` }}
         </van-tag>
       </div>
       <!-- 遍历选项 -->
