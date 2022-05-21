@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { addDrawRecord, getDrawNum } from '~/api/myJoin/draw'
+import { addDrawRecord, drawRecordCount, getDrawNum } from '~/api/myJoin/draw'
 import { getDraw } from '~/api/myJoin/record'
 const route = useRoute()
 const router = useRouter()
@@ -46,11 +46,11 @@ const drawData: DrawData = reactive({
     return result
   }),
   drawingAlreadyNum: computed(() => {
-    let result = 0
+    let result = drawData.allPollNum
     drawData.option.forEach((item) => {
-      result = result + item.lastPoll
+      result = result - item.lastPoll
     })
-    return drawData.allPollNum - result
+    return result
   }),
   endTime: '',
   createTime: '',
@@ -83,26 +83,26 @@ onMounted(() => {
     drawData.status = res.data.status
     drawData.isVisible = res.data.visible
     drawData.isDrawing = res.data.attend
-    drawData.optionChecked = res.data.attend ? res.data.optionId : 0
+    drawData.optionChecked = res.data.attend ? res.data.optionName : 0
     drawData.option.pop()
     for (let i = 0; i < res.data.optionContent.length; i++) {
       const item = {
         optionId: i + 1,
         optionValue: res.data.optionContent[i],
-        allPoll: res.data.optionNum[i],
-        lastPoll: 0,
+        allPoll: 0,
+        lastPoll: res.data.optionNum[i],
       }
       drawData.option.push(item)
     }
     for (let i = 0; i < res.data.optionContent.length; i++) {
-      if (drawData.option[i].optionValue === res.data.optionId) {
+      if (drawData.option[i].optionValue === res.data.optionName) {
         drawData.optionChecked = i + 1
         drawData.optionCheckedValue = drawData.option[i].optionValue
       }
     }
-    getDrawNum(drawId).then((res) => {
+    drawRecordCount(drawId).then((res) => {
       for (let i = 0; i < res.data.length; i++)
-        drawData.option[i].lastPoll = res.data[i]
+        drawData.option[i].allPoll = drawData.option[i].lastPoll + res.data[i]
       loading.value = false
     })
   })
@@ -233,7 +233,7 @@ const toDrawModify = () => {
         {{ drawData.optionCheckedValue }}
       </div>
     </van-dialog>
-    <records-list v-if="drawData.optionChecked" :show="show" :type="drawData.type" :active-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
+    <records-list v-if="drawData.optionChecked&&drawData.anonymity" :show="show" :type="drawData.type" :active-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
   </div>
 </template>
 
