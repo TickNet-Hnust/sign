@@ -1,5 +1,6 @@
 <script setup lang="ts">
 
+import { Toast } from 'vant'
 import { modifyVoteTime } from '~/api/myJoin/vote'
 
 // 投票日期修改 数据类型
@@ -111,8 +112,16 @@ const confirmPickerTime = () => {
 const modifyTime = () => {
   const time = `${voteTime.voteDate} ${voteTime.voteTime}:00`
   console.warn(time, Number(props.voteId))
-  modifyVoteTime(Number(props.voteId), time).then((res) => {
+  modifyVoteTime(Number(props.voteId), time).then((res: any) => {
     console.warn(res)
+    if (res.code === 200) {
+      Toast.success({
+        message: '修改成功',
+        onClose() {
+          location.reload()
+        },
+      })
+    }
   })
 }
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 
+import { Toast } from 'vant'
 import { modifyDraw } from '~/api/myJoin/draw'
 
 // 投票日期修改 数据类型
@@ -132,6 +133,12 @@ const modifyTime = () => {
   console.warn(time, Number(props.drawId))
   modifyDraw(Number(props.drawId), time, modifyDrawData.anonymity).then((res) => {
     console.warn(res)
+    Toast.success({
+      message: '修改成功',
+      onClose() {
+        location.reload()
+      },
+    })
   })
 }
 
