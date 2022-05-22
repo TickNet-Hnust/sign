@@ -131,14 +131,21 @@ const cancelAnonymous = () => {
 const modifyTime = () => {
   const time = `${modifyDrawData.drawDate} ${modifyDrawData.drawTime}:00`
   console.warn(time, Number(props.drawId))
-  modifyDraw(Number(props.drawId), time, modifyDrawData.anonymity).then((res) => {
+  modifyDraw(Number(props.drawId), time, modifyDrawData.anonymity).then((res: any) => {
     console.warn(res)
-    Toast.success({
-      message: '修改成功',
-      onClose() {
-        location.reload()
-      },
-    })
+    if (res.code === 200) {
+      Toast.success({
+        message: '修改成功',
+        onClose() {
+          location.reload()
+        },
+      })
+    }
+    else {
+      Toast.fail({
+        message: '修改失败，请重试',
+      })
+    }
   })
 }
 
