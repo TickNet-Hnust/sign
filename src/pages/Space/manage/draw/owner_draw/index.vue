@@ -30,6 +30,12 @@ interface OptionData{
   lastPoll: number // 剩余的票数
 }
 
+const props = reactive({
+  endDate: '',
+  endTime: '',
+  anonymity: 0,
+})
+
 // 根据路由获得抽签活动的id
 const drawId = Number(route.query.id)
 
@@ -80,6 +86,9 @@ onMounted(() => {
     drawData.anonymity = res.data.anonymity
     drawData.createTime = res.data.createTime
     drawData.endTime = res.data.endTime
+    props.endDate = drawData.endTime.split(' ')[0]
+    props.endTime = `${drawData.endTime.split(' ')[1].split(':')[0]}:${drawData.endTime.split(' ')[1].split(':')[1]}`
+    props.anonymity = drawData.anonymity
     drawData.status = res.data.status
     drawData.isVisible = res.data.visible
     drawData.isDrawing = res.data.attend
@@ -139,17 +148,6 @@ const toDrawRecord = () => {
     path: '/record/sortitionRecord',
     query: {
       id: drawId,
-    },
-  })
-}
-
-// 修改抽签设置
-const toDrawModify = () => {
-  router.push({
-    path: '/space/manage/draw/owner_draw/modify',
-    query: {
-      id: drawId,
-      anonymity: drawData.anonymity,
     },
   })
 }
@@ -215,18 +213,13 @@ const toDrawModify = () => {
       </van-button>
     </div>
     <div class="flex justify-left my-5 text-sm">
-      <div class="border-gray-300 bg-white p-4 w-30">
+      <div class="border-gray-300 bg-white p-4 w-30 border">
         <div @click="toDrawRecord()">
           <van-icon name="records" size="2rem" class="mb-2" />
           <div>抽签记录</div>
         </div>
       </div>
-      <span class="border-gray-300 bg-white p-4 ml-2 w-30">
-        <div @click="toDrawModify()">
-          <van-icon name="setting-o" size="2rem" class="mb-2" />
-          <div>修改部分设置</div>
-        </div>
-      </span>
+      <modify-draw :draw-date="props.endDate" :draw-id="drawId" :anonymity="drawData.anonymity" :draw-time="props.endTime" />
     </div>
     <van-dialog v-model:show="resultShow" title="抽取结果" confirm-button-color="#0033CC">
       <div class="my-1rem">
