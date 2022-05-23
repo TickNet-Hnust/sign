@@ -107,11 +107,11 @@ const addFTFSpace = () => {
   if (isJoin.value === false) { // 创建空间
     addAFTFSpaceData.join = false
     if (!/^[\u4E00-\u9FA5A-Za-z0-9\,\(\)\[\]_\"\'\u2018\u2019\u201C\u201D\u3010\u3011\uFF08\uFF09\u3001\uFF0C]+$/.test(addAFTFSpaceData.spaceName)) {
-      Notify({ type: 'warning', message: '不能包括特殊符号！' })
+      Notify({ type: 'warning', message: '空间名不能包括空格等特殊符号！' })
       router.push('/Space')
       return
     }
-    if (addAFTFSpaceData.code.length < 4) {
+    if (addAFTFSpaceData.code.length !== 4) {
       Notify({ type: 'warning', message: '请输入四位正确的空间码' })
       router.push('/Space')
       return
@@ -239,7 +239,8 @@ const nameRules = [
             class="mb-2"
             :value="addAFTFSpaceData.code"
             :mask="false"
-            info="请输入四位空间码用于创建空间"
+            info="请输入四位空间码用于创建空间
+            (注意：不要多输或者少输哟！)"
             :error-info="errorInfo"
             :length="4"
             :focused="showKeyboard"
