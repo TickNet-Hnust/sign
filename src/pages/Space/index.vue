@@ -199,26 +199,6 @@ const nameRules = [
       </span>
     </div>
     <!-- 弹出框 -->
-    <!-- 面对面加入空间 -->
-    <van-dialog
-      v-model:show="showJoinSpace"
-      title="面对面加入空间"
-      confirm-button-color="rgb(63,133,255)"
-      show-cancel-button
-      @cancel="onCancel()"
-      @confirm="addFTFSpace()"
-    >
-      <van-password-input
-        class="mb-2 mt-2"
-        :value="addAFTFSpaceData.code"
-        :mask="false"
-        info="请输入四位空间码用于加入空间"
-        :error-info="errorInfo"
-        :length="4"
-        :focused="showKeyboard"
-        @focus="showKeyboard = true"
-      />
-    </van-dialog>
     <!-- 面对面创建空间 -->
     <van-dialog
       v-model:show="showCreateSpace"
@@ -249,6 +229,28 @@ const nameRules = [
         </van-form>
       </div>
     </van-dialog>
+    <!-- 面对面加入空间 -->
+    <van-dialog
+      v-model:show="showJoinSpace"
+      title="面对面加入空间"
+      confirm-button-color="rgb(63,133,255)"
+      show-cancel-button
+      @cancel="onCancel()"
+      @confirm="addFTFSpace()"
+    >
+      <van-password-input
+        class="mb-2 mt-2"
+        :value="addAFTFSpaceData.code"
+        :mask="false"
+        info="请输入四位空间码用于您加入空间
+        (注意：不要多输或者少输哟！)"
+        :error-info="errorInfo"
+        :length="4"
+        :focused="showKeyboard"
+        @focus="showKeyboard = true"
+      />
+    </van-dialog>
+
     <van-number-keyboard
       v-model="addAFTFSpaceData.code"
       :show="showKeyboard"
