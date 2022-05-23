@@ -29,7 +29,7 @@ getSignSpace(id.value).then((res) => {
   if (res.code === 200) {
     setTimeout(() => {
       showLoading.value = false
-    }, 500)
+    }, 300)
     spaceList.id = res.data.id
     spaceList.createTime = res.data.createTime
     spaceList.spaceName = res.data.spaceName
@@ -60,12 +60,12 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
     <van-loading
       v-if="showLoading"
       type="spinner"
-      size="40px"
-      color="#333"
+      size="24px"
+      color="#666"
       vertical
     />
   </div>
-  <div class="bg-gray-500/8 p-3 min-h-100vh">
+  <div v-if="!showLoading" class="bg-gray-500/8 p-3 min-h-100vh">
     <div class="text-left text-hex-aaa text-xs ml-3">
       空间信息
     </div>

@@ -33,6 +33,7 @@ const detailRecord:DetailRecord = reactive({
 const route = useRoute()
 const voteId = route.query.id
 // 初始化数据
+const showLoading = ref(true)
 onMounted(() => {
   window.scrollTo(0,0)
   getDetailVote(voteId).then((res: any) => {
@@ -44,6 +45,9 @@ onMounted(() => {
       detailRecord.optionsList.forEach((item,index) => {
         detailRecord.isShow[index] = false
       })
+      setTimeout(() => {
+        showLoading.value = false
+      }, 100)
     }
   }).catch((err) => {
     console.log(err)
@@ -64,17 +68,25 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-gray-500/8 p-3 min-h-screen">
+  <div style="position: absolute; top: 40vh;left: 45vw; z-index: 10">
+    <van-loading
+      v-if="showLoading"
+      type="spinner"
+      size="24px"
+      color="#666"
+      vertical
+    />
+  </div>
+  <div v-if="!showLoading" class="bg-gray-500/8 p-3 min-h-screen">
     <div>
       <div class="text-left ml-3">
         <span class="text-sm">票数统计</span>
-        <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 ml-2">1 票</span>
       </div>
       <div class="text-left mt-2 p-5 text-sm bg-white rounded border-t-2 border-hex-30B648">
         <div class="text-16px font-700">投票标题：{{detailRecord.title}}</div>
-        <div class="mt-2" v-for="(item ,index) in detailRecord.optionsList" :key="item">
+        <!-- <div class="mt-2" v-for="(item ,index) in detailRecord.optionsList" :key="item">
           {{index+1}}. {{item}} （{{detailRecord.optionsNum[index]}} 票）
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="mt-3">

@@ -29,7 +29,7 @@ export function getDrawRecordList(drawId: number, pageNum: number, pageSize: num
       drawId,
       pageNum,
       pageSize,
-      optionId: optionCheckedValue,
+      optionName: optionCheckedValue,
       attend,
     },
   })
@@ -47,14 +47,25 @@ export function addDrawRecord(drawId: number) {
 }
 
 // 修改抽签信息
-export function modifyDraw(drawId: number, duration: number, anonymity: number) {
+export function modifyDraw(drawId: number, endTime: string, anonymity: number) {
   return request({
     method: 'put',
-    url: '/signff/drawRecord',
+    url: '/signff/draw',
     data: {
-      drawId,
-      duration,
+      id: drawId,
+      endTime,
       anonymity,
+    },
+  })
+}
+
+// 获取已经抽签的人数
+export function drawRecordCount(drawId: number) {
+  return request({
+    method: 'get',
+    url: '/signff/drawRecord/count',
+    params: {
+      drawId,
     },
   })
 }

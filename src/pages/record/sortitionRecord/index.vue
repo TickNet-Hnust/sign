@@ -1,3 +1,10 @@
+<!--
+ * @Descipttion: 
+ * @Author: 刘晴
+ * @Date: 2022-04-20 21:46:45
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-22 16:20:18
+-->
 <script setup lang="ts">
 import { getDetailDraw, drawStuList, drawRecordCount } from '~/api/record/drawRecord'
 interface DetailRecord{
@@ -9,7 +16,7 @@ interface DetailRecord{
   currentNum: Array<Number> // 当前选中人数
 }
 // 如果抽签结果可见则展示这个数组
-const drawCount = ref() // 已抽签人数
+const drawCount = ref(0) // 已抽签人数
 const notDraw = ref() // 未抽签人数
 // 展示某个子菜单
 const changeShow = (index: any) => {
@@ -35,6 +42,7 @@ const detailRecord: DetailRecord = reactive({
 const route = useRoute()
 const drawId = route.query.id
 // 初始化数据
+const showLoading = ref(true)
 onMounted(() => {
   window.scrollTo(0,0)
   getDetailDraw(drawId).then((res: any) => {
@@ -43,18 +51,23 @@ onMounted(() => {
       detailRecord.optionsList = res.data.optionContent
       detailRecord.optionsNum = res.data.optionNum
       detailRecord.visible = res.data.visible
-      detailRecord.currentNum = res.data.currentNum
       detailRecord.optionsList.forEach((item, index) => {
         detailRecord.isShow[index] = false
       })
+      setTimeout(() => {
+        showLoading.value = false
+      }, 100)
     }
   }).catch((err) => {
     console.log(err)
   })
   // 获取已抽签人数
-  drawRecordCount(drawId).then((res: any) => {
+  drawRecordCount({drawId: drawId}).then((res: any) => {
     if(res.code === 200) {
-      drawCount.value = res.data
+      detailRecord.currentNum = res.data
+      detailRecord.currentNum.forEach((item) => {
+        drawCount.value += Number(item)
+      })
     }
   }).catch((err) => {
     console.log(err)
@@ -74,17 +87,25 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-gray-500/8 p-3 min-h-100vh">
+  <div style="position: absolute; top: 40vh;left: 45vw; z-index: 10">
+    <van-loading
+      v-if="showLoading"
+      type="spinner"
+      size="24px"
+      color="#666"
+      vertical
+    />
+  </div>
+  <div v-if="!showLoading" class="bg-gray-500/8 p-3 min-h-100vh">
     <div>
       <div class="text-left ml-3">
         <span class="text-sm">签数统计</span>
-        <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 ml-2">1 票</span>
       </div>
       <div class="text-left mt-2 p-5 text-sm bg-white rounded border-t-2 border-hex-30B648">
         <div class="text-16px font-700">抽签标题：{{detailRecord.title}}</div>
-        <div class="mt-2" v-for="(item ,index) in detailRecord.optionsList" :key="item">
+        <!-- <div class="mt-2" v-for="(item ,index) in detailRecord.optionsList" :key="item">
           {{index+1}}. {{item}} （{{detailRecord.optionsNum[index]}} 票）
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="mt-3">
@@ -106,7 +127,7 @@ onMounted(() => {
                   </div>
                   <div>
                     <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 mr-3">
-                      {{detailRecord.currentNum[index]}} 票
+                      {{detailRecord.currentNum[index]}} / {{detailRecord.optionsNum[index]}}
                     </span>
                     <span>
                       <van-icon v-show="!detailRecord.isShow[index]" name="arrow-down" />

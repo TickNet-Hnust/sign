@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { addDrawRecord, getDrawNum } from '~/api/myJoin/draw'
+import { addDrawRecord, drawRecordCount, getDrawNum } from '~/api/myJoin/draw'
 import { getDraw } from '~/api/myJoin/record'
 const route = useRoute()
 const router = useRouter()
@@ -30,6 +30,12 @@ interface OptionData{
   lastPoll: number // 剩余的票数
 }
 
+const props = reactive({
+  endDate: '',
+  endTime: '',
+  anonymity: 0,
+})
+
 // 根据路由获得抽签活动的id
 const drawId = Number(route.query.id)
 
@@ -46,11 +52,11 @@ const drawData: DrawData = reactive({
     return result
   }),
   drawingAlreadyNum: computed(() => {
-    let result = 0
+    let result = drawData.allPollNum
     drawData.option.forEach((item) => {
-      result = result + item.lastPoll
+      result = result - item.lastPoll
     })
-    return drawData.allPollNum - result
+    return result
   }),
   endTime: '',
   createTime: '',
@@ -80,29 +86,32 @@ onMounted(() => {
     drawData.anonymity = res.data.anonymity
     drawData.createTime = res.data.createTime
     drawData.endTime = res.data.endTime
+    props.endDate = drawData.endTime.split(' ')[0]
+    props.endTime = `${drawData.endTime.split(' ')[1].split(':')[0]}:${drawData.endTime.split(' ')[1].split(':')[1]}`
+    props.anonymity = drawData.anonymity
     drawData.status = res.data.status
     drawData.isVisible = res.data.visible
     drawData.isDrawing = res.data.attend
-    drawData.optionChecked = res.data.attend ? res.data.optionId : 0
+    drawData.optionChecked = res.data.attend ? res.data.optionName : 0
     drawData.option.pop()
     for (let i = 0; i < res.data.optionContent.length; i++) {
       const item = {
         optionId: i + 1,
         optionValue: res.data.optionContent[i],
-        allPoll: res.data.optionNum[i],
-        lastPoll: 0,
+        allPoll: 0,
+        lastPoll: res.data.optionNum[i],
       }
       drawData.option.push(item)
     }
     for (let i = 0; i < res.data.optionContent.length; i++) {
-      if (drawData.option[i].optionValue === res.data.optionId) {
+      if (drawData.option[i].optionValue === res.data.optionName) {
         drawData.optionChecked = i + 1
         drawData.optionCheckedValue = drawData.option[i].optionValue
       }
     }
-    getDrawNum(drawId).then((res) => {
+    drawRecordCount(drawId).then((res) => {
       for (let i = 0; i < res.data.length; i++)
-        drawData.option[i].lastPoll = res.data[i]
+        drawData.option[i].allPoll = drawData.option[i].lastPoll + res.data[i]
       loading.value = false
     })
   })
@@ -139,17 +148,6 @@ const toDrawRecord = () => {
     path: '/record/sortitionRecord',
     query: {
       id: drawId,
-    },
-  })
-}
-
-// 修改抽签设置
-const toDrawModify = () => {
-  router.push({
-    path: '/space/manage/draw/owner_draw/modify',
-    query: {
-      id: drawId,
-      anonymity: drawData.anonymity,
     },
   })
 }
@@ -215,25 +213,20 @@ const toDrawModify = () => {
       </van-button>
     </div>
     <div class="flex justify-left my-5 text-sm">
-      <div class="border-gray-300 bg-white p-4 w-30">
+      <div class="border-gray-300 bg-white p-4 w-30 border">
         <div @click="toDrawRecord()">
           <van-icon name="records" size="2rem" class="mb-2" />
           <div>抽签记录</div>
         </div>
       </div>
-      <span class="border-gray-300 bg-white p-4 ml-2 w-30">
-        <div @click="toDrawModify()">
-          <van-icon name="setting-o" size="2rem" class="mb-2" />
-          <div>修改部分设置</div>
-        </div>
-      </span>
+      <modify-draw :draw-date="props.endDate" :draw-id="drawId" :anonymity="drawData.anonymity" :draw-time="props.endTime" />
     </div>
     <van-dialog v-model:show="resultShow" title="抽取结果" confirm-button-color="#0033CC">
       <div class="my-1rem">
         {{ drawData.optionCheckedValue }}
       </div>
     </van-dialog>
-    <records-list v-if="drawData.optionChecked" :show="show" :type="drawData.type" :active-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
+    <records-list v-if="drawData.optionChecked&&drawData.anonymity" :show="show" :type="drawData.type" :active-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
   </div>
 </template>
 

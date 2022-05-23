@@ -2,7 +2,7 @@
 // 定义投票数据类型接口
 import { onMounted } from 'vue'
 import { Dialog } from 'vant'
-import { addVoteRecord } from '../../../../../api/myJoin/vote'
+import { addVoteRecord, getAllVoteRecord } from '../../../../../api/myJoin/vote'
 import { getVote } from '../../../../../api/myJoin/record'
 
 const route = useRoute()
@@ -74,7 +74,7 @@ const voteData: VoteData = reactive({
 })
 
 onMounted(() => {
-  window.scrollTo(0,0)
+  window.scrollTo(0, 0)
   getVote(voteId).then((res) => {
     console.warn(res.data)
     voteData.question = res.data.voteName
@@ -147,9 +147,17 @@ const isClick = () => {
       const option = voteData.option[item - 1].optionValue
       voteOption.push(option)
     })
-    addVoteRecord(voteId, voteOption).then((res) => {
-      voteData.isVote = 1
-      console.warn(res)
+    addVoteRecord(voteId, voteOption).then((res: any) => {
+      getAllVoteRecord(voteId).then((res: any) => {
+        console.warn(res)
+        for (let i = 0; i < res.data.optionCount.length; i++) {
+          for (let j = 0; j < res.data.optionCount.length; j++) {
+            if (res.data.voteOption[i] === voteData.option[j].optionValue)
+              voteData.option[j].poll = res.data.optionCount[i]
+          }
+        }
+        voteData.isVote = 1
+      })
     })
   }
 }
@@ -178,8 +186,11 @@ const toVoteRecord = () => {
         <div class="mb-2">
           {{ voteData.question }}
         </div>
-        <van-tag type="primary" color="#28B648" size="medium">
+        <van-tag type="primary" color="#28B648" size="medium" class="mr-3">
           {{ voteData.voteNumLimit>1?'多选':'单选' }}
+        </van-tag>
+        <van-tag type="primary" color="#66CCFF" size="medium">
+          {{ `${voteData.optionChecked.length} / ${voteData.voteNumLimit}` }}
         </van-tag>
       </div>
       <!-- 遍历选项 -->
@@ -296,7 +307,7 @@ const toVoteRecord = () => {
             <div>投票记录</div>
           </div>
         </span>
-        <modify-time :vote-date="props.endDate" :vote-time="props.endTime" :vote-id="voteId" />
+        <modify-vote :vote-date="props.endDate" :vote-time="props.endTime" :vote-id="voteId" />
       </div>
     </div>
   </div>

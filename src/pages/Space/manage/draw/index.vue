@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Dialog } from 'vant'
+import { Toast } from 'vant'
 import { draw } from '~/api/myJoin/draw'
 
 const route = useRoute()
@@ -125,21 +125,20 @@ const commitDrawInfo = () => {
   draw(newDrawData).then((res: any) => {
     console.warn(res)
     if (res.code === 500 || res.code === 501) {
-      Dialog.alert({
-        message: res.msg,
-      })
+      Toast.fail(res.msg)
     }
     else if (res.code === 200) {
       const id = res.data
-      Dialog.alert({
-        message: '创建成功',
-      }).then(() => {
-        router.push({
-          path: '/space/manage/draw/owner_draw',
-          query: {
-            id,
-          },
-        })
+      Toast.success({
+        message: res.msg,
+        onClose() {
+          router.push({
+            path: '/space/manage/draw/owner_draw',
+            query: {
+              id,
+            },
+          })
+        },
       })
     }
   })

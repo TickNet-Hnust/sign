@@ -1,5 +1,8 @@
 <!-- 学生端 -->
 <script lang="ts">
+export default {
+  name: 'spaceList'
+}
 </script>
 
 <script setup lang="ts">
@@ -256,6 +259,7 @@ const nameRules = [
       :show="showKeyboard"
       safe-area-inset-bottom
       @blur="showKeyboard = false"
+      maxlength="4"
     />
     <div class="mt-3 border-1 border-hex-DEDEDE bg-hex-fff rounded py-3 px-5">
       <van-tabs

@@ -2,8 +2,8 @@
  * @Descipttion:
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: caojun
- * @LastEditTime: 2022-05-20 15:23:48
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-21 11:52:25
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -114,7 +114,7 @@ getSignSpace(id.value).then((res) => {
   if (res.code === 200) {
     setTimeout(() => {
       showLoading.value = false
-    }, 500)
+    }, 300)
     rank.value = res.data.memberRank
     spaceList.id = res.data.id
     spaceList.createTime = res.data.createTime
@@ -306,21 +306,21 @@ onMounted(() => {
     <van-loading
       v-if="showLoading"
       type="spinner"
-      size="40px"
-      color="#333"
+      size="24px"
+      color="#666"
       vertical
     />
   </div>
-  <div class="bg-gray-500/8 p-3 min-h-screen">
+  <div v-if="!showLoading" class="bg-gray-500/8 p-3 min-h-screen">
     <div class="text-left text-hex-aaa text-xs ml-3">
       空间信息
     </div>
     <div class="bg-hex-fff rounded px-5 pt-2 text-hex-666 border border-hex-ccc">
       <div class="flex justify-between border-b border-hex-ccc text-14px py-2 items-center">
         <span class="w-20vw text-left">名称</span>
-        <span class="text-left flex justify-between items-center">
+        <span class="text-left flex justify-between items-center" @click="showUpdate = true">
           {{ spaceList.spaceName }}
-          <span v-if="rank ===2" @click="showUpdate = true"><van-icon name="edit" /></span>
+          <span v-if="rank ===2"><van-icon name="edit" /></span>
         </span>
       </div>
       <div class="flex justify-between text-14px py-2">

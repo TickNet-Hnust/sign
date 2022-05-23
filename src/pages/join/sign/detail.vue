@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-18 10:55:12
+ * @LastEditTime: 2022-05-21 18:27:42
 -->
 
 <script setup lang="ts">
@@ -11,6 +11,7 @@ import { detailSignRecord } from '~/api/record/signRecord'
 const route = useRoute()
 const signId = route.query.id
 const detailMsg = ref({})
+const showLoading = ref(true)
 onMounted( () => {
   window.scrollTo(0,0)
   detailSignRecord(signId).then((res: any) => {
@@ -18,13 +19,25 @@ onMounted( () => {
     if(res.code === 200) {
       detailMsg.value = res.data
     }
+    setTimeout(() => {
+      showLoading.value = false
+    }, 200)
   }).catch((err) => {
     console.log(err)
   })
 })
 </script>
 <template>
-  <div class="bg-gray-500/8 p-3 min-h-100vh">
+<div style="position: absolute; top: 40vh;left: 45vw; z-index: 10">
+    <van-loading
+      v-if="showLoading"
+      type="spinner"
+      size="24px"
+      color="#666"
+      vertical
+    />
+  </div>
+  <div v-if="!showLoading" class="bg-gray-500/8 p-3 min-h-100vh">
     <div
       class="bg-white border border-t-2 border-hex-D9DADB border-t-hex-41B062 rounded">
       <div
