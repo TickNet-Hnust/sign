@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-07 15:08:29
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-18 09:56:15
+ * @LastEditTime: 2022-05-22 16:29:03
 -->
 <script lang="ts" setup>
 import { signByQRCode } from '~/api/record/index'
@@ -39,7 +39,7 @@ const helpSign = () => {
         })
       } else {
         Toast.fail({
-          message: '签到失败，请重试',
+          message: res.msg,
           position: 'top'
         })
         router.replace({

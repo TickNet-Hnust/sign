@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-21 18:33:27
+ * @LastEditTime: 2022-05-22 16:20:18
 -->
 <script setup lang="ts">
 import { getDetailDraw, drawStuList, drawRecordCount } from '~/api/record/drawRecord'
@@ -100,13 +100,12 @@ onMounted(() => {
     <div>
       <div class="text-left ml-3">
         <span class="text-sm">签数统计</span>
-        <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 ml-2">1 票</span>
       </div>
       <div class="text-left mt-2 p-5 text-sm bg-white rounded border-t-2 border-hex-30B648">
         <div class="text-16px font-700">抽签标题：{{detailRecord.title}}</div>
-        <div class="mt-2" v-for="(item ,index) in detailRecord.optionsList" :key="item">
+        <!-- <div class="mt-2" v-for="(item ,index) in detailRecord.optionsList" :key="item">
           {{index+1}}. {{item}} （{{detailRecord.optionsNum[index]}} 票）
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="mt-3">
@@ -128,7 +127,7 @@ onMounted(() => {
                   </div>
                   <div>
                     <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 mr-3">
-                      {{detailRecord.currentNum[index]}} 票
+                      {{detailRecord.currentNum[index]}} / {{detailRecord.optionsNum[index]}}
                     </span>
                     <span>
                       <van-icon v-show="!detailRecord.isShow[index]" name="arrow-down" />
