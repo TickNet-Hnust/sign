@@ -307,7 +307,7 @@ const toVoteRecord = () => {
             <div>投票记录</div>
           </div>
         </span>
-        <modify-time :vote-date="props.endDate" :vote-time="props.endTime" :vote-id="voteId" />
+        <modify-vote :vote-date="props.endDate" :vote-time="props.endTime" :vote-id="voteId" />
       </div>
     </div>
   </div>
