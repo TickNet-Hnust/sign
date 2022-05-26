@@ -6,16 +6,21 @@
  * @LastEditTime: 2022-05-18 12:54:32
 -->
 <script setup lang="ts">
+// import { login } from '~/api/system'
 import { useUserStore } from '~/stores/user'
 const user = useUserStore()
 const router = useRouter()
+const route = useRoute()
+user.CODE = String(route.query.code)
+// 用户登录
+user.loginSign()
+// 获取code
 
-// // 获取code
-// onMounted(() => {
-//   const corpid = 'ww0a8e41e741c02880'
-//   const redirect_uri = ''
+// const corpid = 'ww0a8e41e741c02880'
+// const redirect_uri = 'signff.ticknet.hnust.cn'
+// if (user.CODE === 'undefined')
 //   window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${corpid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
-// })
+// console.warn(user.CODE)
 
 const jumpTargetPage = (targetPath: any) => {
   router.push(targetPath.link)
@@ -52,8 +57,7 @@ const list = reactive([
     link: '',
   },
 ])
-// 用户登录
-user.login()
+
 </script>
 
 <template>
@@ -104,3 +108,7 @@ user.login()
 meta:
   layout: home
 </route>
+
+function beforeCreate() {
+  throw new Error('Function not implemented.')
+}

@@ -7,4 +7,4 @@ pnpm run build
 cd dist
 
 #部署到自定义域名
-scp -r * root@112.74.96.217:/var/www/face2face-frontend/dist
+scp -r * root@49.123.0.26:/var/www/signff

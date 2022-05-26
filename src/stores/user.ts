@@ -1,12 +1,12 @@
 /*
- * @Descipttion: 
+ * @Descipttion:
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
  * @LastEditTime: 2022-05-16 13:48:03
  */
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { loginTest } from '~/api/system'
+import { login } from '~/api/system'
 import { setToken } from '~/utils/cookies'
 
 export const useUserStore = defineStore('user', () => {
@@ -38,10 +38,21 @@ export const useUserStore = defineStore('user', () => {
   const token = ref('')
   const userName = ref('')
   const userId = ref('')
-  function login() {
+  const CODE = ref('')
+  const corpid = 'ww0a8e41e741c02880'
+  const redirect_uri = 'signff.ticknet.hnust.cn'
+  function loginSign() {
     return new Promise((resolve, reject) => {
-      loginTest().then((res: any) => {
-        if (res.code == 200) {
+      console.warn(CODE)
+      if (String(CODE.value) === 'undefined') {
+        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${corpid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
+        console.warn('第一次的CODE:', CODE)
+      }
+      console.warn('loginSign')
+      login(String(CODE.value)).then((res: any) => {
+        console.warn(res)
+        console.warn('code', CODE.value)
+        if (res.code === 200) {
           token.value = res.data.access_token
           userName.value = res.data.userName
           userId.value = res.data.userId
@@ -62,9 +73,11 @@ export const useUserStore = defineStore('user', () => {
     otherNames,
     savedName,
     login,
+    loginSign,
     token,
     userName,
-    userId
+    userId,
+    CODE,
   }
 })
 
