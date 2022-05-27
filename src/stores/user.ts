@@ -39,7 +39,7 @@ export const useUserStore = defineStore('user', () => {
   const userName = ref('')
   const userId = ref('')
   const CODE = ref('')
-  const corpid = 'ww0a8e41e741c02880'
+  const corpid = 'wx6219dbfa9b86489e'
   const redirect_uri = 'signff.ticknet.hnust.cn'
   function loginSign() {
     return new Promise((resolve, reject) => {
