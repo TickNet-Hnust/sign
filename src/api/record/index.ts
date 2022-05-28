@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-01 20:32:16
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-22 10:38:13
+ * @LastEditTime: 2022-05-28 17:27:36
  */
 import request from '~/utils/request'
 import qs from 'qs'
@@ -47,7 +47,7 @@ export function signByUser(data: any) {
 export function spaceSignRecord(data: any) {
   return request({
     method: 'get',
-    url: '/sign/space/getRecord' + '?' + qs.stringify(data, { arrayFormat: 'repeat' })
+    url: '/sign/space/getStatistics' + '?' + qs.stringify(data, { arrayFormat: 'repeat' })
   })
 }
 
@@ -92,6 +92,23 @@ export function spaceDeptList(data: any) {
   return request({
     method: 'get',
     url: '/sign/space/deptList',
+    params: data
+  })
+}
+
+// 查询单次签到统计
+export function getStatistics(data: any) {
+  return request({
+    method: 'get',
+    url: '/signff/sign/getStatistics' + '?' + qs.stringify(data, { arrayFormat: 'repeat' })
+  })
+}
+
+// 查询单次签到可能存在的班级
+export function signDeptList(data: any) {
+  return request({
+    method: 'get',
+    url: '/signff/sign/deptList',
     params: data
   })
 }

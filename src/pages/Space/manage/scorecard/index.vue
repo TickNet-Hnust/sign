@@ -3,10 +3,10 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-22 16:13:40
+ * @LastEditTime: 2022-05-28 20:15:35
 -->
 <script lang="ts" setup>
-import { spaceSignRecord, spaceSignList, spaceDeptList } from '~/api/record/index'
+import { spaceSignRecord, spaceSignList, spaceDeptList, getStatistics, signDeptList } from '~/api/record/index'
 interface RecordList {// 记录列表
   userId: String //学号/工号
   userName: String //用户名
@@ -25,24 +25,42 @@ interface DeptList { //班级列表
 }
 // 获取空间id
 const route = useRoute()
-const spaceId = route.query.id
+const queryItem = reactive({
+  id: route.query.id, // 可能是空间id也可能是签到id
+  type: route.query.type // 标识是单次签到还是整个空间
+})
+
 const recordList: Array<RecordList> = reactive([])
 // 获取签到统计列表
-const recordRequest = reactive({
-  spaceId: spaceId,
+const spaceRecordRequest = reactive({ //获取空间内的签到记录查询参数
+  spaceId: queryItem.id,
   signId: '',
+  deptId: ['0']
+})
+const signRecordRequest = reactive({ // 获取单次签到记录查询参数
+  signId: queryItem.id,
   deptId: ['0']
 })
 const getSpaceSignRecord = () => {
   // 先将列表数据清零
   recordList.length = 0
-  spaceSignRecord(recordRequest).then((res: any) => {
-    if(res.code === 200) {
-      recordList.push(...res.data)
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
+  if(queryItem.type === 'space') {
+    spaceSignRecord(spaceRecordRequest).then((res: any) => {
+      if(res.code === 200) {
+        recordList.push(...res.data)
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
+  } else {
+    getStatistics(signRecordRequest).then((res: any) => {
+      if(res.code === 200) {
+        recordList.push(...res.data)
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
 }
 // 该空间发起过的签到列表
 const signList: Array<SignList> = reactive([])
@@ -53,24 +71,34 @@ onMounted(() => {
   // 获取所有签到统计
   getSpaceSignRecord()
   // 获取该空间发起过的签到列表
-  spaceSignList({spaceId: spaceId}).then((res: any) => {
-    if(res.code === 200) {
-      signList.push(...res.data)
-      if(signList.length !==0 ) {
-        signList.push({
-          name: '所有记录',
-          id: '',
-          createTime: ''
-        })
+  if(queryItem.type === 'space') {
+    spaceSignList({spaceId: queryItem.id}).then((res: any) => {
+      if(res.code === 200) {
+        signList.push(...res.data)
+        if(signList.length !==0 ) {
+          signList.push({
+            name: '所有记录',
+            id: '',
+            createTime: ''
+          })
+        }
       }
-    }
-  })
+    })
+  }
   // 获取该空间可能存在的班级
-  spaceDeptList({spaceId: spaceId}).then((res) => {
-    if(res.code === 200) {
-      deptList.push(...res.data)
-    }
-  })
+  if(queryItem.type === 'space') {
+    spaceDeptList({spaceId: queryItem.id}).then((res: any) => {
+      if(res.code === 200) {
+        deptList.push(...res.data)
+      }
+    })
+  } else {
+    signDeptList({signId: queryItem.id}).then((res: any) => {
+      if(res.code === 200) {
+        deptList.push(...res.data)
+      }
+    })
+  }
 })
 
 // 筛选签到
@@ -78,20 +106,29 @@ const sign = ref(null)
 const checkedId = ref('') // 选中的签到id
 const onCancel = () => {
   // 点击取消按钮
-  checkedId.value = recordRequest.signId
-  checkedDeptList.value = recordRequest.deptId
+  if(queryItem.type === 'space') {
+    checkedId.value = spaceRecordRequest.signId
+    checkedDeptList.value = spaceRecordRequest.deptId
+  }
+  else {
+    checkedDeptList.value = signRecordRequest.deptId
+  }
 }
 // 筛选班级
 const dept = ref(null)
-const checkedDeptList = ref([])
+const checkedDeptList = ref([''])
 const searchSign = (option: any) => {
   // 点击确定按钮
   if(option === 'sign') {
-    recordRequest.signId = checkedId.value
+    spaceRecordRequest.signId = checkedId.value
     sign.value.toggle()
   }
   else {
-    recordRequest.deptId = checkedDeptList.value
+    if(queryItem.type === 'space') {
+      spaceRecordRequest.deptId = checkedDeptList.value
+    } else {
+      signRecordRequest.deptId = checkedDeptList.value
+    }
     dept.value.toggle()
   }
   getSpaceSignRecord()
@@ -129,7 +166,7 @@ const searchSign = (option: any) => {
     <!-- 下拉筛选菜单 -->
     <div class="mt-2">
       <van-dropdown-menu active-color="#1989fa">
-        <van-dropdown-item ref="sign" class="mx-3" title="筛选签到" @close="onCancel">
+        <van-dropdown-item ref="sign" class="mx-3" title="筛选签到" @close="onCancel" v-if="queryItem.type==='space'">
           <van-empty
             v-if="signList.length===0"
             description="该空间暂时没有发起过签到"
@@ -160,7 +197,7 @@ const searchSign = (option: any) => {
         <van-dropdown-item ref="dept" class="mx-3" title="筛选班级" @close="onCancel">
           <van-empty
             v-if="deptList.length===0"
-            description="抱歉暂时没有找到该空间可能存在的班级"
+            description="抱歉暂时没有找到可能存在的班级"
             image-size="5em"
           />
           <van-checkbox-group
@@ -174,7 +211,7 @@ const searchSign = (option: any) => {
               name="0" icon-size="15px" 
               class="flex items-center text-14px text-hex-666 py-2"
             >
-              原空间内成员
+              原成员
             </van-checkbox>
             <van-checkbox
               v-for="item in deptList"
@@ -199,6 +236,11 @@ const searchSign = (option: any) => {
         <span class="flex-1">姓名</span>
         <span class="flex-1">统计</span>
       </li>
+      <van-empty
+        v-if="recordList.length===0"
+        description="暂时为空"
+        image-size="5em"
+      />
       <li
         v-for="item in recordList"
         :key="item"

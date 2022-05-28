@@ -3,7 +3,7 @@
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-21 11:52:25
+ * @LastEditTime: 2022-05-28 16:42:50
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -53,15 +53,22 @@ const router = useRouter()
 const finished = ref(true)
 const id = ref(route.query.id)
 const jumpPage = (item) => {
-  if (item.title !== '发起签到') {
+  if (item.title === '签到统计') {
+    router.push({
+      path: `manage/${item.link}`,
+      query: {
+        id: id.value,
+        type: 'space'
+      },
+    })
+  } else if (item.title !== '发起签到') {
     router.push({
       path: `manage/${item.link}`,
       query: {
         id: id.value,
       },
     })
-  }
-  else {
+  } else {
     router.push({
       path: item.link,
       query: {
