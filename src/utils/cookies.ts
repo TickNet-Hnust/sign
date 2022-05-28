@@ -1,9 +1,17 @@
+/*
+ * @Description:
+ * @Author: caojun
+ * @Date: 2022-05-02 10:21:22
+ * @LastEditors: caojun
+ * @LastEditTime: 2022-05-28 21:33:38
+ */
 import Cookies from 'js-cookie'
 
 const TokenKey = 'token'
 const RoleKey = 'roles'
 const nameKey = 'name'
 const avatarKey = 'avatar'
+const userIdKey = 'userId'
 
 export function getToken() {
   return Cookies.get(TokenKey)
@@ -51,4 +59,16 @@ export function setAvatar(avatar: string) {
 
 export function removeAvatar() {
   return Cookies.remove(avatarKey)
+}
+
+export function setUserId(userId: string) {
+  return Cookies.set(userIdKey, userId)
+}
+
+export function removeUserId() {
+  return Cookies.remove(userIdKey)
+}
+
+export function getUserId() {
+  return Cookies.get(userIdKey)
 }

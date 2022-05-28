@@ -2,12 +2,12 @@
  * @Descipttion:
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-16 13:48:03
+ * @LastEditors: caojun
+ * @LastEditTime: 2022-05-28 21:31:33
  */
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { loginByCode, loginByTest } from '~/api/system'
-import { setToken } from '~/utils/cookies'
+import { setToken, setUserId } from '~/utils/cookies'
 
 export const useUserStore = defineStore('user', () => {
   /**
@@ -54,6 +54,8 @@ export const useUserStore = defineStore('user', () => {
           userId.value = res.data.userId
           // 将token存储到cookie中
           setToken(token.value)
+          // 将用户名存储到cookie中
+          setUserId(res.data.userId)
           console.warn('存储token')
         }
         else {
