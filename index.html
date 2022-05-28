@@ -3,7 +3,7 @@
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
  * @LastEditors: 张津瑞
- * @LastEditTime: 2022-05-13 11:37:52
+ * @LastEditTime: 2022-05-28 17:30:33
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +25,14 @@
   </script>
   <!-- 引入百度地图sdk -->
   <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=ftDGweQMHmmHGCWfrMRDGU3dT65ZZg5H"></script>
+  <script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-vconsole-devtools@1.0.5/dist/vue_plugin.js"></script>
+  <!-- cdn引入vConsole -->
+  <script>
+    var vConsole = new window.VConsole();
+    const Devtools = window.vueVconsoleDevtools["default"];
+    Devtools.initPlugin(vConsole);
+  </script>
 </head>
 <body class="font-sans">
   <div id="app"></div>
