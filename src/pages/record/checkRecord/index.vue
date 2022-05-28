@@ -30,6 +30,16 @@ const jumpPage = () => {
     }
   })
 }
+// 跳转到签到统计页面
+const jumpPageToScorecard = () => {
+  router.push(({
+    path: '/space/manage/scorecard',
+    query: {
+      id: signId,
+      type: 'sign'
+    }
+  }))
+}
 //改变是否可见
 const changeRequest = ref({
   id: signId,
@@ -121,6 +131,9 @@ const editSignName = async () => {
     />
   </div>
   <div v-if="!showLoading" class="bg-gray-500/8 p-3 min-h-100vh">
+    <!-- <div class="text-left text-hex-999 text-12px">
+      <span class="mr-1 text-sm"><van-icon name="column" /></span>签到信息
+    </div> -->
     <div class="bg-white border border-t-2 border-hex-D9DADB border-t-hex-41B062 rounded">
       <div
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
@@ -161,6 +174,17 @@ const editSignName = async () => {
       <div
         class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
       >
+        <span class="text-sm w-5em text-left inline-block">签到统计</span>
+        <span
+          class="text-xl bg-hex-10AA62 text-white rounded-15px px-1 mr-3"
+          @click="jumpPageToScorecard"
+        >
+          <van-icon name="fire-o" />
+        </span>
+      </div>
+      <div
+        class="flex justify-between h-3em border-b border-hex-DEDEDE p-2 items-center"
+      >
         <span>
           <span class="text-sm w-5em text-left inline-block">日期</span>
           <span class="text-sm ml-10">{{detailMsg.createTime}}</span>
@@ -181,8 +205,8 @@ const editSignName = async () => {
           <span class="text-sm w-5em text-left inline-block">用户可见</span>
           <span class="ml-10">
             <van-radio-group @change="changeShow()" v-model="isShow" direction="horizontal">
-              <van-radio name="yes">可见</van-radio>
-              <van-radio name="no">不可见</van-radio>
+              <van-radio checked-color="#10AA62" name="yes">可见</van-radio>
+              <van-radio checked-color="#10AA62" name="no">不可见</van-radio>
             </van-radio-group>
           </span>
         </span>

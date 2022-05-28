@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-13 17:40:33
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-20 20:45:42
+ * @LastEditTime: 2022-05-28 19:45:46
 -->
 <script lang="ts" setup>
 import { signStuList } from '~/api/record/signRecord'
@@ -26,11 +26,16 @@ const clist:Array<StuList> = reactive([])
 // 控制van-list加载
 const loading = ref(false);
 const finished = ref(false);
+const refreshing = ref(false)
+const isEmpty = ref(true)
 const pageNum = ref(1)
 // 总记录条数
 const totalRecord = ref(0)
 // 请求学生列表
 const getStuList = () => {
+  if(pageNum.value === 1 && clist.length) {
+    clist.length = 0
+  }
   // 签到
   if(props.action === 'sign') {
     const signRequest = reactive({
@@ -46,6 +51,9 @@ const getStuList = () => {
         totalRecord.value = res.total
         pageNum.value++
         loading.value = false
+        if(clist.length>0) {
+          isEmpty.value = false
+        }
         if(clist.length >= res.total) {
           console.log('数据加载完毕')
           finished.value = true
@@ -71,6 +79,9 @@ const getStuList = () => {
         totalRecord.value = res.total
         pageNum.value++
         loading.value = false
+        if(clist.length>0) {
+          isEmpty.value = false
+        }
         if(clist.length >= res.total) {
           console.log('数据加载完毕')
           finished.value = true
@@ -96,6 +107,9 @@ const getStuList = () => {
         totalRecord.value = res.total
         pageNum.value++
         loading.value = false
+        if(clist.length>0) {
+          isEmpty.value = false
+        }
         if(clist.length >= res.total) {
           console.log('数据加载完毕')
           finished.value = true
@@ -112,9 +126,18 @@ onMounted(() => {
 })
 const onLoad = () => {
   setTimeout(() => {
+    if(refreshing.value) {
+      refreshing.value = false
+    }
     getStuList()
   }, 500);
 };
+const onRefresh = () => {
+  finished.value = false
+  pageNum.value = 1
+  loading.value = true
+  onLoad()
+}
 // 将总数据传给父组件
 const emit = defineEmits(['getTotal'])
 emit('getTotal', totalRecord)
@@ -122,24 +145,26 @@ emit('getTotal', totalRecord)
 
 <template>
   <div class="bg-white border border-hex-D9DADB rounded mt-5 p-3 border-t-2 border-t-hex-41B062">
-    <van-list
-      :immediate-check="false"
-      v-model:loading="loading"
-      :finished="finished"
-      loading-text="——上拉加载更多——"
-      @load="onLoad"
-    >
-      <ul class="flex py-2 text-sm">
-        <span class="flex-1">学号/工号<van-icon name="sort" /></span>
-        <span class="flex-1">姓名</span>
-        <span class="flex-1" v-if="props.attend === '1' ">时间</span>
-      </ul>
-      <van-empty v-if="clist.length === 0" image-size="7rem" description="空~" />
-      <ul v-for="item in clist" :key="item" class="flex items-center py-2 border-t border-hex-E4E4E4 text-sm">
-        <span class="flex-1">{{ item.createUserId }}</span>
-        <span class="flex-1">{{ item.createUserName }}</span>
-        <span class="flex-1" v-if="props.attend === '1' ">{{ item.createTime }}</span>
-      </ul>
-    </van-list>
+    <ul class="flex py-2 text-sm">
+      <span class="flex-1">学号/工号<van-icon name="sort" /></span>
+      <span class="flex-1">姓名</span>
+      <span class="flex-1" v-if="props.attend === '1' ">时间</span>
+    </ul>
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <van-list
+        :immediate-check="false"
+        v-model:loading="loading"
+        :finished="finished"
+        loading-text="——上拉加载更多——"
+        @load="onLoad"
+      >
+        <van-empty v-if="clist.length === 0 && isEmpty" image-size="7rem" description="空~" />
+        <ul v-for="item in clist" :key="item" class="flex items-center py-2 border-t border-hex-E4E4E4 text-sm">
+          <span class="flex-1">{{ item.createUserId }}</span>
+          <span class="flex-1">{{ item.createUserName }}</span>
+          <span class="flex-1" v-if="props.attend === '1' ">{{ item.createTime }}</span>
+        </ul>
+      </van-list>
+    </van-pull-refresh>
   </div>
 </template>

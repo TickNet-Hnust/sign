@@ -20,6 +20,7 @@ const props = defineProps({
 let list: Array<RecordList> = reactive([])
 const loading = ref(false)
 const finished = ref(false)
+const refreshing = ref(false)
 const pageCnt = ref(1)
 const request = reactive({
   pageNum: 1,
@@ -33,6 +34,9 @@ const getList = () => {
   getDrawList(request).then((res: any) => {
     if (res.code === 200) {
       showLoading.value = false
+      if(request.pageNum === 1 && list.length) {
+        list.length = 0
+      }
       list.push(...res.rows)
       pageCnt.value++
       loading.value = false
@@ -51,8 +55,17 @@ onMounted(() => {
 })
 const onload = () => {
   setTimeout(() => {
+    if(refreshing.value) {
+      refreshing.value = false
+    }
     getList()
-  }, 1000)
+  }, 700)
+}
+const onRefresh = () => {
+  finished.value = false
+  pageCnt.value = 1
+  loading.value = true
+  onload()
 }
 const search = (drawName: any) => {
   request.drawName = drawName
@@ -97,74 +110,76 @@ const jumpDetail = (item: any) => {
     v-if="showLoading"
     vertical>加载中...</van-loading>
   <van-empty v-if="list.length === 0" description="" />
-  <van-list
-    v-model:loading="loading"
-    :immediate-check="false"
-    :finished="finished"
-    loading-text="————下拉加载更多————"
-    finished-text="没有更多了"
-    @load="onload"
-  >
-    <ul
-      v-for="item in list"
-      :key="item"
-      class="mt-3 p-4 rounded"
-      style="background-color: #fff; position: relative"
-      @click="jumpDetail(item)"
+  <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+    <van-list
+      v-model:loading="loading"
+      :immediate-check="false"
+      :finished="finished"
+      loading-text="————下拉加载更多————"
+      finished-text="没有更多了"
+      @load="onload"
     >
-      <div
-        v-if="!item.status"
-        class="h-0 w-0"
-        style="
-           border: 10px solid transparent;
-           border-left-color: #41BD62;
-           border-top-color: #41BD62;
-           position: absolute;
-           top: 0;
-           left: 0"
-      />
-      <div
-        v-if="item.attend"
-        class="w-54px h-54px"
-        style="
-          position: absolute;
-          top: 0;
-          right: 84px;
-          background: url(join.png);
-          background-size: 100%"
-      />
-      <div
-        v-if="item.status"
-        class="h-0 w-0"
-        style="
-           border: 10px solid transparent;
-           border-left-color: #C9C9C9;
-           border-top-color: #C9C9C9;
-           position: absolute;
-           top: 0;
-           left: 0"
-      />
-      <div style="display: flex; justify-content: space-between">
-        <span
-          class="text-base font-semibold w-48vw text-left"
-          style="word-break:break-all;"
-        >{{ item.activityName }}</span>
-        <span class="text-xs w-5em">
-          <span v-if="!item.status" class="bg-hex-41BD62 text-white px-2 py-1 rounded">进行中</span>
-          <span v-if="item.status" class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded">已结束</span>
-        </span>
-      </div>
-      <div class="flex justify-between items-center text-xs text-gray-400 text-left mt-3">
-        <span class="w-43vw" v-if="Number(props.admin) === 1">
-          所属空间：{{ item.spaceName }}
-          <span v-if="item.spaceName === '' "> --- </span>
-        </span>
-        <span class="w-43vw" v-if="Number(props.admin) !== 1">
-          发起人：{{ item.createUserName }}
-          <span v-if="item.createUserName === '' "> --- </span>
-        </span>
-        <span>{{ item.createTime }}</span>
-      </div>
-    </ul>
-  </van-list>
+      <ul
+        v-for="item in list"
+        :key="item"
+        class="mt-3 p-4 rounded"
+        style="background-color: #fff; position: relative"
+        @click="jumpDetail(item)"
+      >
+        <div
+          v-if="!item.status"
+          class="h-0 w-0"
+          style="
+             border: 10px solid transparent;
+             border-left-color: #41BD62;
+             border-top-color: #41BD62;
+             position: absolute;
+             top: 0;
+             left: 0"
+        />
+        <div
+          v-if="item.attend"
+          class="w-54px h-54px"
+          style="
+            position: absolute;
+            top: 0;
+            right: 84px;
+            background: url(join.png);
+            background-size: 100%"
+        />
+        <div
+          v-if="item.status"
+          class="h-0 w-0"
+          style="
+             border: 10px solid transparent;
+             border-left-color: #C9C9C9;
+             border-top-color: #C9C9C9;
+             position: absolute;
+             top: 0;
+             left: 0"
+        />
+        <div style="display: flex; justify-content: space-between">
+          <span
+            class="text-base font-semibold w-48vw text-left"
+            style="word-break:break-all;"
+          >{{ item.activityName }}</span>
+          <span class="text-xs w-5em">
+            <span v-if="!item.status" class="bg-hex-41BD62 text-white px-2 py-1 rounded">进行中</span>
+            <span v-if="item.status" class="bg-hex-C9C9C9 text-hex-7E7E7E px-2 py-1 rounded">已结束</span>
+          </span>
+        </div>
+        <div class="flex justify-between items-center text-xs text-gray-400 text-left mt-3">
+          <span class="w-43vw" v-if="Number(props.admin) === 1">
+            所属空间：{{ item.spaceName }}
+            <span v-if="item.spaceName === '' "> --- </span>
+          </span>
+          <span class="w-43vw" v-if="Number(props.admin) !== 1">
+            发起人：{{ item.createUserName }}
+            <span v-if="item.createUserName === '' "> --- </span>
+          </span>
+          <span>{{ item.createTime }}</span>
+        </div>
+      </ul>
+    </van-list>
+  </van-pull-refresh>
 </template>
