@@ -62,7 +62,7 @@ service.interceptors.response.use(
     }
     return Promise.reject(error)
       .catch((error) => {
-        console.log(error)
+        console.warn(error)
       })
   },
 )

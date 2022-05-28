@@ -58,6 +58,7 @@ export const useUserStore = defineStore('user', () => {
           userId.value = res.data.userId
           // 将token存储到cookie中
           setToken(token.value)
+          console.warn('存储token')
         }
         else {
           // 弹出出错信息
