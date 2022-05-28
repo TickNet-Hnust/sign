@@ -6,7 +6,7 @@
  * @LastEditTime: 2022-05-16 13:48:03
  */
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { login } from '~/api/system'
+import { loginByCode, loginByTest } from '~/api/system'
 import { setToken } from '~/utils/cookies'
 
 export const useUserStore = defineStore('user', () => {
@@ -41,7 +41,32 @@ export const useUserStore = defineStore('user', () => {
   const CODE = ref('')
   const corpid = 'wx6219dbfa9b86489e'
   const redirect_uri = 'signff.ticknet.hnust.cn'
-  function loginSign() {
+
+  // 测试登录方法
+  function loginSignByTest() {
+    return new Promise((resolve, reject) => {
+      loginByTest().then((res: any) => {
+        console.warn('生产环境')
+        console.warn(res)
+        if (res.code === 200) {
+          token.value = res.data.access_token
+          userName.value = res.data.userName
+          userId.value = res.data.userId
+          // 将token存储到cookie中
+          setToken(token.value)
+          console.warn('存储token')
+        }
+        else {
+          // 弹出出错信息
+        }
+        resolve(res)
+      }).catch((error: any) => {
+        reject(error)
+      })
+    })
+  }
+
+  function loginSignByCode() {
     return new Promise((resolve, reject) => {
       console.warn(CODE)
       if (String(CODE.value) === 'undefined') {
@@ -49,7 +74,7 @@ export const useUserStore = defineStore('user', () => {
         console.warn('第一次的CODE:', CODE)
       }
       console.warn('loginSign')
-      login(String(CODE.value)).then((res: any) => {
+      loginByCode(String(CODE.value)).then((res: any) => {
         console.warn(res)
         console.warn('code', CODE.value)
         if (res.code === 200) {
@@ -64,17 +89,18 @@ export const useUserStore = defineStore('user', () => {
           // 弹出出错信息
         }
         resolve(res)
-      }).catch((error) => {
+      }).catch((error: any) => {
         reject(error)
       })
     })
   }
+
   return {
     setNewName,
     otherNames,
     savedName,
-    login,
-    loginSign,
+    loginSignByCode,
+    loginSignByTest,
     token,
     userName,
     userId,

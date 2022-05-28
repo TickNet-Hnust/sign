@@ -7,13 +7,19 @@
 -->
 <script setup lang="ts">
 // import { login } from '~/api/system'
+import config from '../config/index'
 import { useUserStore } from '~/stores/user'
 const user = useUserStore()
 const router = useRouter()
 const route = useRoute()
 user.CODE = String(route.query.code)
+
 // 用户登录
-user.loginSign()
+if (config.isLoginTest)
+  user.loginSignByTest()
+else
+  user.loginSignByCode()
+
 // 获取code
 
 // const corpid = 'ww0a8e41e741c02880'

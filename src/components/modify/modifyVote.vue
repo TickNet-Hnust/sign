@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { Toast } from 'vant'
+import { getVote } from '~/api/myJoin/record'
 import { modifyVoteTime } from '~/api/myJoin/vote'
 
 // 投票日期修改 数据类型
@@ -118,7 +119,9 @@ const modifyTime = () => {
       Toast.success({
         message: '修改成功',
         onClose() {
-          location.reload()
+          getVote(Number(props.voteId)).then((res) => {
+
+          })
         },
       })
     }
