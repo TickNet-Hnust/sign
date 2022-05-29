@@ -2,8 +2,8 @@
  * @Description:
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
- * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-18 12:54:32
+ * @LastEditors: 张津瑞
+ * @LastEditTime: 2022-05-29 13:53:24
 -->
 <script setup lang="ts">
 // import { login } from '~/api/system'
@@ -21,13 +21,23 @@ else
   user.loginSignByCode()
 
 // 获取code
-
 // const corpid = 'ww0a8e41e741c02880'
 // const redirect_uri = 'signff.ticknet.hnust.cn'
 // if (user.CODE === 'undefined')
 //   window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${corpid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
 // console.warn(user.CODE)
 
+//事件总线例子
+// const zhangjinruiTestFun = (params) =>{
+//   console.log('张津瑞test'+params)
+// }
+// const { eventHub } = getCurrentInstance().proxy;
+// eventHub.$on('zhangjinruiTestEvent', zhangjinruiTestFun);
+// onBeforeUnmount(() => {
+//       eventHub.$off('event-zhangjinruiTestEvent', zhangjinruiTestFun);
+// });
+
+//跳转目标页
 const jumpTargetPage = (targetPath: any) => {
   router.push(targetPath.link)
 }

@@ -2,8 +2,8 @@
  * @Description: 
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
- * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-19 12:51:58
+ * @LastEditors: 张津瑞
+ * @LastEditTime: 2022-05-29 13:53:23
 -->
 <script setup lang="ts">
 import { Notify, Toast } from 'vant';
@@ -13,6 +13,13 @@ import { customAlphabet } from  'nanoid'
 const nanoid = customAlphabet('1234567890abcdef', 5)
 const router = useRouter()
 const route = useRoute()
+
+//触发事件总线例子
+// const { eventHub } = getCurrentInstance().proxy;
+// onMounted(() => {
+//   eventHub.$emit('zhangjinruiTestEvent', 'some params');
+// });
+
 //百度地图获取定位方法
 //经度
 let longitude =ref(0)
