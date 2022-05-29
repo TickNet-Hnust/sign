@@ -139,6 +139,16 @@ const isClick = () => {
   })
 }
 
+const modifyConfig = (endTime: string, anonymity: number) => {
+  drawData.endTime = endTime
+  drawData.anonymity = anonymity
+  props.anonymity = anonymity
+  props.endDate = drawData.endTime.split(' ')[0]
+  props.endTime = `${drawData.endTime.split(' ')[1].split(':')[0]}:${drawData.endTime.split(' ')[1].split(':')[1]}`
+  show.value = false
+  console.warn(show.value)
+}
+
 const normal = 'background-color: #ffffff;border-color: #E1E2E3;'// 普通选项的样式
 const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后选项的样式
 
@@ -219,7 +229,7 @@ const toDrawRecord = () => {
           <div>抽签记录</div>
         </div>
       </div>
-      <modify-draw :draw-date="props.endDate" :draw-id="drawId" :anonymity="drawData.anonymity" :draw-time="props.endTime" />
+      <modify-draw :draw-date="props.endDate" :draw-id="drawId" :anonymity="drawData.anonymity" :draw-time="props.endTime" @modify-config="modifyConfig" />
     </div>
     <van-dialog v-model:show="resultShow" title="抽取结果" confirm-button-color="#0033CC">
       <div class="my-1rem">
