@@ -2,8 +2,7 @@
 import { Notify } from 'vant'
 import { getSignSpace, quitSignSpace } from '~/api/mySpace/index'
 import { getSpaceMemberList } from '~/api/mySpace/spaceMember'
-import { useUserStore } from '~/stores/user'
-const user = useUserStore()
+import { getUserId } from '~/utils/cookies'
 const route = useRoute()
 const router = useRouter()
 const showLoading = ref(true)
@@ -21,22 +20,26 @@ const spaceList = reactive({
 const id = ref(route.query.id)
 // 退出空间的参数
 const quitData = reactive({
-  userId: user.userId,
-  spaceId: 0,
+  userId: getUserId(),
+  spaceId: parseInt(id.value),
 })
 // 获取我参与的空间的列表
-getSignSpace(id.value).then((res) => {
-  if (res.code === 200) {
-    setTimeout(() => {
-      showLoading.value = false
-    }, 300)
-    spaceList.id = res.data.id
-    spaceList.createTime = res.data.createTime
-    spaceList.spaceName = res.data.spaceName
-    spaceList.count = res.data.count
-    quitData.spaceId = res.data.id
-  }
-})
+const getSpace = () => {
+  getSignSpace(id.value).then((res) => {
+    if (res.code === 200) {
+      setTimeout(() => {
+        showLoading.value = false
+      }, 300)
+      spaceList.id = res.data.id
+      spaceList.createTime = res.data.createTime
+      spaceList.spaceName = res.data.spaceName
+      spaceList.count = res.data.count
+      quitData.spaceId = res.data.id
+    }
+  })
+}
+getSpace()//初始化列表
+
 getSpaceMemberList(id.value).then((res: any) => {
   member_list.push(...res.rows)
 })
@@ -46,9 +49,13 @@ onMounted(() => {
 // 退出空间的方法
 const quitSpace = () => {
   quitSignSpace(quitData).then((res) => {
+    console.log(getUserId(), 111)
     if (res.code === 200) {
       Notify({ type: 'primary', message: '退出成功' })
-      router.replace('/Space')
+      router.replace({
+        path: '/space',
+        query: { quitSpace: true },
+      })
     }
   })
 }

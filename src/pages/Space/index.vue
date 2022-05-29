@@ -1,7 +1,8 @@
 <!-- 学生端 -->
 <script lang="ts">
 export default {
-  name: 'spaceList'
+  name: 'spaceList',
+  
 }
 </script>
 
@@ -11,13 +12,13 @@ import { addAFTFSpace, signSpaceList } from '~/api/mySpace/index'
 const showJoinSpace = ref(false)// 在我参与的选项卡中显示面对面建群
 const showCreateSpace = ref(false)// 在我管理的选项卡中显示新增空间
 const router = useRouter()
+const route = useRoute()
 const isJoin = ref(false)// 控制用户点击是创建空间还是加入空间 TRUE为加入空间，FALSE为创建空间
 const showPopover = ref(false) // 控制点击加号弹窗显示
 const value = ref('123')
 const errorInfo = ref('')
 const showKeyboard = ref(false)
 const showLoading = ref(true)
-
 // 点击加号创建空间还是加入空间
 const popoverSelect = (action: any) => {
   if (action.text === '创建空间') {
@@ -57,6 +58,14 @@ const getsignSpaceList = () => {
     }
   })
 }
+//退出空间重新加加载页面
+watchEffect(() => {
+  console.log(route.query.quitSpace,111111)
+  if(route.query.quitInvovleSpace) {
+    spaceList.value = []
+    getsignSpaceList()
+  }
+})
 getsignSpaceList()// 进入页面获取空间列表
 // 搜索空间的方法，为什么搜索进了这个方法，但要切换之后才有效果
 const searchList = () => {
@@ -258,8 +267,8 @@ const nameRules = [
       v-model="addAFTFSpaceData.code"
       :show="showKeyboard"
       safe-area-inset-bottom
-      @blur="showKeyboard = false"
       maxlength="4"
+      @blur="showKeyboard = false"
     />
     <div class="mt-3 border-1 border-hex-DEDEDE bg-hex-fff rounded py-3 px-5">
       <van-tabs
