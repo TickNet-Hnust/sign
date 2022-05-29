@@ -26,6 +26,9 @@ const props = defineProps({
   voteId: Number,
 })
 
+const emit = defineEmits([
+  'modifyEndTime',
+])
 // 控制遮罩层是否显示
 const dialogShow = ref(false)
 
@@ -119,7 +122,11 @@ const modifyTime = () => {
       Toast.success({
         message: '修改成功',
         onClose() {
-          getVote(Number(props.voteId)).then((res) => {
+          getVote(Number(props.voteId)).then((res: any) => {
+            console.warn(res)
+            if (res.code === 200)
+              emit('modifyEndTime', res.data.endTime)
+          }).catch(() => {
 
           })
         },

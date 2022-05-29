@@ -2,6 +2,7 @@
 
 import { Toast } from 'vant'
 import { modifyDraw } from '~/api/myJoin/draw'
+import { getDraw } from '~/api/myJoin/record'
 
 // 投票日期修改 数据类型
 interface ModifyDrawData{
@@ -28,6 +29,9 @@ const props = defineProps({
   anonymity: Number,
 })
 
+const emit = defineEmits([
+  'modifyConfig',
+])
 // 控制遮罩层是否显示
 const dialogShow = ref(false)
 
@@ -137,7 +141,13 @@ const modifyTime = () => {
       Toast.success({
         message: '修改成功',
         onClose() {
-          location.reload()
+          getDraw(Number(props.drawId)).then((res: any) => {
+            console.warn(res)
+            if (res.code === 200)
+              emit('modifyConfig', res.data.endTime, res.data.anonymity)
+          }).catch(() => {
+
+          })
         },
       })
     }

@@ -162,6 +162,12 @@ const isClick = () => {
   }
 }
 
+const modifyEndTime = (endTime: string) => {
+  voteData.endTime = endTime
+  props.endDate = voteData.endTime.split(' ')[0]
+  props.endTime = `${voteData.endTime.split(' ')[1].split(':')[0]}:${voteData.endTime.split(' ')[1].split(':')[1]}`
+}
+
 // 跳转投票记录
 const toVoteRecord = () => {
   router.push({
@@ -307,7 +313,7 @@ const toVoteRecord = () => {
             <div>投票记录</div>
           </div>
         </span>
-        <modify-vote :vote-date="props.endDate" :vote-time="props.endTime" :vote-id="voteId" />
+        <modify-vote :vote-date="props.endDate" :vote-time="props.endTime" :vote-id="voteId" @modify-end-time="modifyEndTime" />
       </div>
     </div>
   </div>
