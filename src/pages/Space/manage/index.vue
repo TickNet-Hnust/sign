@@ -2,14 +2,15 @@
  * @Descipttion:
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-28 16:42:50
+ * @LastEditors: caojun
+ * @LastEditTime: 2022-05-29 13:38:19
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
 import src from '~/assets/1.png'
 import { deleteSignSpace, getSignSpace, quitSignSpace, updateSignSpace } from '~/api/mySpace/index'
 import { deleteSpaceMember, getSpaceMemberList, updateSpaceMember } from '~/api/mySpace/spaceMember'
+import { getUserId } from '~/utils/cookies'
 const route = useRoute()
 const active = ref(0)
 const loading = ref(false)
@@ -111,7 +112,7 @@ const deleteStudentData = reactive({
 })
 // 管理员退出空间
 const quitSpaceData = reactive({
-  userId: '1905040121',
+  userId: getUserId(),
   spaceId: 0,
 })
 // 获取当前操作者的权限 1为管理员 2为负责人
@@ -160,7 +161,10 @@ const deleteSpace = () => {
   deleteSignSpace(deleteData).then((res) => {
     if (res.code === 200) {
       Notify({ type: 'primary', message: '解散成功' })
-      router.replace('/Space')
+      router.replace({
+        path:'/Space',
+        query:{dismissSpace:true}
+      })
     }
   })
 }
@@ -300,7 +304,10 @@ const quitSpace = () => {
   quitSignSpace(quitSpaceData).then((res) => {
     if (res.code === 200) {
       Notify({ type: 'primary', message: '退出成功' })
-      router.replace('/Space')
+      router.replace({
+        path:'/Space',
+        query:{quitSpace:true}
+      })
     }
   })
 }

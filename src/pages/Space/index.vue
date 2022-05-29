@@ -41,7 +41,7 @@ const request = ref({
   memberRank: active.value,
   spaceName: '',
   pageNum: 1,
-  pageSize: 10,
+  pageSize: 100,
 })
 // 请求列表的方法
 const getsignSpaceList = () => {
@@ -58,15 +58,32 @@ const getsignSpaceList = () => {
     }
   })
 }
-//退出空间重新加加载页面
-watchEffect(() => {
-  console.log(route.query.quitSpace,111111)
-  if(route.query.quitInvovleSpace) {
+// let quitInvovleSpace = Boolean(route.query.quitInvovleSpace)
+// let space = Boolean(route.query.space)
+onMounted(() => {
+  getsignSpaceList()// 进入页面获取空间列表
+  console.log(route.query.quitInvovleSpace,111111)
+  
+})
+// 成员或管理员退出空间重新加载页面
+// 负责人解散空间重新加载页面
+onUpdated(() =>{
+  if(route.query.quitSpace) {
+    request.value.pageNum = 1
     spaceList.value = []
     getsignSpaceList()
+    router.replace('/space')
+    router.back()
+  }
+  else if(route.query.dismissSpace){
+    active.value = 1
+    request.value.pageNum = 1
+    spaceList.value = []
+    getsignSpaceList()
+    router.replace('/space')
+    router.back()
   }
 })
-getsignSpaceList()// 进入页面获取空间列表
 // 搜索空间的方法，为什么搜索进了这个方法，但要切换之后才有效果
 const searchList = () => {
   showLoading.value = true
@@ -182,6 +199,47 @@ const nameRules = [
   },
 ]
 
+const isShow = ref(false)
+// const toTop = () => {
+//       let top = document.documentElement.scrollTop//获取点击时页面的滚动条纵坐标位置
+//       const timeTop = setInterval(() => {
+//       document.documentElement.scrollTop = top -= 50//一次减50往上滑动
+//       if (top === 0) {
+//         clearInterval(timeTop)
+//       }
+// },10)
+// }
+const toTop = () => {
+    window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+})
+}
+// watchEffect(() => {
+//   if (document.documentElement.scrollTop > 20) {
+//         isShow.value = true
+//       } else {
+//         isShow.value = false
+//       }
+//       //往下滑超过20则显示 否则则不显示按钮
+// })
+
+
+
+const handleScroll = () => {
+    if (document.documentElement.scrollTop > 20) {
+        isShow.value = true
+      } else {
+        isShow.value = false
+      }
+      //往下滑超过20则显示 否则则不显示按钮
+  }
+onMounted(()=>{
+  window.addEventListener('scroll', handleScroll )
+}) 
+onUnmounted (()=>{
+  window.removeEventListener('scroll', handleScroll )
+}) 
 </script>
 
 <template>
@@ -279,6 +337,12 @@ const nameRules = [
         <van-tab title="我参与的" />
         <van-tab title="我管理的" />
       </van-tabs>
+      <div v-show="isShow" class="fixed right-5px bottom-5px pt-2" >
+        <van-sticky>
+        <van-icon class="color-hex-059669 b-hex-059669" name="back-top" size="2rem" @click="toTop" />
+      </van-sticky>
+      </div>
+      
       <van-list>
         <van-loading
           v-if="showLoading"
@@ -302,12 +366,15 @@ const nameRules = [
           <div class="text-left text-xs mt-1 color-hex-999">
             {{ item.createTime }}
           </div>
+          
         </ul>
+        
         <div v-if=" spaceList.length===0 " class="text-sm text-hex-aaa mb-5 px-5 mt-10">
           空空如也~
         </div>
         <van-list />
       </van-list>
+      
     </div>
   </div>
 </template>

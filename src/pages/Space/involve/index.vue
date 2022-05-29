@@ -41,11 +41,16 @@ const getSpace = () => {
 getSpace()//初始化列表
 
 getSpaceMemberList(id.value).then((res: any) => {
+  if(res.code === 200)
   member_list.push(...res.rows)
+  // else{
+  //   Notify({type:'warning',message:res.msg})
+  //   router.push('/space')
+  // }
 })
-onMounted(() => {
-  window.scrollTo(0, 0)
-})
+// onMounted(() => {
+//   window.scrollTo(0, 0)
+// })
 // 退出空间的方法
 const quitSpace = () => {
   quitSignSpace(quitData).then((res) => {
@@ -54,7 +59,7 @@ const quitSpace = () => {
       Notify({ type: 'primary', message: '退出成功' })
       router.replace({
         path: '/space',
-        query: { quitSpace: true },
+        query: { quitSpace: true }
       })
     }
   })
