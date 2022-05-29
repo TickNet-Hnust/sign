@@ -78,14 +78,14 @@ const subOption = (item: Option, index: number) => {
   drawInitData.option.splice(index, 1)
 }
 
-const subDrawNum = () => {
-  if (drawInitData.drawNum > 1)
-    drawInitData.drawNum = drawInitData.drawNum - 1
-}
+// const subDrawNum = () => {
+//   if (drawInitData.drawNum > 1)
+//     drawInitData.drawNum = drawInitData.drawNum - 1
+// }
 
-const addDrawNum = () => {
-  drawInitData.drawNum = drawInitData.drawNum + 1
-}
+// const addDrawNum = () => {
+//   drawInitData.drawNum = drawInitData.drawNum + 1
+// }
 
 const confirmModifyTime = () => {
   const arr = currentTime.value.split(':')
@@ -190,7 +190,7 @@ const commitDrawInfo = () => {
         <span>隐藏选项</span>
         <span><van-switch v-model="hide_checked" size="1.5em" /></span>
       </div>
-      <div class=" flex justify-between items-center border-b-1 border-hex-C9C9C9 py-3">
+      <!-- <div class=" flex justify-between items-center border-b-1 border-hex-C9C9C9 py-3">
         <span> 每人可参与抽签次数 </span>
         <span>
           <i class="bg-hex-D7D7D7 color-hex-633333 text-xs p-1" @click="subDrawNum()">
@@ -201,7 +201,7 @@ const commitDrawInfo = () => {
             <van-icon name="plus" />
           </i>
         </span>
-      </div>
+      </div> -->
       <div class=" flex justify-between items-center border-b-1 border-hex-C9C9C9 py-3">
         <span> 持续时间(分钟) </span>
         <span>

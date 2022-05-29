@@ -15,10 +15,7 @@ const route = useRoute()
 user.CODE = String(route.query.code)
 
 // 用户登录
-if (config.isLoginTest)
-  user.loginSignByTest()
-else
-  user.loginSignByCode()
+config.isLoginTest ? user.loginSignByTest() : user.loginSignByCode()
 
 // 获取code
 
