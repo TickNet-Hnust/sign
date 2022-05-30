@@ -24,7 +24,7 @@ config.isLoginTest ? user.loginSignByTest() : user.loginSignByCode()
 //   window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${corpid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
 // console.warn(user.CODE)
 
-//事件总线例子
+// 事件总线例子
 // const zhangjinruiTestFun = (params) =>{
 //   console.log('张津瑞test'+params)
 // }
@@ -34,7 +34,7 @@ config.isLoginTest ? user.loginSignByTest() : user.loginSignByCode()
 //       eventHub.$off('event-zhangjinruiTestEvent', zhangjinruiTestFun);
 // });
 
-//跳转目标页
+// 跳转目标页
 const jumpTargetPage = (targetPath: any) => {
   router.push(targetPath.link)
 }

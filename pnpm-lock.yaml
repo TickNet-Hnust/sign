@@ -22,6 +22,7 @@ specifiers:
   js-cookie: ^3.0.1
   markdown-it-link-attributes: ^4.0.0
   markdown-it-prism: ^2.2.3
+  mitt: ^3.0.0
   nprogress: ^0.2.0
   pinia: ^2.0.13
   pnpm: ^6.32.7
@@ -53,6 +54,7 @@ dependencies:
   '@vueuse/core': 8.2.6_vue@3.2.33
   '@vueuse/head': 0.7.6_vue@3.2.33
   js-cookie: 3.0.1
+  mitt: 3.0.0
   nprogress: 0.2.0
   pinia: 2.0.13_ifhmkzsxec62ezvqv7qmanm4bq
   prism-theme-vars: 0.2.2
@@ -252,7 +254,7 @@ packages:
       debug: 4.3.4
       gensync: 1.0.0-beta.2
       json5: 2.2.1
-      semver: registry.npmmirror.com/semver/6.3.0
+      semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1278,7 +1280,7 @@ packages:
       babel-plugin-polyfill-corejs3: 0.5.2_@babel+core@7.17.9
       babel-plugin-polyfill-regenerator: 0.3.1_@babel+core@7.17.9
       core-js-compat: 3.22.0
-      semver: registry.npmmirror.com/semver/6.3.0
+      semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2096,7 +2098,7 @@ packages:
       '@babel/parser': 7.17.9
       '@vue/shared': 3.2.33
       estree-walker: 2.0.2
-      source-map: registry.npmmirror.com/source-map/0.6.1
+      source-map: 0.6.1
 
   /@vue/compiler-dom/3.2.33:
     resolution: {integrity: sha512-GhiG1C8X98Xz9QUX/RlA6/kgPBWJkjq0Rq6//5XTAGSYrTMBgcLpP9+CnlUg1TFxnnCVughAG+KZl28XJqw8uQ==}
@@ -2752,7 +2754,7 @@ packages:
     resolution: {integrity: sha512-EJUDT7nDVFDvaQgAo2G/PJvxmp1o/c6iXLbswsBbUFXi1Nr+AjA2cKmfbKDMjMvzEe75g3P6JkaDDAKk96A85A==}
     engines: {node: '>= 4.0'}
     dependencies:
-      source-map: registry.npmmirror.com/source-map/0.6.1
+      source-map: 0.6.1
     dev: true
 
   /clean-regexp/1.0.0:
@@ -5446,6 +5448,10 @@ packages:
     resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
     dev: true
 
+  /mitt/3.0.0:
+    resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
+    dev: false
+
   /mrmime/1.0.0:
     resolution: {integrity: sha512-a70zx7zFfVO7XpnQ2IX1Myh9yY4UYvfld/dikWRnsXxbyvMcfz+u6UfgNAtH+k2QqtJuzVpv6eLTx1G2+WKZbQ==}
     engines: {node: '>=10'}
@@ -7703,17 +7709,6 @@ packages:
     version: 6.9.7
     dev: true
 
-  registry.npmmirror.com/acorn-jsx/5.3.2_acorn@8.7.0:
-    resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==, registry: https://registry.nlark.com/, tarball: https://registry.npmmirror.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz}
-    id: registry.npmmirror.com/acorn-jsx/5.3.2
-    name: acorn-jsx
-    version: 5.3.2
-    peerDependencies:
-      acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
-    dependencies:
-      acorn: 8.7.0
-    dev: true
-
   registry.npmmirror.com/acorn/7.4.1:
     resolution: {integrity: sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==, registry: https://registry.nlark.com/, tarball: https://registry.npmmirror.com/acorn/-/acorn-7.4.1.tgz}
     name: acorn
@@ -7774,7 +7769,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       acorn: 8.7.0
-      acorn-jsx: registry.npmmirror.com/acorn-jsx/5.3.2_acorn@8.7.0
+      acorn-jsx: 5.3.2_acorn@8.7.0
       eslint-visitor-keys: 3.3.0
     dev: true
 

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
 import { Toast } from 'vant'
+import { getCurrentInstance } from 'vue'
 import { getVote } from '~/api/myJoin/record'
 import { modifyVoteTime } from '~/api/myJoin/vote'
-
 // 投票日期修改 数据类型
 interface VoteTime{
   nowTime: string
@@ -29,6 +29,7 @@ const props = defineProps({
 const emit = defineEmits([
   'modifyEndTime',
 ])
+const { eventHub } = getCurrentInstance()?.proxy
 // 控制遮罩层是否显示
 const dialogShow = ref(false)
 
@@ -124,8 +125,10 @@ const modifyTime = () => {
         onClose() {
           getVote(Number(props.voteId)).then((res: any) => {
             console.warn(res)
-            if (res.code === 200)
+            if (res.code === 200) {
               emit('modifyEndTime', res.data.endTime)
+              eventHub.$emit('refreshList', 'vote')
+            }
           }).catch(() => {
 
           })
