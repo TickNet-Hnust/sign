@@ -166,7 +166,7 @@ const jumpRecord = function() {
         >联系我们，留言时请务必说明具体情况（如签到问题请说明当前时间、地点、签到方式等等具体问题描述）
       </div>
       <div class="mt-5">
-        <van-button size="large" color="rgb(129,185,138)">
+        <van-button size="large" color="rgb(129,185,138)" @click="$router.push('/help')">
           查看更多帮助
         </van-button>
       </div>

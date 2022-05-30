@@ -2,8 +2,8 @@
  * @Description:
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
- * @LastEditors: 张津瑞
- * @LastEditTime: 2022-05-29 13:53:24
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-30 12:16:03
 -->
 <script setup lang="ts">
 // import { login } from '~/api/system'
@@ -67,7 +67,7 @@ const list = reactive([
   {
     name: '在线帮助',
     icon: 'i-carbon-help',
-    link: '',
+    link: 'help',
   },
 ])
 
