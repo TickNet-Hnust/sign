@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-13 17:40:33
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-28 19:45:46
+ * @LastEditTime: 2022-05-30 09:23:54
 -->
 <script lang="ts" setup>
 import { signStuList } from '~/api/record/signRecord'
@@ -33,9 +33,6 @@ const pageNum = ref(1)
 const totalRecord = ref(0)
 // 请求学生列表
 const getStuList = () => {
-  if(pageNum.value === 1 && clist.length) {
-    clist.length = 0
-  }
   // 签到
   if(props.action === 'sign') {
     const signRequest = reactive({
@@ -135,6 +132,7 @@ const onLoad = () => {
 const onRefresh = () => {
   finished.value = false
   pageNum.value = 1
+  clist.length = 0
   loading.value = true
   onLoad()
 }
@@ -144,27 +142,27 @@ emit('getTotal', totalRecord)
 </script>
 
 <template>
-  <div class="bg-white border border-hex-D9DADB rounded mt-5 p-3 border-t-2 border-t-hex-41B062">
+  <div class="text-right text-hex-999 mt-5 mr-3" @click="onRefresh">
+    <van-icon name="replay" />刷新
+  </div>
+  <div class="bg-white border border-hex-D9DADB rounded p-3 border-t-2 border-t-hex-41B062">
     <ul class="flex py-2 text-sm">
       <span class="flex-1">学号/工号<van-icon name="sort" /></span>
       <span class="flex-1">姓名</span>
       <span class="flex-1" v-if="props.attend === '1' ">时间</span>
     </ul>
-    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-      <van-list
-        :immediate-check="false"
-        v-model:loading="loading"
-        :finished="finished"
-        loading-text="——上拉加载更多——"
-        @load="onLoad"
-      >
-        <van-empty v-if="clist.length === 0 && isEmpty" image-size="7rem" description="空~" />
-        <ul v-for="item in clist" :key="item" class="flex items-center py-2 border-t border-hex-E4E4E4 text-sm">
-          <span class="flex-1">{{ item.createUserId }}</span>
-          <span class="flex-1">{{ item.createUserName }}</span>
-          <span class="flex-1" v-if="props.attend === '1' ">{{ item.createTime }}</span>
-        </ul>
-      </van-list>
-    </van-pull-refresh>
+    <van-list
+      :immediate-check="false"
+      v-model:loading="loading"
+      :finished="finished"
+      @load="onLoad"
+    >
+      <van-empty v-if="clist.length === 0 && isEmpty" image-size="7rem" description="空~" />
+      <ul v-for="item in clist" :key="item" class="flex items-center py-2 border-t border-hex-E4E4E4 text-sm">
+        <span class="flex-1">{{ item.createUserId }}</span>
+        <span class="flex-1">{{ item.createUserName }}</span>
+        <span class="flex-1" v-if="props.attend === '1' ">{{ item.createTime }}</span>
+      </ul>
+    </van-list>
   </div>
 </template>
