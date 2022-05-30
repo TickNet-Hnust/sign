@@ -2,6 +2,8 @@
 <script setup lang="ts">
 import { detailSignRecord, changeSignMsg } from '~/api/record/signRecord'
 import { FormInstance } from 'vant'
+import { getCurrentInstance } from 'vue'
+const { eventHub } = getCurrentInstance()?.proxy
 // 签到活动id
 const route = useRoute()
 const signId = route.query.id
@@ -56,7 +58,8 @@ const changeShow = () => {
   }
   changeRequest.value.signName = signName.value
   changeSignMsg(changeRequest.value).then((res: any) => {
-    console.log(res)
+    // 改变名字或是否可见后应该通知列表页面重新加载
+    eventHub.$emit('refreshList','sign')
   }).catch((err: any) => {
     console.log(err)
   })
