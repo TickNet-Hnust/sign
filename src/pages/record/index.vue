@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-18 16:00:05
+ * @LastEditTime: 2022-05-30 10:02:27
 -->
 <script lang="ts">
 export default{
@@ -12,6 +12,8 @@ export default{
 </script>
 
 <script setup lang="ts">
+import { getCurrentInstance } from 'vue'
+const { eventHub } = getCurrentInstance()?.proxy
 const searchValue = ref('')
 const activeName = ref('sign')
 const signlist = ref(null)
@@ -33,6 +35,13 @@ const changeTab = () => {
     search()
   }
 }
+onMounted(() => {
+  eventHub.$on('refreshList', (type: any) => {
+    console.log(type)
+    searchValue.value = '';
+    search()
+  })
+})
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100vh">
@@ -49,17 +58,15 @@ const changeTab = () => {
     <div class="record_list mt-2">
       <van-tabs color="rgb(40,182,72)" v-model:active="activeName" @change="changeTab">
         <van-tab title="签到" name="sign">
+          <sign-list ref="signlist" admin="1"></sign-list>
         </van-tab>
         <van-tab title="投票" name="vote">
+          <vote-list ref="votelist" admin="1"></vote-list>
         </van-tab>
         <van-tab title="抽签" name="draw">
+          <draw-list ref="drawlist" admin="1"></draw-list>
         </van-tab>
       </van-tabs>
-      <div>
-        <vote-list v-if="activeName==='vote'" ref="votelist" admin="1"></vote-list>
-        <draw-list v-if="activeName==='draw'" ref="drawlist" admin="1"></draw-list>
-        <sign-list v-if="activeName==='sign'" ref="signlist" admin="1"></sign-list>
-      </div>
     </div>
   </div>
 </template>
