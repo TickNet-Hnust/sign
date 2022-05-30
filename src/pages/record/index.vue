@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-30 10:02:27
+ * @LastEditTime: 2022-05-30 10:05:44
 -->
 <script lang="ts">
 export default{
@@ -37,8 +37,6 @@ const changeTab = () => {
 }
 onMounted(() => {
   eventHub.$on('refreshList', (type: any) => {
-    console.log(type)
-    searchValue.value = '';
     search()
   })
 })
