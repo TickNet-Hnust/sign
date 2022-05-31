@@ -2,8 +2,8 @@
  * @Descipttion:
  * @Author: 刘晴
  * @Date: 2022-05-01 19:32:33
- * @LastEditors: caojun
- * @LastEditTime: 2022-05-28 21:30:43
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-05-31 16:51:48
  */
 // 封装axios
 import axios from 'axios'
@@ -15,7 +15,7 @@ const service = axios.create({
   // 请求路由
   baseURL: 'http://49.123.0.26:8282',
   // 请求超时时间
-  timeout: 5000,
+  timeout: 10000,
 })
 // 请求拦截器
 service.interceptors.request.use(

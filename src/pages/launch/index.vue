@@ -3,7 +3,7 @@
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-30 14:55:39
+ * @LastEditTime: 2022-05-31 16:53:31
 -->
 <script setup lang="ts">
 import { Notify, Toast } from 'vant';
@@ -250,12 +250,12 @@ const onConfirm = (currentValue: any) => {
           </div>
         </div>
         <div class="text-center mb-5 mt-5">
-          <span
+          <div
             class="rounded bg-hex-41AA62 text-white p-3 px-7"
             v-if="locationLoading&&!launchLoading"
           >
             正在获取位置信息……
-          </span>
+          </div>
           <div
             class="rounded bg-hex-41AA62 text-white p-3 px-7"
             v-if="!locationLoading"

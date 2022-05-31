@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-30 12:08:41
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-30 16:35:43
+ * @LastEditTime: 2022-05-31 17:02:02
 -->
 <script setup lang="ts">
 const activeNames = ref([])
@@ -221,7 +221,7 @@ onMounted(() => {
           </div>
           <div class="color-hex-41AA62">群二维码：</div>
           <div class="ml-3 w-150px">
-            <img src="QRCode.png" />
+            <div class="w-150px h-200px" style="background:url('QRCode.png'); background-size:100%" />
           </div>
         </div>
       </van-collapse-item>

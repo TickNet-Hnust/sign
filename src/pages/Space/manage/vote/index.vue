@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-19 12:54:45
+ * @LastEditTime: 2022-05-31 17:05:44
 -->
 <script setup lang="ts">
 import { newVote } from '~/api/record/index'
@@ -149,15 +149,16 @@ const validatorMessage = (val: any) => {
   }
 }
 // 发起投票
+const voteBtn = ref(true)
 const beginVote = async () => {
   voteForm.value?.validate().then(() => {
+    voteBtn.value = false
     voteMsg.voteOption.length = 0
     voteOptions.value.forEach((item) => {
       voteMsg.voteOption.push(item.value)
     })
     if(anonymity) voteMsg.anonymity = 1
     else voteMsg.anonymity = 0
-
     if(voteType.value === '多选') {
       voteMsg.voteNumLimit = currentCount.value
     }
@@ -174,6 +175,7 @@ const beginVote = async () => {
         Toast({
           message: res.message
         })
+        voteBtn.value = true
       }
     })
   })
@@ -257,15 +259,18 @@ const beginVote = async () => {
       </div>
     </div>
     <div class="mt-8">
-      <van-button type="success" size="large" @click="beginVote">
+      <van-button v-if="voteBtn" type="success" size="large" @click="beginVote">
         发起投票
+      </van-button>
+      <van-button v-if="!voteBtn" type="success" size="large">
+        发起中...
       </van-button>
     </div>
     <!-- 单选多选选择器 -->
     <van-popup
       v-model:show="showTypePicker"
       position="bottom"
-      :style="{ height: '30%' }"
+      :style="{ height: '50%' }"
     >
       <van-picker
         title="投票类型"
@@ -278,7 +283,7 @@ const beginVote = async () => {
     <van-popup
       v-model:show="showTimePicker"
       position="bottom"
-      :style="{ height: '30%' }"
+      :style="{ height: '50%' }"
     >
       <van-picker
         title="活动时长"
