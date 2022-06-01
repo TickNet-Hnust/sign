@@ -54,6 +54,10 @@ const quitSpace = () => {
         path: '/space',
         query: { quitSpace: true }
       })
+    } else if(res.code == 501) {
+      Notify({
+        message: res.msg
+      })
     }
   })
 }

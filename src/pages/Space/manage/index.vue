@@ -3,11 +3,11 @@
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: caojun
- * @LastEditTime: 2022-06-01 17:04:38
+ * @LastEditTime: 2022-06-01 17:22:17
+
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
-import src from '~/assets/1.png'
 import { deleteSignSpace, getSignSpace, quitSignSpace, updateSignSpace } from '~/api/mySpace/index'
 import { deleteSpaceMember, getSpaceMemberList, updateSpaceMember } from '~/api/mySpace/spaceMember'
 import { getUserId } from '~/utils/cookies'
@@ -166,6 +166,10 @@ const deleteSpace = () => {
         path:'/Space',
         query:{dismissSpace:true}
       })
+    } else if(res.code === 501) {
+      Notify({
+        message: res.msg
+      })
     }
     else {
       Notify({ type:'warning',message:res.msg})
@@ -311,6 +315,10 @@ const quitSpace = () => {
       router.replace({
         path:'/Space',
         query:{quitSpace:true}
+      })
+    } else if(res.code === 501){
+      Notify({
+        message: res.msg
       })
     }
   })
