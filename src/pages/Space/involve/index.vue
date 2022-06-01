@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Notify } from 'vant'
+import { Notify,Toast } from 'vant'
 import { getSignSpace, quitSignSpace } from '~/api/mySpace/index'
 import { getSpaceMemberList } from '~/api/mySpace/spaceMember'
 import { getUserId } from '~/utils/cookies'
@@ -43,14 +43,7 @@ getSpace()//初始化列表
 getSpaceMemberList(id.value).then((res: any) => {
   if(res.code === 200)
   member_list.push(...res.rows)
-  // else{
-  //   Notify({type:'warning',message:res.msg})
-  //   router.push('/space')
-  // }
 })
-// onMounted(() => {
-//   window.scrollTo(0, 0)
-// })
 // 退出空间的方法
 const quitSpace = () => {
   quitSignSpace(quitData).then((res) => {
@@ -65,7 +58,18 @@ const quitSpace = () => {
   })
 }
 const showQuit = ref(false)// 是否显示退出空间的弹窗
-
+const refreshing = ref(false)
+const onRefresh = () =>{
+  setTimeout(() =>{
+    getSpaceMemberList(id.value).then((res) => {
+  if (res.code === 200){
+    member_list.value = res.rows
+    Toast('刷新成功');
+    refreshing.value = false;
+      }
+    })
+  },1000)
+}
 </script>
 <template>
   <div style="position: absolute; top: 40vh;left: 45vw; z-index: 10">
@@ -109,6 +113,7 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
     <div
       class="bg-hex-fff px-2 border border-hex-ccc rounded"
     >
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
       <van-list>
         <ul
           class="
@@ -139,6 +144,7 @@ const showQuit = ref(false)// 是否显示退出空间的弹窗
           </span>
         </ul>
       </van-list>
+    </van-pull-refresh>
     </div>
     <div class="p-2 bg-white mt-3 rounded border border-hex-ccc text-red font-600" @click="showQuit = true">
       退出空间
