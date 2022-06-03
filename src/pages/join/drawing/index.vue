@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { addDrawRecord, drawRecordCount, getDrawNum } from '~/api/myJoin/draw'
 import { getDraw } from '~/api/myJoin/record'
+import { debounce } from '~/utils/shake'
+
 const route = useRoute()
 const loading = ref(true)
 // 定义投票数据类型接口
@@ -113,7 +115,7 @@ const showChange = function() {
 }
 
 const resultShow = ref(false) // 控制结果展示
-const isClick = () => {
+const isClick = debounce(() => {
   addDrawRecord(drawId).then((res) => {
     drawData.isDrawing = 1
     drawData.optionCheckedValue = res.data
@@ -127,7 +129,7 @@ const isClick = () => {
         drawData.option[i].lastPoll = res.data[i]
     })
   })
-}
+}, 500)
 
 const normal = 'background-color: #ffffff;border-color: #E1E2E3;'// 普通选项的样式
 const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后选项的样式

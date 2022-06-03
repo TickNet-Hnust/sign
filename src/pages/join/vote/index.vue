@@ -4,6 +4,7 @@ import { onMounted } from 'vue'
 import { Dialog } from 'vant'
 import { addVoteRecord, getAllVoteRecord } from '~/api/myJoin/vote'
 import { getVote } from '~/api/myJoin/record'
+import { debounce } from '~/utils/shake'
 
 const route = useRoute()
 const voteId = Number(route.query.id)
@@ -131,7 +132,7 @@ const optionCheck = function(optionId: number) {
 }
 
 // 投票按钮
-const isClick = () => {
+const isClick = debounce(() => {
   const voteOption: Array<string> = []
   console.warn(voteData.optionChecked)
   if (voteData.optionChecked.length === 0) {
@@ -159,7 +160,7 @@ const isClick = () => {
       })
     })
   }
-}
+}, 500)
 
 </script>
 
@@ -240,10 +241,10 @@ const isClick = () => {
             <!-- 没有选上但是有票数的选项 -->
             <div
               v-else-if="item.poll > 0 && !optionCheck(item.id)"
-              class="mt-4 border-true-gray-200 border rounded"
+              class="mt-4 border-true-gray-200 border rounded bg-white"
             >
               <div
-                class="border-none h-40px bg-gray-300 leading-40px text-left"
+                class="border-none h-40px bg-gray-300 leading-40px text-left flex"
                 :style="{ width: voteData.optionWidth[item.id-1] }"
                 style="white-space: nowrap"
               >
