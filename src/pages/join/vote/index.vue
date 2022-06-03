@@ -4,6 +4,7 @@ import { onMounted } from 'vue'
 import { Dialog } from 'vant'
 import { addVoteRecord, getAllVoteRecord } from '~/api/myJoin/vote'
 import { getVote } from '~/api/myJoin/record'
+import { debounce } from '~/utils/shake'
 
 const route = useRoute()
 const voteId = Number(route.query.id)
@@ -131,7 +132,7 @@ const optionCheck = function(optionId: number) {
 }
 
 // 投票按钮
-const isClick = () => {
+const isClick = debounce(() => {
   const voteOption: Array<string> = []
   console.warn(voteData.optionChecked)
   if (voteData.optionChecked.length === 0) {
@@ -159,7 +160,7 @@ const isClick = () => {
       })
     })
   }
-}
+}, 500)
 
 </script>
 

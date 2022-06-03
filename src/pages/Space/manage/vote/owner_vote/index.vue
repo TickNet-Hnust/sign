@@ -4,6 +4,7 @@ import { onMounted } from 'vue'
 import { Dialog } from 'vant'
 import { addVoteRecord, getAllVoteRecord } from '../../../../../api/myJoin/vote'
 import { getVote } from '../../../../../api/myJoin/record'
+import { debounce } from '~/utils/shake'
 
 const route = useRoute()
 const router = useRouter()
@@ -132,14 +133,14 @@ const optionCheck = function(optionId: number) {
 }
 
 // 投票按钮
-const isClick = () => {
+const isClick = debounce(() => {
+  console.warn('vote click函数被执行')
   const voteOption: Array<string> = []
   console.warn(voteData.optionChecked)
   if (voteData.optionChecked.length === 0) {
     Dialog.alert({
       message: '请至少选择一个选项！',
     }).then(() => {
-      // on close
     })
   }
   else {
@@ -160,7 +161,7 @@ const isClick = () => {
       })
     })
   }
-}
+}, 500)
 
 const modifyEndTime = (endTime: string) => {
   voteData.endTime = endTime
@@ -178,6 +179,19 @@ const toVoteRecord = () => {
   })
 }
 
+// // 防抖
+// function debounce(fn: any, delay: any) {
+//   let timer: any
+//   return function() {
+//     if (timer)
+//       clearTimeout(timer)
+
+//     timer = setTimeout(() => {
+//       fn()
+//     }, delay)
+//   }
+// }
+
 </script>
 
 <template>
@@ -187,13 +201,13 @@ const toVoteRecord = () => {
     </van-loading>
   </div>
   <div v-else class="bg-gray-500/8 h-full">
-    <div class="p-3 ">
-      <div class="p-3 text-left border border-gray-200 bg-white  rounded">
+    <div class="p-3">
+      <div class="p-3 text-left border border-gray-200 bg-white rounded">
         <div class="mb-2">
           {{ voteData.question }}
         </div>
         <van-tag type="primary" color="#28B648" size="medium" class="mr-3">
-          {{ voteData.voteNumLimit>1?'多选':'单选' }}
+          {{ voteData.voteNumLimit > 1 ? "多选" : "单选" }}
         </van-tag>
         <van-tag type="primary" color="#66CCFF" size="medium">
           {{ `${voteData.optionChecked.length} / ${voteData.voteNumLimit}` }}
@@ -227,16 +241,13 @@ const toVoteRecord = () => {
             <div
               v-if="optionCheck(item.id)"
               class="mt-4 h-42px bg-light-50 border rounded"
-              style="border-color:#1FA71F"
+              style="border-color: #1fa71f"
               @click="handleClickOption(item.id)"
             >
               <div
                 class="border-none h-40px leading-40px text-left flex"
-                :style="{ width: voteData.optionWidth[item.id-1] }"
-                style="
-                  white-space: nowrap;
-                  background-color: #C8E5C9;
-                "
+                :style="{ width: voteData.optionWidth[item.id - 1] }"
+                style="white-space: nowrap; background-color: #c8e5c9"
               >
                 <van-icon
                   name="checked"
@@ -244,11 +255,25 @@ const toVoteRecord = () => {
                   size="1.25em"
                   class="relative left-10px leading-40px"
                 />
-                <div class="text-dark-900 left-3 relative w-40px leading-40px text-sm">
+                <div
+                  class="
+                    text-dark-900
+                    left-3
+                    relative
+                    w-40px
+                    leading-40px
+                    text-sm
+                  "
+                >
                   {{ item.optionValue }}
                 </div>
                 <span
-                  class="absolute right-50px leading-40px text-cool-gray-400 text-sm"
+                  class="
+                    absolute
+                    right-50px
+                    leading-40px
+                    text-cool-gray-400 text-sm
+                  "
                 >
                   {{ item.poll + "票" }}
                 </span>
@@ -260,18 +285,37 @@ const toVoteRecord = () => {
               class="mt-4 border-true-gray-200 border rounded bg-white"
             >
               <div
-                class="border-none h-40px bg-gray-300 leading-40px text-left flex"
-                :style="{ width: voteData.optionWidth[item.id-1] }"
+                class="
+                  border-none
+                  h-40px
+                  bg-gray-300
+                  leading-40px
+                  text-left
+                  flex
+                "
+                :style="{ width: voteData.optionWidth[item.id - 1] }"
                 style="white-space: nowrap"
               >
                 <!-- <van-icon name="checked" color="green" size="1.25em" class="relative left-10px  leading-40px" /> -->
-                <div class="text-dark-900 left-10px relative w-40px leading-40px text-sm ">
-                  {{
-                    item.optionValue
-                  }}
+                <div
+                  class="
+                    text-dark-900
+                    left-10px
+                    relative
+                    w-40px
+                    leading-40px
+                    text-sm
+                  "
+                >
+                  {{ item.optionValue }}
                 </div>
                 <span
-                  class="absolute right-50px leading-40px text-sm text-cool-gray-400"
+                  class="
+                    absolute
+                    right-50px
+                    leading-40px
+                    text-sm text-cool-gray-400
+                  "
                 >
                   {{ item.poll + "票" }}
                 </span>
@@ -279,11 +323,26 @@ const toVoteRecord = () => {
             </div>
             <div
               v-else-if="item.poll === 0"
-              class="mt-4 border-true-gray-200 border h-42px  text-dark-900 text-left bg-light-50 rounded"
+              class="
+                mt-4
+                border-true-gray-200 border
+                h-42px
+                text-dark-900 text-left
+                bg-light-50
+                rounded
+              "
             >
-              <span class="leading-40px m-10px text-sm">{{ item.optionValue }}</span>
+              <span class="leading-40px m-10px text-sm">{{
+                item.optionValue
+              }}</span>
               <span
-                class="absolute right-50px leading-20px text-xs text-cool-gray-400 pt-10px"
+                class="
+                  absolute
+                  right-50px
+                  leading-20px
+                  text-xs text-cool-gray-400
+                  pt-10px
+                "
               >
                 {{ item.poll + "票" }}
               </span>
@@ -298,9 +357,9 @@ const toVoteRecord = () => {
         <van-button
           type="primary"
           size="large"
-          :color="voteData.isVote||voteData.status?'#9DD49D':'#1FA71F'"
+          :color="voteData.isVote || voteData.status ? '#9DD49D' : '#1FA71F'"
           class="my-10px rounded"
-          :disabled="voteData.isVote===1 || voteData.status ===1"
+          :disabled="voteData.isVote === 1 || voteData.status === 1"
           @click="isClick()"
         >
           {{ voteData.text }}
@@ -313,11 +372,22 @@ const toVoteRecord = () => {
             <div>投票记录</div>
           </div>
         </span>
-        <modify-vote :vote-date="props.endDate" :vote-time="props.endTime" :vote-id="voteId" @modify-end-time="modifyEndTime" />
+        <modify-vote
+          :vote-date="props.endDate"
+          :vote-time="props.endTime"
+          :vote-id="voteId"
+          @modify-end-time="modifyEndTime"
+        />
       </div>
     </div>
   </div>
-  <records-list :show="show" :type="voteData.type" :active-id="voteId" :option-checked-value="optionCheckedValue" @show-change="showChange()" />
+  <records-list
+    :show="show"
+    :type="voteData.type"
+    :active-id="voteId"
+    :option-checked-value="optionCheckedValue"
+    @show-change="showChange()"
+  />
 </template>
 
 <route lang="yaml">

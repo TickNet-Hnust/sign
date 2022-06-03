@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Toast } from 'vant'
 import { draw } from '~/api/myJoin/draw'
+import { debounce } from '~/utils/shake'
 
 const route = useRoute()
 const router = useRouter()
@@ -106,7 +107,7 @@ const confirmAnonymous = (value: string, index: number) => {
   anonymousPopup.value = false
 }
 
-const commitDrawInfo = () => {
+const commitDrawInfo = debounce(() => {
   const newDrawData = {
     drawName: drawInitData.drawName,
     visible: drawInitData.visible,
@@ -142,7 +143,7 @@ const commitDrawInfo = () => {
       })
     }
   })
-}
+}, 500)
 
 </script>
 <template>

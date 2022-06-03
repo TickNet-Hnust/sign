@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { addDrawRecord, drawRecordCount, getDrawNum } from '~/api/myJoin/draw'
 import { getDraw } from '~/api/myJoin/record'
+import { debounce } from '~/utils/shake'
+
 const route = useRoute()
 const router = useRouter()
 const loading = ref(true)
@@ -123,7 +125,7 @@ const showChange = function() {
 }
 
 const resultShow = ref(false) // 控制结果展示
-const isClick = () => {
+const isClick = debounce(() => {
   addDrawRecord(drawId).then((res) => {
     drawData.isDrawing = 1
     drawData.optionCheckedValue = res.data
@@ -137,7 +139,7 @@ const isClick = () => {
         drawData.option[i].lastPoll = res.data[i]
     })
   })
-}
+}, 500)
 
 const modifyConfig = (endTime: string, anonymity: number) => {
   drawData.endTime = endTime
