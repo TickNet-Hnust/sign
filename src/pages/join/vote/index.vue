@@ -240,10 +240,10 @@ const isClick = () => {
             <!-- 没有选上但是有票数的选项 -->
             <div
               v-else-if="item.poll > 0 && !optionCheck(item.id)"
-              class="mt-4 border-true-gray-200 border rounded"
+              class="mt-4 border-true-gray-200 border rounded bg-white"
             >
               <div
-                class="border-none h-40px bg-gray-300 leading-40px text-left"
+                class="border-none h-40px bg-gray-300 leading-40px text-left flex"
                 :style="{ width: voteData.optionWidth[item.id-1] }"
                 style="white-space: nowrap"
               >
