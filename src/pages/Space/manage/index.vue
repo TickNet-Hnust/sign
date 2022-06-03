@@ -3,7 +3,7 @@
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-31 16:20:01
+ * @LastEditTime: 2022-06-03 22:39:25
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -111,7 +111,6 @@ const deleteStudentData = reactive({
 })
 // 管理员退出空间
 const quitSpaceData = reactive({
-  userId: getUserId(),
   spaceId: 0,
 })
 // 获取当前操作者的权限 1为管理员 2为负责人

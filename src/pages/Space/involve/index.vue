@@ -20,7 +20,6 @@ const spaceList = reactive({
 const id = ref(route.query.id)
 // 退出空间的参数
 const quitData = reactive({
-  userId: getUserId(),
   spaceId: parseInt(id.value),
 })
 // 获取我参与的空间的列表

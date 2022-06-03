@@ -3,7 +3,7 @@
  * @Autor: 张津瑞
  * @Date: 2022-04-20 16:18:10
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-31 16:53:31
+ * @LastEditTime: 2022-06-01 09:35:41
 -->
 <script setup lang="ts">
 import { Notify, Toast } from 'vant';
@@ -146,7 +146,7 @@ const  launchSign = function(){
 //跳转到签到记录
 //跳转时通过query参数带上相关数据
 const jumpRecord = function() {
-  router.push({ path: `/record/checkRecord`,query: { 
+  router.replace({ path: `/record/checkRecord`,query: { 
     id:signResponseData.id,
     } 
   })

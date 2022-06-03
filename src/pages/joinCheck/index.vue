@@ -63,8 +63,10 @@ let signRecordResponseData = reactive({
   id:0,
 })
 //确认签到
+const checking = ref(false)
 const joinCheck = () => {
   if(canCheck.value) {
+    checking.value = true
     signRecordRequestData.longitude = longitude.value
     signRecordRequestData.latitude = latitude.value
     signRecordRequestData.signCode = inputValue.value
@@ -75,7 +77,7 @@ const joinCheck = () => {
       if(code!==200){
         Toast({
           message: msg,
-          duration: 2000
+          duration: 1000
         })
       }else if(code===200){
         Toast({
@@ -85,6 +87,7 @@ const joinCheck = () => {
         signRecordResponseData.id = res.data
         checkShow.value = false
       }
+      checking.value = false
     })
 }
 }
@@ -129,10 +132,16 @@ const jumpRecord = function() {
         </div>
         <div
           class="my-6 border w-150px mx-auto py-3 text-xl rounded border-hex-4FC09C text-hex-4FC09C"
-          v-else
+          v-if="!locationLoading&&!checking"
           @click="joinCheck"
         >
           确认签到
+        </div>
+        <div
+          class="my-6 w-150px mx-auto py-3 text-xl rounded bg-hex-41AA62 text-white"
+          v-if="checking"
+        >
+          签到中...
         </div>
       </div>
       <div v-show="!checkShow">
