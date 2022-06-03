@@ -3,11 +3,11 @@
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: caojun
- * @LastEditTime: 2022-05-29 13:38:19
+ * @LastEditTime: 2022-06-01 17:22:17
+
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
-import src from '~/assets/1.png'
 import { deleteSignSpace, getSignSpace, quitSignSpace, updateSignSpace } from '~/api/mySpace/index'
 import { deleteSpaceMember, getSpaceMemberList, updateSpaceMember } from '~/api/mySpace/spaceMember'
 import { getUserId } from '~/utils/cookies'
@@ -159,12 +159,20 @@ const updateSpaceName = () => {
 // 负责人解散空间
 const deleteSpace = () => {
   deleteSignSpace(deleteData).then((res) => {
+    console.log(deleteData)
     if (res.code === 200) {
       Notify({ type: 'primary', message: '解散成功' })
       router.replace({
         path:'/Space',
         query:{dismissSpace:true}
       })
+    } else if(res.code === 501) {
+      Notify({
+        message: res.msg
+      })
+    }
+    else {
+      Notify({ type:'warning',message:res.msg})
     }
   })
 }
@@ -308,12 +316,28 @@ const quitSpace = () => {
         path:'/Space',
         query:{quitSpace:true}
       })
+    } else if(res.code === 501){
+      Notify({
+        message: res.msg
+      })
     }
   })
 }
 onMounted(() => {
   window.scrollTo(0, 0)
 })
+const refreshing = ref(false)
+const onRefresh = () =>{
+  setTimeout(() =>{
+    getSpaceMemberList(id.value).then((res) => {
+  if (res.code === 200){
+    member_list.value = res.rows
+    Toast('刷新成功');
+    refreshing.value = false;
+      }
+    })
+  },1000)
+}
 </script>
 <template>
   <div style="position: absolute; top: 40vh;left: 45vw; z-index: 10">
@@ -437,6 +461,7 @@ onMounted(() => {
           成员
         </div>
         <div class="bg-white rounded items-center p-1 border border-hex-ccc">
+          <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
           <van-list>
             <div class="flex items-center text-sm py-2">
               <span class="flex-1">学号/工号</span>
@@ -464,10 +489,11 @@ onMounted(() => {
                 </span>
               </div>
               <span style="transform: rotate(90deg);position: absolute; right: 1em">
-                <van-icon v-if="item.memberRank<rank" name="ellipsis" @click="changeMenber(item)" />
+                <van-icon v-if="item.memberRank < rank" name="ellipsis" @click="changeMenber(item)" />
               </span>
             </div>
           </van-list>
+          </van-pull-refresh>
         </div>
       </van-tab>
       <van-popup
