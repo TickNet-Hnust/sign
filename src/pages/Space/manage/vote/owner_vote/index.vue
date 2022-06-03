@@ -248,7 +248,7 @@ const toVoteRecord = () => {
                   {{ item.optionValue }}
                 </div>
                 <span
-                  class="absolute right-50px leading-40px text-xs text-cool-gray-400"
+                  class="absolute right-50px leading-40px text-cool-gray-400 text-sm"
                 >
                   {{ item.poll + "票" }}
                 </span>
@@ -257,15 +257,15 @@ const toVoteRecord = () => {
             <!-- 没有选上但是有票数的选项 -->
             <div
               v-else-if="item.poll > 0 && !optionCheck(item.id)"
-              class="mt-4 border-true-gray-200 border rounded"
+              class="mt-4 border-true-gray-200 border rounded bg-white"
             >
               <div
-                class="border-none h-40px bg-gray-300 leading-40px text-left"
+                class="border-none h-40px bg-gray-300 leading-40px text-left flex"
                 :style="{ width: voteData.optionWidth[item.id-1] }"
                 style="white-space: nowrap"
               >
                 <!-- <van-icon name="checked" color="green" size="1.25em" class="relative left-10px  leading-40px" /> -->
-                <div class="text-dark-900 left-10px relative w-40px leading-40px text-sm">
+                <div class="text-dark-900 left-10px relative w-40px leading-40px text-sm ">
                   {{
                     item.optionValue
                   }}
