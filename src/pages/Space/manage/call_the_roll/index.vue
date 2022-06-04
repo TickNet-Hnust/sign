@@ -31,27 +31,29 @@ const stop_roll = () => {
     time: `${checkTime(mydate.getMonth() + 1)}-${checkTime(mydate.getDate())} ${checkTime(mydate.getHours())
     }:${checkTime(mydate.getMinutes())}:${checkTime(mydate.getSeconds())}`,
   }
-  checked_list.push(checked_item)
+  checked_list.splice(0,0,checked_item)
 }
 // 选中列表
 const checked_list = reactive([])
 const { pause, resume, isActive } = useIntervalFn(
   () => {
-    let r = Math.round(Math.random() * (name_list.value.length - 1))
-    while (1) {
-      let flag = true
-      for (let i = 0; i < checked_list.length; i++) {
-        if (checked_list[i].name === name_list.value[r]) {
-          flag = false
-          break
+    if(checked_list.length < name_list.value.length) {
+      let r = Math.round(Math.random() * (name_list.value.length - 1))
+      while (1) {
+        let flag = true
+        for (let i = 0; i < checked_list.length; i++) {
+          if (checked_list[i].name === name_list.value[r]) {
+            flag = false
+            break
+          }
         }
+        if (flag)
+          break
+        else
+          r = Math.round(Math.random() * (name_list.value.length - 1))
       }
-      if (flag)
-        break
-      else
-        r = Math.round(Math.random() * (name_list.value.length - 1))
+      check_name.value = name_list.value[r]
     }
-    check_name.value = name_list.value[r]
   },
   100,
   {

@@ -76,11 +76,14 @@ const changeTab = () => {
         border: 1px solid rgb(166, 222, 251);
       "
     >
-      <div>辅助签到用法：</div>
-      <div class="px-8">
+      <div >辅助签到用法：</div>
+      <div class="px-8" v-if="spaceName !== '无' ">
         1.签到发起人可以通过直接补录未签到同学的信息来让其签到
         <br />
         2.签到发起人可以通过生成二维码让签到不成功的同学签到
+      </div>
+      <div class="px-8" v-if="spaceName === '无' ">
+        签到发起人可以通过生成二维码让签到不成功的同学签到
       </div>
     </div>
     <div class="m-t-4">

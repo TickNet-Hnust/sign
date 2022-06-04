@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-31 17:05:44
+ * @LastEditTime: 2022-06-04 16:28:22
 -->
 <script setup lang="ts">
 import { newVote } from '~/api/record/index'
@@ -138,7 +138,7 @@ const addCount = () => {
   }
 }
 // 是否匿名
-const anonymity = ref(true)
+const anonymity = ref(false)
 // 表单验证
 const voteForm = ref<FormInstance>()
 const validatorMessage = (val: any) => {
