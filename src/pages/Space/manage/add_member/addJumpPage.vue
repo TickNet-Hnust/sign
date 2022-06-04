@@ -3,12 +3,15 @@
  * @Author: 刘晴
  * @Date: 2022-05-07 15:08:29
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-18 10:10:29
+ * @LastEditTime: 2022-06-04 21:13:00
 -->
 <script lang="ts" setup>
 import { enterSpaceByCode } from '~/api/record/index'
 import { getSignSpace } from '~/api/mySpace/index'
 import { Toast } from 'vant'
+import config from '~/config/index'
+import { useUserStore } from '~/stores/user'
+const user = useUserStore()
 const router = useRouter()
 const route = useRoute()
 const spaceId = route.query.spaceId
@@ -54,6 +57,8 @@ const joinSpace = () => {
   },1000)
 }
 onMounted(() => {
+  // 扫码后先登录一次
+  config.isLoginTest ? user.loginSignByTest() : user.loginSignByCode()
   Toast.loading({
     message: '加载中...',
      forbidClick: true,
