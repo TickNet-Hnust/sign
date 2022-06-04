@@ -167,6 +167,23 @@ const modifyEndTime = (endTime: string) => {
   voteData.endTime = endTime
   props.endDate = voteData.endTime.split(' ')[0]
   props.endTime = `${voteData.endTime.split(' ')[1].split(':')[0]}:${voteData.endTime.split(' ')[1].split(':')[1]}`
+  getVote(voteId).then((res) => {
+    console.warn(res.data)
+    voteData.question = res.data.voteName
+    voteData.status = res.data.status
+    voteData.endTime = res.data.endTime
+    voteData.isVote = res.data.attend
+    voteData.voteNumLimit = res.data.voteNumLimit
+    props.endDate = voteData.endTime.split(' ')[0]
+    props.endTime = `${voteData.endTime.split(' ')[1].split(':')[0]}:${voteData.endTime.split(' ')[1].split(':')[1]}`
+    console.warn(props)
+    let i = 0
+    for (const key in res.data.voteNums) {
+      voteData.option[i].poll = res.data.voteNums[key]
+      i = i + 1
+    }
+    loading.value = false
+  })
 }
 
 // 跳转投票记录
