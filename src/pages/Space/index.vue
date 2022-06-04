@@ -192,6 +192,7 @@ const nameRules = [
 const refreshing = ref(false)
 const onRefresh = () =>{
   setTimeout(() =>{
+    spaceList.value = []
     getsignSpaceList()
     Toast('刷新成功');
     refreshing.value = false;
