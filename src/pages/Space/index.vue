@@ -60,21 +60,18 @@ const getsignSpaceList = () => {
     }
   })
 }
-// let quitInvovleSpace = Boolean(route.query.quitInvovleSpace)
-// let space = Boolean(route.query.space)
+
 getsignSpaceList()// 进入页面获取空间列表
 
-// 成员或管理员退出空间重新加载页面
-// 负责人解散空间重新加载页面
 onUpdated(() =>{
-  if(route.query.quitSpace) {
+  if(route.query.quitSpace) {// 成员或管理员退出空间重新加载页面
     request.value.pageNum = 1
     spaceList.value = []
     getsignSpaceList()
     router.replace('/space')
     router.back()
   }
-  else if(route.query.dismissSpace){
+  else if(route.query.dismissSpace){// 负责人解散空间重新加载页面
     active.value = 1
     request.value.pageNum = 1
     spaceList.value = []
@@ -96,7 +93,6 @@ const tabChange = () => {
   request.value.pageNum = 1
   request.value.spaceName = ''
   getsignSpaceList()
-  console.log(active.value)
 }
 // 点击清除重新加载数据
 const clear = () => {
@@ -145,9 +141,6 @@ const addFTFSpace = () => {
       return
     }
     addAFTFSpace(addAFTFSpaceData).then((res) => {
-      console.log(addAFTFSpaceData)
-      console.log(res)
-
       if (res.code === 200) {
         Notify({ type: 'success', message: '创建成功' })
         router.push('/Space')
@@ -168,8 +161,6 @@ const addFTFSpace = () => {
   else if (isJoin.value === true) { // 加入空间
     addAFTFSpaceData.join = true
     addAFTFSpace(addAFTFSpaceData).then((res) => {
-      console.log(addAFTFSpaceData)
-      console.log(res)
       if (res.code === 200) {
         Notify({ type: 'success', message: '加入成功' })
         router.push('/Space')
