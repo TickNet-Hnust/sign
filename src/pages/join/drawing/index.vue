@@ -6,7 +6,9 @@ import { debounce } from '~/utils/shake'
 
 const route = useRoute()
 const loading = ref(true)
+
 const { eventHub } = getCurrentInstance()?.proxy
+
 // 定义投票数据类型接口
 interface DrawData {
   type: string // 抽签或者投票
@@ -120,11 +122,6 @@ onMounted(() => {
   })
 })
 
-const show = ref(false)
-const showChange = function() {
-  show.value = !show.value
-}
-
 const resultShow = ref(false) // 控制结果展示
 const isClick = debounce(() => {
   addDrawRecord(drawId).then((res: any) => {
@@ -158,6 +155,17 @@ const isClick = debounce(() => {
 const normal = 'background-color: #ffffff;border-color: #E1E2E3;'// 普通选项的样式
 const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后选项的样式
 
+// 监听点击选项事件
+const clickedOptionValue = ref('')
+const show = ref(false)
+const showChange = function() {
+  show.value = !show.value
+}
+const handleOptionClick = (val: string) => {
+  show.value = true
+  clickedOptionValue.value = val
+}
+
 </script>
 
 <template>
@@ -166,6 +174,7 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
       加载中...
     </van-loading>
   </div>
+  <!-- 加载数据 -->
   <div v-else class="bg-gray-500/8 w-screen h-screen p-3">
     <div class="border-gray-200 border p-3 bg-white text-left rounded">
       <div class="mb-3">
@@ -178,9 +187,10 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
         {{ "已抽" + drawData.drawingAlreadyNum + " / " + drawData.allPollNum }}
       </van-tag>
     </div>
+    <!-- 隐藏选项 -->
     <div v-if="!drawData.anonymity">
       <div v-for="item in drawData.option" :key="item.optionId">
-        <div class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.optionId===drawData.optionChecked?show = true:''">
+        <div class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="handleOptionClick(item.optionValue)">
           <div v-if="drawData.optionChecked !== item.optionId">
             <span>{{ item.optionValue }}</span>
             <span class="float-right text-gray-500 ">&times;{{ item.lastPoll }}</span>
@@ -194,13 +204,13 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
     </div>
     <div v-else>
       <div v-for="item in drawData.option" :key="item.optionId">
-        <div v-if="drawData.isDrawing === 0" class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.optionId===drawData.optionChecked?show = true:''">
+        <div v-if="drawData.isDrawing === 0" class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal">
           <div>
             <span>选项{{ item.optionId }}</span>
             <span class="float-right text-gray-500">&times;{{ item.lastPoll }}</span>
           </div>
         </div>
-        <div v-else-if="drawData.optionChecked === item.optionId" class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.optionId===drawData.optionChecked?show = true:''">
+        <div v-else-if="drawData.optionChecked === item.optionId" class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="handleOptionClick(item.optionValue)">
           <div>
             <span>{{ item.optionValue }}</span>
             <span class="float-right text-gray-500">已抽中该项</span>
@@ -223,7 +233,7 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
         {{ drawData.optionCheckedValue }}
       </div>
     </van-dialog>
-    <records-list v-if="drawData.optionChecked&&drawData.isVisible" :show="show" :type="drawData.type" :active-id="drawId" :option-checked-value="drawData.option[drawData.optionChecked - 1].optionValue" @show-change="showChange()" />
+    <records-list v-if="drawData.isVisible" :show="show" :type="drawData.type" :active-id="drawId" :option-checked-value="clickedOptionValue" @show-change="showChange()" />
   </div>
 </template>
 
