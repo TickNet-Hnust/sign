@@ -146,7 +146,7 @@ const modifyTime = () => {
           getDraw(Number(props.drawId)).then((res: any) => {
             console.warn(res)
             if (res.code === 200) {
-              emit('modifyConfig', res.data.endTime, res.data.visible)
+              emit('modifyConfig')
               eventHub.$emit('refreshList', 'draw')
             }
           }).catch(() => {

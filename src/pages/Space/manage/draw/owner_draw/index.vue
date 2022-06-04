@@ -156,14 +156,20 @@ const isClick = debounce(() => {
   })
 }, 500)
 
-const modifyConfig = (endTime: string, visible: number) => {
-  drawData.endTime = endTime
-  drawData.isVisible = visible
-  props.visible = visible
-  props.endDate = drawData.endTime.split(' ')[0]
-  props.endTime = `${drawData.endTime.split(' ')[1].split(':')[0]}:${drawData.endTime.split(' ')[1].split(':')[1]}`
-  show.value = false
-  console.warn(show.value)
+const modifyConfig = () => {
+  getDraw(drawId).then((res) => {
+    drawData.anonymity = res.data.anonymity
+    drawData.endTime = res.data.endTime
+    props.endDate = drawData.endTime.split(' ')[0]
+    props.endTime = `${drawData.endTime.split(' ')[1].split(':')[0]}:${drawData.endTime.split(' ')[1].split(':')[1]}`
+    props.visible = res.data.visible
+    drawData.status = res.data.status
+    drawData.isVisible = res.data.visible
+    drawData.isDrawing = res.data.attend
+    drawData.optionChecked = res.data.attend ? res.data.optionName : 0
+    for (let i = 0; i < res.data.optionContent.length; i++)
+      drawData.option[i].lastPoll = res.data.optionNum[i]
+  })
 }
 
 const normal = 'background-color: #ffffff;border-color: #E1E2E3;'// 普通选项的样式
