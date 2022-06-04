@@ -67,7 +67,8 @@ const onRefresh = () =>{
     getSpaceMemberList(id.value).then((res) => {
   if (res.code === 200){
     spaceList.count = res.total
-    member_list.value = res.rows
+    member_list.length = 0
+    member_list.push(...res.rows)
     Toast('刷新成功');
     refreshing.value = false;
       }
