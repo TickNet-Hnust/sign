@@ -9,6 +9,8 @@ export default {
 <script setup lang="ts">
 import { Notify } from 'vant'
 import { addAFTFSpace, signSpaceList } from '~/api/mySpace/index'
+import { getCurrentInstance } from 'vue'
+const { eventHub } = getCurrentInstance()?.proxy
 const showJoinSpace = ref(false)// 在我参与的选项卡中显示面对面建群
 const showCreateSpace = ref(false)// 在我管理的选项卡中显示新增空间
 const router = useRouter()
@@ -213,9 +215,13 @@ const handleScroll = () => {
   }
 onMounted(()=>{
   window.addEventListener('scroll', handleScroll )
+  eventHub.$on('refreshSpaceList', () => {
+    searchList()
+  })
 }) 
 onUnmounted (()=>{
   window.removeEventListener('scroll', handleScroll )
+  eventHub.$off('refreshSpaceList')
 }) 
 </script>
 

@@ -3,13 +3,15 @@
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-06-03 22:50:39
+ * @LastEditTime: 2022-06-04 10:00:10
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
 import { deleteSignSpace, getSignSpace, quitSignSpace, updateSignSpace } from '~/api/mySpace/index'
 import { deleteSpaceMember, getSpaceMemberList, updateSpaceMember } from '~/api/mySpace/spaceMember'
 import { getUserId } from '~/utils/cookies'
+import { getCurrentInstance } from 'vue'
+const { eventHub } = getCurrentInstance()?.proxy
 const route = useRoute()
 const active = ref(0)
 const loading = ref(false)
@@ -147,9 +149,12 @@ const updateSpaceName = () => {
       if (/^[\u4E00-\u9FA5A-Za-z0-9\,\(\)\[\]_\"\'\u2018\u2019\u201C\u201D\u3010\u3011\uFF08\uFF09\u3001\uFF0C]+$/.test(updateData.spaceName)) {
         Toast('修改成功')
         spaceList.spaceName = updateData.spaceName
+        // 改变名字或是否可见后应该通知列表页面重新加载
+        eventHub.$emit('refreshSpaceList')
       }
     }
     else {
+      updateData.spaceName = spaceList.spaceName
       Notify({ type: 'warning', message: res.msg })
     }
   })
