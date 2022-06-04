@@ -43,7 +43,7 @@ const request = ref({
   memberRank: active.value,
   spaceName: '',
   pageNum: 1,
-  pageSize: 100,
+  pageSize: 100,//如果用户的空间大于了100，将会有bug
 })
 // 请求列表的方法
 const getsignSpaceList = () => {
@@ -52,11 +52,15 @@ const getsignSpaceList = () => {
     if (res.code === 200) {
       showLoading.value = false
       spaceList.value = spaceList.value.concat(res.rows)
+      console.log(res);
+      
     }
 
     if (spaceList.value.length < res.total) {
       request.value.pageNum++
       getsignSpaceList()
+      console.log(res);
+      
     }
   })
 }
@@ -191,9 +195,24 @@ const nameRules = [
 //下拉刷新空间列表
 const refreshing = ref(false)
 const onRefresh = () =>{
-  setTimeout(() =>{
+  setTimeout(() => {
     spaceList.value = []
-    getsignSpaceList()
+    request.value.memberRank = active.value
+    signSpaceList(request.value).then((res: any) => {
+    if (res.code === 200) {
+      showLoading.value = false
+      spaceList.value = spaceList.value.concat(res.rows)
+      console.log(res);
+      
+    }
+
+    if (spaceList.value.length < res.total) {
+      request.value.pageNum++
+      getsignSpaceList()
+      console.log(res);
+      
+    }
+  })
     Toast('刷新成功');
     refreshing.value = false;
   },1000)

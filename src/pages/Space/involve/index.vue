@@ -66,6 +66,7 @@ const onRefresh = () =>{
   setTimeout(() =>{
     getSpaceMemberList(id.value).then((res) => {
   if (res.code === 200){
+    spaceList.count = res.total
     member_list.value = res.rows
     Toast('刷新成功');
     refreshing.value = false;

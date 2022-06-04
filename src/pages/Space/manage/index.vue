@@ -3,7 +3,7 @@
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 曹俊
- * @LastEditTime: 2022-06-04 11:11:32
+ * @LastEditTime: 2022-06-04 15:27:45
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -359,6 +359,7 @@ const onRefresh = () =>{
   setTimeout(() =>{
     getSpaceMemberList(id.value).then((res) => {
   if (res.code === 200){
+    spaceList.count = res.total
     member_list.value = res.rows
     Toast('刷新成功');
     refreshing.value = false;
