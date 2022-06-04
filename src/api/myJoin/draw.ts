@@ -47,14 +47,14 @@ export function addDrawRecord(drawId: number) {
 }
 
 // 修改抽签信息
-export function modifyDraw(drawId: number, endTime: string, anonymity: number) {
+export function modifyDraw(drawId: number, endTime: string, visible: number) {
   return request({
     method: 'put',
     url: '/signff/draw',
     data: {
       id: drawId,
       endTime,
-      anonymity,
+      visible,
     },
   })
 }

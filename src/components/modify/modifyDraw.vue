@@ -18,7 +18,7 @@ interface ModifyDrawData{
   minMinute: string|number
   maxMinute: string|number
   // 权限查看
-  anonymity: number
+  visible: number
 }
 
 // 接受父组件相关参数
@@ -26,7 +26,7 @@ const props = defineProps({
   drawDate: String,
   drawTime: String,
   drawId: Number,
-  anonymity: Number,
+  visible: Number,
 })
 
 const emit = defineEmits([
@@ -46,7 +46,7 @@ const currentTime = ref(' ')
 const timePopupShow = ref(false)
 
 // 控制查看权限选项器弹出层
-const anonymityPopupShow = ref(false)
+const visiblePopupShow = ref(false)
 
 const modifyDrawData: ModifyDrawData = reactive({
   nowTime: '',
@@ -62,7 +62,7 @@ const modifyDrawData: ModifyDrawData = reactive({
     return modifyDrawData.drawDate === modifyDrawData.nowTime ? modifyDrawData.minDate.getMinutes() : 0
   }),
   maxMinute: 59,
-  anonymity: 0,
+  visible: 0,
 })
 
 const init = () => {
@@ -79,7 +79,7 @@ const init = () => {
   modifyDrawData.drawDate = String(props.drawDate)
   modifyDrawData.drawTime = String(props.drawTime)
   modifyDrawData.minDate = new Date()
-  modifyDrawData.anonymity = Number(props.anonymity)
+  modifyDrawData.visible = Number(props.visible)
   currentTime.value = String(props.drawTime)
   currentDate.value = new Date(Number(dateArr[0]), Number(dateArr[1]) - 1, Number(dateArr[2]))
   dialogShow.value = true
@@ -123,21 +123,21 @@ const confirmPickerTime = () => {
 }
 
 // 查看选线选择器参数设置
-const defaultIndex = ref(Number(props.anonymity))
+const defaultIndex = ref(Number(props.visible))
 const columns = ['仅发起人可见', '参与人可见']
 const confirmAnonymous = (value: string, index: number) => {
-  modifyDrawData.anonymity = index
+  modifyDrawData.visible = index
   defaultIndex.value = index
-  anonymityPopupShow.value = false
+  visiblePopupShow.value = false
 }
 const cancelAnonymous = () => {
-  anonymityPopupShow.value = false
+  visiblePopupShow.value = false
 }
 // 提交信息
 const modifyTime = () => {
   const time = `${modifyDrawData.drawDate} ${modifyDrawData.drawTime}:00`
-  console.warn(time, Number(props.drawId))
-  modifyDraw(Number(props.drawId), time, modifyDrawData.anonymity).then((res: any) => {
+  console.warn(time, Number(props.drawId), modifyDrawData.visible)
+  modifyDraw(Number(props.drawId), time, modifyDrawData.visible).then((res: any) => {
     console.warn(res)
     if (res.code === 200) {
       Toast.success({
@@ -146,7 +146,7 @@ const modifyTime = () => {
           getDraw(Number(props.drawId)).then((res: any) => {
             console.warn(res)
             if (res.code === 200) {
-              emit('modifyConfig', res.data.endTime, res.data.anonymity)
+              emit('modifyConfig', res.data.endTime, res.data.visible)
               eventHub.$emit('refreshList', 'draw')
             }
           }).catch(() => {
@@ -191,9 +191,9 @@ const modifyTime = () => {
     <van-cell
       title="抽签查看权限"
       is-link
-      :value="modifyDrawData.anonymity?'参与人可见':'仅发起人可见'"
+      :value="modifyDrawData.visible?'参与人可见':'仅发起人可见'"
       title-style="text-align: left"
-      @click="anonymityPopupShow = true"
+      @click="visiblePopupShow = true"
     />
   </van-dialog>
   <van-popup v-model:show="datePopupShow" position="bottom">
@@ -221,7 +221,7 @@ const modifyTime = () => {
       @confirm="confirmPickerTime"
     />
   </van-popup>
-  <van-popup v-model:show="anonymityPopupShow" position="bottom">
+  <van-popup v-model:show="visiblePopupShow" position="bottom">
     <van-picker title="抽签查看权限" :columns="columns" :default-index="defaultIndex" @confirm="confirmAnonymous" @cancel="cancelAnonymous" />
   </van-popup>
 </template>

@@ -9,7 +9,7 @@ const router = useRouter()
 interface Draw{
   drawName: string
   drawNum: number
-  anonymous: number
+  anonymous: boolean
   visible: number
   describe: string
   duration: number
@@ -23,21 +23,18 @@ interface Option{
 }
 
 const key = ref(3) // 记录选项的唯一值
-const hide_checked = ref(false)
 const timePopup = ref(false)
 const currentTime = ref('00:30')
 
 const columns = ['仅发起人可见', '参与人可见']
-const anonymousPopup = ref(false)
+const visiblePopup = ref(false)
 const defaultIndex = ref(0)
 
 const drawInitData: Draw = reactive({
   drawName: '',
   drawNum: 1,
-  anonymous: 0,
-  visible: computed(() => {
-    return hide_checked.value ? 0 : 1
-  }),
+  anonymous: false,
+  visible: 0,
   describe: '',
   duration: 30,
   option: [{ // 设置初始值
@@ -102,9 +99,9 @@ const cancleModifyTime = () => {
 }
 
 const confirmAnonymous = (value: string, index: number) => {
-  drawInitData.anonymous = index
+  drawInitData.visible = index
   defaultIndex.value = index
-  anonymousPopup.value = false
+  visiblePopup.value = false
 }
 
 const commitDrawInfo = debounce(() => {
@@ -113,7 +110,7 @@ const commitDrawInfo = debounce(() => {
     visible: drawInitData.visible,
     duration: drawInitData.duration,
     spaceId: route.query.id,
-    anonymity: drawInitData.anonymous,
+    anonymity: drawInitData.anonymous ? 1 : 0,
     optionContent: [''],
     optionNum: [0],
   }
@@ -123,6 +120,7 @@ const commitDrawInfo = debounce(() => {
     newDrawData.optionContent.push(item.content)
     newDrawData.optionNum.push(item.num)
   })
+  console.warn(newDrawData)
   draw(newDrawData).then((res: any) => {
     console.warn(res)
     if (res.code === 500 || res.code === 501) {
@@ -189,7 +187,7 @@ const commitDrawInfo = debounce(() => {
     <div class="bg-white rounded mt-3 p-3 text-sm">
       <div class=" flex justify-between items-center border-b-1 border-hex-C9C9C9 py-1">
         <span>隐藏选项</span>
-        <span><van-switch v-model="hide_checked" size="1.5em" /></span>
+        <span><van-switch v-model="drawInitData.anonymous" size="1.5em" /></span>
       </div>
       <!-- <div class=" flex justify-between items-center border-b-1 border-hex-C9C9C9 py-3">
         <span> 每人可参与抽签次数 </span>
@@ -226,12 +224,12 @@ const commitDrawInfo = debounce(() => {
       <div class=" flex justify-between items-center border-b-1 border-hex-C9C9C9 py-3">
         <span>抽签结果查看权限</span>
         <span>
-          {{ drawInitData.anonymous?'参与人可见':'仅发起人可见' }}
+          {{ drawInitData.visible?'参与人可见':'仅发起人可见' }}
           <i>
-            <van-icon name="arrow" @click="anonymousPopup = true" />
+            <van-icon name="arrow" @click="visiblePopup = true" />
           </i>
-          <van-popup v-model:show="anonymousPopup" position="bottom">
-            <van-picker title="标题" :columns="columns" :default-index="1" @confirm="confirmAnonymous" @cancel="anonymousPopup = false" />
+          <van-popup v-model:show="visiblePopup" position="bottom">
+            <van-picker title="抽签结果查看权限" :columns="columns" :default-index="0" @confirm="confirmAnonymous" @cancel="visiblePopup = false" />
           </van-popup>
         </span>
       </div>
