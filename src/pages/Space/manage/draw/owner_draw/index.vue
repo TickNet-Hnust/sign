@@ -7,7 +7,10 @@ import { debounce } from '~/utils/shake'
 const route = useRoute()
 const router = useRouter()
 const loading = ref(true)
+const recordListValue = ref('')
+
 const { eventHub } = getCurrentInstance()?.proxy
+
 // 定义投票数据类型接口
 interface DrawData {
   type: string // 抽签或者投票
@@ -208,11 +211,11 @@ const toDrawRecord = () => {
     <div v-if="!drawData.anonymity">
       <div v-for="item in drawData.option" :key="item.optionId">
         <div class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="drawData.isDrawing&&item.optionId===drawData.optionChecked?show = true:''">
-          <div v-if="drawData.optionChecked !== item.optionId">
+          <div v-if="drawData.optionChecked !== item.optionId" @click="recordListValue=item.optionValue">
             <span>{{ item.optionValue }}</span>
             <span class="float-right text-gray-500 ">&times;{{ item.lastPoll }}</span>
           </div>
-          <div v-else-if="drawData.optionChecked === item.optionId">
+          <div v-else-if="drawData.optionChecked === item.optionId" @click="recordListValue=item.optionValue">
             <span>{{ item.optionValue }}</span>
             <span class="float-right text-gray-500">已抽中该项</span>
           </div>

@@ -23,6 +23,7 @@ interface VoteData {
   allPollNum: number
   status: number // 1表示已经结束
   text: string
+  anonymity: number // 是否匿名 1表示匿名，0表示不匿名
   optionWidth: Array<string> // 确定选项染色的宽度
 }
 
@@ -33,11 +34,13 @@ interface OptionData{
   poll: number
 }
 
+// 修改时间组件的父传子参数
 const props = reactive({
   endDate: '',
   endTime: '',
 })
 
+// 投票的初始化数据
 const voteData: VoteData = reactive({
   type: '投票',
   status: 1,
@@ -47,6 +50,7 @@ const voteData: VoteData = reactive({
   isVote: 0,
   optionChecked: [],
   option: [],
+  anonymity: 0,
   text: computed(() => {
     if (voteData.isVote) {
       return '已投票'
@@ -74,6 +78,7 @@ const voteData: VoteData = reactive({
   }),
 })
 
+// 数据初始化
 onMounted(() => {
   window.scrollTo(0, 0)
   getVote(voteId).then((res) => {
@@ -112,11 +117,13 @@ onMounted(() => {
 
 // 是否显示投票详细数据
 const show = ref(false)
-const optionCheckedValue = ref('')
+const optionCheckedValue = ref('') // 被点击的选项的值
+// 修改投票名单的展示
 const showChange = function() {
   show.value = !show
 }
 
+// 监听投票人员名单展示函数
 const handleClickOption = (id: number) => {
   show.value = true
   optionCheckedValue.value = voteData.option[id - 1].optionValue
@@ -163,17 +170,15 @@ const isClick = debounce(() => {
   }
 }, 500)
 
+// 修改投票时间，重新初始化数据
 const modifyEndTime = (endTime: string) => {
   voteData.endTime = endTime
   props.endDate = voteData.endTime.split(' ')[0]
   props.endTime = `${voteData.endTime.split(' ')[1].split(':')[0]}:${voteData.endTime.split(' ')[1].split(':')[1]}`
   getVote(voteId).then((res) => {
-    console.warn(res.data)
-    voteData.question = res.data.voteName
+    console.warn('修改时间的数据:', res.data)
     voteData.status = res.data.status
-    voteData.endTime = res.data.endTime
-    voteData.isVote = res.data.attend
-    voteData.voteNumLimit = res.data.voteNumLimit
+    voteData.isVote = res.data.attend // 是否参与投票
     props.endDate = voteData.endTime.split(' ')[0]
     props.endTime = `${voteData.endTime.split(' ')[1].split(':')[0]}:${voteData.endTime.split(' ')[1].split(':')[1]}`
     console.warn(props)
@@ -195,19 +200,6 @@ const toVoteRecord = () => {
     },
   })
 }
-
-// // 防抖
-// function debounce(fn: any, delay: any) {
-//   let timer: any
-//   return function() {
-//     if (timer)
-//       clearTimeout(timer)
-
-//     timer = setTimeout(() => {
-//       fn()
-//     }, delay)
-//   }
-// }
 
 </script>
 
@@ -266,12 +258,6 @@ const toVoteRecord = () => {
                 :style="{ width: voteData.optionWidth[item.id - 1] }"
                 style="white-space: nowrap; background-color: #c8e5c9"
               >
-                <van-icon
-                  name="checked"
-                  color="green"
-                  size="1.25em"
-                  class="relative left-10px leading-40px"
-                />
                 <div
                   class="
                     text-dark-900
@@ -300,6 +286,7 @@ const toVoteRecord = () => {
             <div
               v-else-if="item.poll > 0 && !optionCheck(item.id)"
               class="mt-4 border-true-gray-200 border rounded bg-white"
+              @click="handleClickOption(item.id)"
             >
               <div
                 class="
@@ -348,6 +335,7 @@ const toVoteRecord = () => {
                 bg-light-50
                 rounded
               "
+              @click="handleClickOption(item.id)"
             >
               <span class="leading-40px m-10px text-sm">{{
                 item.optionValue
@@ -399,6 +387,7 @@ const toVoteRecord = () => {
     </div>
   </div>
   <records-list
+    v-if="!voteData.anonymity"
     :show="show"
     :type="voteData.type"
     :active-id="voteId"

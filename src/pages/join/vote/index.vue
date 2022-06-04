@@ -22,6 +22,7 @@ interface VoteData {
   allPollNum: number
   status: number // 1表示已经结束
   text: string
+  anonymity: number // 是否匿名 1表示匿名，0表示不匿名
   optionWidth: Array<string> // 确定选项染色的宽度
 }
 
@@ -32,11 +33,13 @@ interface OptionData{
   poll: number
 }
 
+// 修改时间组件的父传子参数
 const props = reactive({
   endDate: '',
   endTime: '',
 })
 
+// 投票的初始化数据
 const voteData: VoteData = reactive({
   type: '投票',
   status: 1,
@@ -46,6 +49,7 @@ const voteData: VoteData = reactive({
   isVote: 0,
   optionChecked: [],
   option: [],
+  anonymity: 0,
   text: computed(() => {
     if (voteData.isVote) {
       return '已投票'
@@ -73,6 +77,7 @@ const voteData: VoteData = reactive({
   }),
 })
 
+// 数据初始化
 onMounted(() => {
   window.scrollTo(0, 0)
   getVote(voteId).then((res: any) => {
@@ -111,11 +116,13 @@ onMounted(() => {
 
 // 是否显示投票详细数据
 const show = ref(false)
-const optionCheckedValue = ref('')
+const optionCheckedValue = ref('') // 被点击的选项的值
+// 修改投票名单的展示
 const showChange = function() {
   show.value = !show
 }
 
+// 监听投票人员名单展示函数
 const handleClickOption = (id: number) => {
   show.value = true
   optionCheckedValue.value = voteData.option[id - 1].optionValue
@@ -133,13 +140,13 @@ const optionCheck = function(optionId: number) {
 
 // 投票按钮
 const isClick = debounce(() => {
+  console.warn('vote click函数被执行')
   const voteOption: Array<string> = []
   console.warn(voteData.optionChecked)
   if (voteData.optionChecked.length === 0) {
     Dialog.alert({
       message: '请至少选择一个选项！',
     }).then(() => {
-      // on close
     })
   }
   else {
@@ -171,13 +178,13 @@ const isClick = debounce(() => {
     </van-loading>
   </div>
   <div v-else class="bg-gray-500/8 h-full">
-    <div class="p-3 ">
-      <div class="p-3 text-left border border-gray-200 bg-white  rounded">
+    <div class="p-3">
+      <div class="p-3 text-left border border-gray-200 bg-white rounded">
         <div class="mb-2">
           {{ voteData.question }}
         </div>
         <van-tag type="primary" color="#28B648" size="medium" class="mr-3">
-          {{ voteData.voteNumLimit>1?'多选':'单选' }}
+          {{ voteData.voteNumLimit > 1 ? "多选" : "单选" }}
         </van-tag>
         <van-tag type="primary" color="#66CCFF" size="medium">
           {{ `${voteData.optionChecked.length} / ${voteData.voteNumLimit}` }}
@@ -211,28 +218,33 @@ const isClick = debounce(() => {
             <div
               v-if="optionCheck(item.id)"
               class="mt-4 h-42px bg-light-50 border rounded"
-              style="border-color:#1FA71F"
+              style="border-color: #1fa71f"
               @click="handleClickOption(item.id)"
             >
               <div
                 class="border-none h-40px leading-40px text-left flex"
-                :style="{ width: voteData.optionWidth[item.id-1] }"
-                style="
-                  white-space: nowrap;
-                  background-color: #C8E5C9;
-                "
+                :style="{ width: voteData.optionWidth[item.id - 1] }"
+                style="white-space: nowrap; background-color: #c8e5c9"
               >
-                <van-icon
-                  name="checked"
-                  color="green"
-                  size="1.25em"
-                  class="relative left-10px leading-40px"
-                />
-                <div class="text-dark-900 left-3 relative w-40px leading-40px text-sm">
+                <div
+                  class="
+                    text-dark-900
+                    left-3
+                    relative
+                    w-40px
+                    leading-40px
+                    text-sm
+                  "
+                >
                   {{ item.optionValue }}
                 </div>
                 <span
-                  class="absolute right-50px leading-40px text-xs text-cool-gray-400"
+                  class="
+                    absolute
+                    right-50px
+                    leading-40px
+                    text-cool-gray-400 text-sm
+                  "
                 >
                   {{ item.poll + "票" }}
                 </span>
@@ -242,20 +254,40 @@ const isClick = debounce(() => {
             <div
               v-else-if="item.poll > 0 && !optionCheck(item.id)"
               class="mt-4 border-true-gray-200 border rounded bg-white"
+              @click="handleClickOption(item.id)"
             >
               <div
-                class="border-none h-40px bg-gray-300 leading-40px text-left flex"
-                :style="{ width: voteData.optionWidth[item.id-1] }"
+                class="
+                  border-none
+                  h-40px
+                  bg-gray-300
+                  leading-40px
+                  text-left
+                  flex
+                "
+                :style="{ width: voteData.optionWidth[item.id - 1] }"
                 style="white-space: nowrap"
               >
                 <!-- <van-icon name="checked" color="green" size="1.25em" class="relative left-10px  leading-40px" /> -->
-                <div class="text-dark-900 left-10px relative w-40px leading-40px text-sm">
-                  {{
-                    item.optionValue
-                  }}
+                <div
+                  class="
+                    text-dark-900
+                    left-10px
+                    relative
+                    w-40px
+                    leading-40px
+                    text-sm
+                  "
+                >
+                  {{ item.optionValue }}
                 </div>
                 <span
-                  class="absolute right-50px leading-40px text-sm text-cool-gray-400"
+                  class="
+                    absolute
+                    right-50px
+                    leading-40px
+                    text-sm text-cool-gray-400
+                  "
                 >
                   {{ item.poll + "票" }}
                 </span>
@@ -263,11 +295,27 @@ const isClick = debounce(() => {
             </div>
             <div
               v-else-if="item.poll === 0"
-              class="mt-4 border-true-gray-200 border h-42px  text-dark-900 text-left bg-light-50 rounded"
+              class="
+                mt-4
+                border-true-gray-200 border
+                h-42px
+                text-dark-900 text-left
+                bg-light-50
+                rounded
+              "
+              @click="handleClickOption(item.id)"
             >
-              <span class="leading-40px m-10px text-sm">{{ item.optionValue }}</span>
+              <span class="leading-40px m-10px text-sm">{{
+                item.optionValue
+              }}</span>
               <span
-                class="absolute right-50px leading-20px text-xs text-cool-gray-400 pt-10px"
+                class="
+                  absolute
+                  right-50px
+                  leading-20px
+                  text-xs text-cool-gray-400
+                  pt-10px
+                "
               >
                 {{ item.poll + "票" }}
               </span>
@@ -282,9 +330,9 @@ const isClick = debounce(() => {
         <van-button
           type="primary"
           size="large"
-          :color="voteData.isVote||voteData.status?'#9DD49D':'#1FA71F'"
+          :color="voteData.isVote || voteData.status ? '#9DD49D' : '#1FA71F'"
           class="my-10px rounded"
-          :disabled="voteData.isVote===1 || voteData.status ===1"
+          :disabled="voteData.isVote === 1 || voteData.status === 1"
           @click="isClick()"
         >
           {{ voteData.text }}
@@ -292,7 +340,14 @@ const isClick = debounce(() => {
       </div>
     </div>
   </div>
-  <records-list :show="show" :type="voteData.type" :active-id="voteId" :option-checked-value="optionCheckedValue" @show-change="showChange()" />
+  <records-list
+    v-if="!voteData.anonymity"
+    :show="show"
+    :type="voteData.type"
+    :active-id="voteId"
+    :option-checked-value="optionCheckedValue"
+    @show-change="showChange()"
+  />
 </template>
 
 <route lang="yaml">
