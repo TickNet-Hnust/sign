@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-13 17:40:33
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-30 09:23:54
+ * @LastEditTime: 2022-06-04 10:18:07
 -->
 <script lang="ts" setup>
 import { signStuList } from '~/api/record/signRecord'
@@ -142,8 +142,10 @@ emit('getTotal', totalRecord)
 </script>
 
 <template>
-  <div class="text-right text-hex-999 mt-5 mr-3" @click="onRefresh">
-    <van-icon name="replay" />刷新
+  <div class="text-right text-hex-999 mt-5 mr-3 mb-2">
+    <span class="bg-hex-10AA62 text-white px-2 py-1 rounded"  @click="onRefresh">
+      <van-icon name="replay" />刷新
+  </span>
   </div>
   <div class="bg-white border border-hex-D9DADB rounded p-3 border-t-2 border-t-hex-41B062">
     <ul class="flex py-2 text-sm">
