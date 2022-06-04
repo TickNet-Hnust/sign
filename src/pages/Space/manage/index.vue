@@ -2,8 +2,8 @@
  * @Descipttion:
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: 刘晴
- * @LastEditTime: 2022-06-04 10:00:10
+ * @LastEditors: 曹俊
+ * @LastEditTime: 2022-06-04 15:27:45
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
@@ -169,13 +169,11 @@ const deleteSpace = () => {
         path:'/Space',
         query:{dismissSpace:true}
       })
-    } else if(res.code === 501) {
+    } else if(res.code !== 200) {
       Notify({
+        type:'warning',
         message: res.msg
       })
-    }
-    else {
-      Notify({ type:'warning',message:res.msg})
     }
   })
 }
@@ -232,6 +230,11 @@ const onConfirmAdmin = (index, value) => {
           member_list.value = res.rows
           showAdminChange.value = false
           Notify({ type: 'success', message: '操作成功' })
+        }else if(res.code !== 200){
+          Notify({
+          type: 'warning',
+          message: res.msg
+        })
         }
       })
     })
@@ -248,6 +251,11 @@ const onConfirmDeleteAdmin = () => {
         member_list.value = res.rows
         showAdminChange.value = false
         Notify({ type: 'success', message: '操作成功' })
+      }else if(res.code !== 200){
+        Notify({
+        type: 'warning',
+        message: res.msg
+      })
       }
     })
   })
@@ -260,6 +268,11 @@ const onConfirmDeleteStu = () => {
         member_list.value = res.rows
         showStuChange.value = false
         Notify({ type: 'success', message: '操作成功' })
+      }else if(res.code !== 200){
+        Notify({
+        type: 'warning',
+        message: res.msg
+      })
       }
     })
   })
@@ -272,6 +285,11 @@ const onConfirmDeleteStudent = () => {
         member_list.value = res.rows
         showStudentChange.value = false
         Notify({ type: 'success', message: '操作成功' })
+      }else if(res.code !== 200){
+        Notify({
+        type: 'warning',
+        message: res.msg
+      })
       }
     })
   })
@@ -297,6 +315,11 @@ const onConfirmStu = (index, value) => {
           member_list.value = res.rows
           showStuChange.value = false
           Notify({ type: 'success', message: '操作成功' })
+        } else if(res.code !== 200){
+          Notify({
+          type: 'warning',
+          message: res.msg
+          })
         }
       })
     })
@@ -319,8 +342,9 @@ const quitSpace = () => {
         path:'/Space',
         query:{quitSpace:true}
       })
-    } else if(res.code === 501){
+    } else if(res.code !== 200){
       Notify({
+        type: 'warning',
         message: res.msg
       })
     }
@@ -329,11 +353,13 @@ const quitSpace = () => {
 onMounted(() => {
   window.scrollTo(0, 0)
 })
+//下拉刷新成员列表
 const refreshing = ref(false)
 const onRefresh = () =>{
   setTimeout(() =>{
     getSpaceMemberList(id.value).then((res) => {
   if (res.code === 200){
+    spaceList.count = res.total
     member_list.value = res.rows
     Toast('刷新成功');
     refreshing.value = false;

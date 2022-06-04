@@ -127,7 +127,7 @@ const modifyTime = () => {
           getVote(Number(props.voteId)).then((res: any) => {
             console.warn(res)
             if (res.code === 200) {
-              emit('modifyEndTime', res.data.endTime)
+              emit('modifyEndTime')
               eventHub.$emit('refreshList', 'vote')
             }
           }).catch(() => {
