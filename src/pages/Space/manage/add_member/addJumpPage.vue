@@ -3,15 +3,15 @@
  * @Author: 刘晴
  * @Date: 2022-05-07 15:08:29
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-06-05 12:50:57
+ * @LastEditTime: 2022-06-08 17:36:22
 -->
 <script lang="ts" setup>
 import { enterSpaceByCode } from '~/api/record/index'
 import { getSignSpace } from '~/api/mySpace/index'
+import { getSpaceId, getQRCode } from '~/utils/cookies'
 import { Toast } from 'vant'
 const router = useRouter()
-const route = useRoute()
-const spaceId = route.query.spaceId
+const spaceId = getSpaceId()
 const spaceMsg = ref({
   id: '',
   spaceName: '',
@@ -20,7 +20,7 @@ const spaceMsg = ref({
 })
 const request = reactive({
   spaceId: spaceId,
-  code: route.query.code
+  code: getQRCode()
 })
 const joinSpace = () => {
   Toast.loading({

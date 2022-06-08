@@ -2,7 +2,6 @@
 import { Notify,Toast } from 'vant'
 import { getSignSpace, quitSignSpace } from '~/api/mySpace/index'
 import { getSpaceMemberList } from '~/api/mySpace/spaceMember'
-import { getUserId } from '~/utils/cookies'
 const route = useRoute()
 const router = useRouter()
 const showLoading = ref(true)
@@ -46,7 +45,6 @@ getSpaceMemberList(id.value).then((res: any) => {
 // 退出空间的方法
 const quitSpace = () => {
   quitSignSpace(quitData).then((res) => {
-    console.log(getUserId(), 111)
     if (res.code === 200) {
       Notify({ type: 'primary', message: '退出成功' })
       router.replace({

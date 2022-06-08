@@ -3,16 +3,14 @@
  * @Author: caojun
  * @Date: 2022-05-02 10:21:22
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-06-07 20:55:46
+ * @LastEditTime: 2022-06-08 13:06:16
  */
 import Cookies from 'js-cookie'
 
 const TokenKey = 'token'
-const RoleKey = 'roles'
-const nameKey = 'name'
-const avatarKey = 'avatar'
-const userIdKey = 'userId'
-
+const QRCodeKey = 'qrCode'
+const SpaceIdKey = 'spaceId'
+const SignIdKey = 'signId'
 
 
 export function getToken() {
@@ -27,50 +25,40 @@ export function removeToken() {
   return Cookies.remove(TokenKey)
 }
 
-export function getRoles() {
-  return Cookies.get(RoleKey)
+export function getSpaceId() {
+  return Cookies.get(SpaceIdKey)
 }
 
-export function setRoles(role: string) {
-  return Cookies.set(RoleKey, role)
+export function setSpaceId(spaceId: String) {
+  return Cookies.set(SpaceIdKey, spaceId)
 }
 
-export function removeRoles() {
-  return Cookies.remove(RoleKey)
+export function removeSpaceId() {
+  return Cookies.remove(SpaceIdKey)
 }
 
-export function getName() {
-  return Cookies.get(nameKey)
+export function getQRCode() {
+  return Cookies.get(QRCodeKey)
 }
 
-export function setName(name: string) {
-  return Cookies.set(nameKey, name)
+export function setQRCode(qrCode: String) {
+  return Cookies.set(QRCodeKey, qrCode)
 }
 
-export function removeName() {
-  return Cookies.remove(nameKey)
+export function removeQRCode() {
+  return Cookies.remove(QRCodeKey)
 }
 
-export function getAvatar() {
-  return Cookies.get(avatarKey)
+export function getSignId() {
+  return Cookies.get(SignIdKey)
 }
 
-export function setAvatar(avatar: string) {
-  return Cookies.set(avatarKey, avatar)
+export function setSignId(signId: String) {
+  return Cookies.set(SignIdKey, signId)
 }
 
-export function removeAvatar() {
-  return Cookies.remove(avatarKey)
+export function removeSignId() {
+  return Cookies.remove(SignIdKey)
 }
 
-export function setUserId(userId: string) {
-  return Cookies.set(userIdKey, userId)
-}
 
-export function removeUserId() {
-  return Cookies.remove(userIdKey)
-}
-
-export function getUserId() {
-  return Cookies.get(userIdKey)
-}

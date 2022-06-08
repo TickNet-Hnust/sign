@@ -2,14 +2,13 @@
  * @Descipttion:
  * @Author: 曹俊
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: 曹俊
- * @LastEditTime: 2022-06-04 17:31:05
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-06-08 17:49:02
 -->
 <script setup leng="ts">
 import { Notify, Picker, Toast } from 'vant'
 import { deleteSignSpace, getSignSpace, quitSignSpace, updateSignSpace } from '~/api/mySpace/index'
 import { deleteSpaceMember, getSpaceMemberList, updateSpaceMember } from '~/api/mySpace/spaceMember'
-import { getUserId } from '~/utils/cookies'
 import { getCurrentInstance } from 'vue'
 const { eventHub } = getCurrentInstance()?.proxy
 const route = useRoute()

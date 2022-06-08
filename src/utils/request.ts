@@ -3,13 +3,13 @@
  * @Author: 刘晴
  * @Date: 2022-05-01 19:32:33
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-06-08 10:16:28
+ * @LastEditTime: 2022-06-08 13:01:17
  */
 // 封装axios
 import axios from 'axios'
 // 引入vant组件
 import { Toast } from 'vant'
-import { getToken, removeAvatar, removeName, removeRoles, removeToken, removeUserId } from './cookies'
+import { getToken, removeToken } from './cookies'
 // 创建axios实例
 const service = axios.create({
   // 请求路由
@@ -56,10 +56,6 @@ service.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       removeToken()
-      removeRoles()
-      removeName()
-      removeAvatar()
-      removeUserId()
       location.reload()
     }
     return Promise.reject(error)

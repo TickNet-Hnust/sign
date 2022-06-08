@@ -3,19 +3,19 @@
  * @Author: 刘晴
  * @Date: 2022-05-07 15:08:29
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-06-07 14:33:43
+ * @LastEditTime: 2022-06-08 13:28:37
 -->
 <script lang="ts" setup>
 import { signByQRCode } from '~/api/record/index'
+import { getSignId, getQRCode } from '~/utils/cookies'
 import { Toast } from 'vant'
 const router = useRouter()
-const route = useRoute()
 const request = reactive({
   ip: '',
   browser: '',
   os: '',
-  signId: route.query.signId,
-  code: route.query.code,
+  signId: getSignId(),
+  code: getQRCode(),
 })
 const helpSign = () => {
   Toast.loading({
