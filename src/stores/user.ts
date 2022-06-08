@@ -2,8 +2,8 @@
  * @Descipttion:
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
- * @LastEditors: caojun
- * @LastEditTime: 2022-05-28 21:31:33
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-06-05 11:02:20
  */
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { loginByCode, loginByTest } from '~/api/system'
@@ -38,9 +38,9 @@ export const useUserStore = defineStore('user', () => {
   const token = ref('')
   const userName = ref('')
   const userId = ref('')
-  const CODE = ref('')
-  const corpid = 'wx6219dbfa9b86489e'
-  const redirect_uri = 'signff.ticknet.hnust.cn'
+  // const CODE = ref('')
+  // const corpid = 'wx6219dbfa9b86489e'
+  // let redirect_uri = 'signff.ticknet.hnust.cn'
 
   // 测试登录方法
   function loginSignByTest() {
@@ -68,17 +68,18 @@ export const useUserStore = defineStore('user', () => {
     })
   }
 
-  function loginSignByCode() {
+  function loginSignByCode(code: any) {
     return new Promise((resolve, reject) => {
-      console.warn(CODE)
-      if (String(CODE.value) === 'undefined') {
-        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${corpid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
-        console.warn('第一次的CODE:', CODE)
-      }
+      console.warn(code)
+      // if (String(CODE.value) === 'undefined' || String(CODE.value) === '' || String(CODE.value) === null) {
+      //   if(url!=='') redirect_uri = redirect_uri + url
+      //   window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${corpid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect`
+      //   console.warn('第一次的CODE:', CODE)
+      // }
       console.warn('loginSign')
-      loginByCode(String(CODE.value)).then((res: any) => {
+      loginByCode(String(code)).then((res: any) => {
         console.warn(res)
-        console.warn('code', CODE.value)
+        console.warn('code', code)
         if (res.code === 200) {
           token.value = res.data.access_token
           userName.value = res.data.userName
@@ -106,7 +107,6 @@ export const useUserStore = defineStore('user', () => {
     token,
     userName,
     userId,
-    CODE,
   }
 })
 

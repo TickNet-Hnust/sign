@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-04-20 21:46:45
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-20 13:46:17
+ * @LastEditTime: 2022-06-07 22:20:34
 -->
 <script setup lang="ts">
 import { spaceQRcode } from '~/api/record/index'
@@ -37,7 +37,7 @@ onMounted(() => {
         class="mt-8 p-4 font-semibold rounded bg-gray-250 border border-gray-300"
       >
         <div>
-          扫码追加成员（<span style="color: rgb(0, 102, 255)">刷新</span>）
+          扫码追加成员
         </div>
         <div>
           <div class="mt-5" v-if="loadingImg">

@@ -3,18 +3,13 @@
  * @Author: 刘晴
  * @Date: 2022-05-07 15:08:29
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-06-04 21:12:15
+ * @LastEditTime: 2022-06-07 14:33:43
 -->
 <script lang="ts" setup>
 import { signByQRCode } from '~/api/record/index'
 import { Toast } from 'vant'
 const router = useRouter()
 const route = useRoute()
-import config from '~/config/index'
-import { useUserStore } from '~/stores/user'
-const user = useUserStore()
-// 扫码后先登录一次
-config.isLoginTest ? user.loginSignByTest() : user.loginSignByCode()
 const request = reactive({
   ip: '',
   browser: '',

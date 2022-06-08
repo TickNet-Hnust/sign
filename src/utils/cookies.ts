@@ -2,8 +2,8 @@
  * @Description:
  * @Author: caojun
  * @Date: 2022-05-02 10:21:22
- * @LastEditors: caojun
- * @LastEditTime: 2022-05-28 21:33:38
+ * @LastEditors: 刘晴
+ * @LastEditTime: 2022-06-07 20:55:46
  */
 import Cookies from 'js-cookie'
 
@@ -13,12 +13,14 @@ const nameKey = 'name'
 const avatarKey = 'avatar'
 const userIdKey = 'userId'
 
+
+
 export function getToken() {
   return Cookies.get(TokenKey)
 }
-
+// { expires: 7 }
 export function setToken(token: string) {
-  return Cookies.set(TokenKey, token)
+  return Cookies.set(TokenKey, token)//设置cookie7天过期
 }
 
 export function removeToken() {

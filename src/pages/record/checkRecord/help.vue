@@ -112,9 +112,7 @@ const changeTab = () => {
         </van-tab>
         <van-tab title="生成二维码" name="byCode">
           <div class="mt-6 border-1 p-4 border-gray-500/50 font-semibold rounded bg-white">
-            辅助扫码签到（
-            <span style="color: rgb(0, 102, 255)" @click="refresh()">刷新</span>
-            ）
+            辅助扫码签到
             <div class="mt-5" v-if="loadingImg">
               <van-loading color="#999" type="spinner" size="30px" class="text-14px font-400">加载中...</van-loading>
             </div>

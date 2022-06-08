@@ -3,7 +3,7 @@
  * @Author: 刘晴
  * @Date: 2022-05-01 19:32:33
  * @LastEditors: 刘晴
- * @LastEditTime: 2022-05-31 16:51:48
+ * @LastEditTime: 2022-06-08 10:16:28
  */
 // 封装axios
 import axios from 'axios'
@@ -39,6 +39,7 @@ service.interceptors.response.use(
         position: 'top',
         duration: 1000,
       })
+      removeToken()
       setTimeout(() => {
         location.href = '/'
       }, 1000)
