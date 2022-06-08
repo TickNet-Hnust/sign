@@ -37,23 +37,8 @@ const stop_roll = () => {
 const checked_list = reactive([])
 const { pause, resume, isActive } = useIntervalFn(
   () => {
-    if(checked_list.length < name_list.value.length) {
-      let r = Math.round(Math.random() * (name_list.value.length - 1))
-      while (1) {
-        let flag = true
-        for (let i = 0; i < checked_list.length; i++) {
-          if (checked_list[i].name === name_list.value[r]) {
-            flag = false
-            break
-          }
-        }
-        if (flag)
-          break
-        else
-          r = Math.round(Math.random() * (name_list.value.length - 1))
-      }
-      check_name.value = name_list.value[r]
-    }
+   let r = Math.round(Math.random() * (name_list.value.length - 1))
+    check_name.value = name_list.value[r]
   },
   100,
   {
