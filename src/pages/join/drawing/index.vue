@@ -3,12 +3,9 @@ import { Toast } from 'vant'
 import { addDrawRecord, drawRecordCount, getDrawNum } from '~/api/myJoin/draw'
 import { getDraw } from '~/api/myJoin/record'
 import { debounce } from '~/utils/shake'
-
 const route = useRoute()
 const loading = ref(true)
-
 const { eventHub } = getCurrentInstance()?.proxy
-
 // 定义投票数据类型接口
 interface DrawData {
   type: string // 抽签或者投票
@@ -26,7 +23,6 @@ interface DrawData {
   option: Array<OptionData> // 选项具体数据
   text: string // 按钮的文本
 }
-
 // 定义投票选项数据类型接口
 interface OptionData{
   optionId: number // 选项的识别
@@ -34,16 +30,13 @@ interface OptionData{
   allPoll: number // 所有票数集合
   lastPoll: number // 剩余的票数
 }
-
 const props = reactive({
   endDate: '',
   endTime: '',
   visible: 0,
 })
-
 // 根据路由获得抽签活动的id
 const drawId = Number(route.query.id)
-
 const drawData: DrawData = reactive({
   type: '抽签',
   anonymity: 0,
@@ -82,7 +75,6 @@ const drawData: DrawData = reactive({
       return drawData.isDrawing ? '已抽签' : '已结束'
   }),
 })
-
 onMounted(() => {
   window.scrollTo(0, 0)
   getDraw(drawId).then((res) => {
@@ -121,7 +113,6 @@ onMounted(() => {
     })
   })
 })
-
 const resultShow = ref(false) // 控制结果展示
 const isClick = debounce(() => {
   addDrawRecord(drawId).then((res: any) => {
@@ -151,10 +142,8 @@ const isClick = debounce(() => {
     }
   })
 }, 500)
-
 const normal = 'background-color: #ffffff;border-color: #E1E2E3;'// 普通选项的样式
 const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后选项的样式
-
 // 监听点击选项事件
 const clickedOptionValue = ref('')
 const show = ref(false)
@@ -165,7 +154,6 @@ const handleOptionClick = (val: string) => {
   show.value = true
   clickedOptionValue.value = val
 }
-
 </script>
 
 <template>

@@ -26,6 +26,7 @@ const props = defineProps({
 
 // 接受父组件方法，改变show的值
 const emit = defineEmits(['showChange'])
+
 const fun = function() {
   emit('showChange')
 }
@@ -46,8 +47,22 @@ const listPage: ListPage = reactive({
   pageSize: 10,
 })
 
+// const optionCheckedValue = computed(() => {
+//   return props.optionCheckedValue
+// })
+// let flag = 1
+// watch(optionCheckedValue, (newVal: string) => {
+//   console.warn('optionCheckedValue被更改')
+//   console.warn(newVal)
+//   recordList.length = 0
+//   // eslint-disable-next-line no-empty
+//   if (flag === 1) { flag = flag + 1}
+//   else onLoad()
+// })
 const onLoad = () => {
-  if (props.type === '抽签') {
+  console.warn('onload')
+  if (String(props.type) === '抽签') {
+    console.warn('查看抽签人员名单')
     getDrawRecordList(Number(props.activeId), listPage.pageNum, listPage.pageSize, String(props.optionCheckedValue), 1).then((res: any) => {
       let i = 1
       console.warn(res)
@@ -68,7 +83,8 @@ const onLoad = () => {
       listPage.loading = false
     })
   }
-  else {
+  else if (String(props.type) === '投票') {
+    console.warn('查看投票人员名单')
     getVoteRecordList(Number(props.activeId), listPage.pageNum, listPage.pageSize, String(props.optionCheckedValue), 1).then((res: any) => {
       let i = 1
       console.warn(res)

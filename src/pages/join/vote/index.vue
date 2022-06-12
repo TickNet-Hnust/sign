@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 定义投票数据类型接口
 import { onMounted } from 'vue'
-import { Dialog } from 'vant'
+import { Dialog, Toast } from 'vant'
 import { addVoteRecord, getAllVoteRecord } from '~/api/myJoin/vote'
 import { getVote } from '~/api/myJoin/record'
 import { debounce } from '~/utils/shake'
@@ -119,13 +119,13 @@ const show = ref(false)
 const optionCheckedValue = ref('') // 被点击的选项的值
 // 修改投票名单的展示
 const showChange = function() {
-  show.value = !show
+  show.value = !show.value
 }
-
 // 监听投票人员名单展示函数
 const handleClickOption = (id: number) => {
   show.value = true
   optionCheckedValue.value = voteData.option[id - 1].optionValue
+  console.warn(optionCheckedValue.value)
 }
 
 // 检查选项是否选中，选中返回true，未选中返回false
@@ -169,6 +169,36 @@ const isClick = debounce(() => {
   }
 }, 500)
 
+const refreshLoading = ref(false)
+const onRefresh = () => {
+  // loading.value = true
+  loading.value = true
+  // voteData.option.length = 0
+  console.warn('刷新')
+  getVote(voteId).then((res: any) => {
+    console.warn(res)
+    voteData.status = res.data.status
+    voteData.isVote = res.data.attend
+    voteData.option.forEach((optionItem: any) => {
+      for (const key in res.data.voteNums) {
+        if (key === optionItem.optionValue)
+          optionItem.poll = res.data.voteNums[key]
+      }
+    })
+    if (res.data.presentChoices !== null) {
+      res.data.presentChoices.forEach((key: string) => {
+        for (const item of voteData.option) {
+          if (item.optionValue === key)
+            voteData.optionChecked.push(item.id)
+        }
+      })
+    }
+    voteData.optionChecked = Array.from(new Set(voteData.optionChecked))
+    loading.value = false
+    Toast.success('刷新成功')
+    refreshLoading.value = false
+  })
+}
 </script>
 
 <template>
@@ -178,99 +208,103 @@ const isClick = debounce(() => {
     </van-loading>
   </div>
   <div v-else class="bg-gray-500/8 h-full">
-    <div class="p-3">
-      <div class="p-3 text-left border border-gray-200 bg-white rounded">
-        <div class="mb-2">
-          {{ voteData.question }}
-        </div>
-        <van-tag type="primary" color="#28B648" size="medium" class="mr-3">
-          {{ voteData.voteNumLimit > 1 ? "多选" : "单选" }}
-        </van-tag>
-        <van-tag type="primary" color="#66CCFF" size="medium">
-          {{ `${voteData.optionChecked.length} / ${voteData.voteNumLimit}` }}
-        </van-tag>
-      </div>
-      <!-- 遍历选项 -->
-      <div>
-        <van-checkbox-group
-          v-for="item in voteData.option"
-          :key="item.id"
-          v-model="voteData.optionChecked"
-          :max="voteData.voteNumLimit"
-        >
-          <!-- 判断是否已经投票 -->
-          <!-- 未投票 -->
-          <div
-            v-if="voteData.isVote === 0 && voteData.status === 0"
-            class="mt-4 border-gray-200 border p-10px bg-white rounded text-sm"
-          >
-            <van-checkbox
-              :name="item.id"
-              checked-color="#dde1e3"
-              icon-size="16px"
-            >
-              {{ item.optionValue }}
-            </van-checkbox>
+    <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh">
+      <div class="p-3">
+        <div class="p-3 text-left border border-gray-200 bg-white rounded">
+          <div class="mb-2">
+            {{ voteData.question }}
           </div>
-          <!-- 已投票 -->
-          <div v-else>
-            <!-- 被选中的选项样式 -->
+          <van-tag type="primary" color="#28B648" size="medium" class="mr-3">
+            {{ voteData.voteNumLimit > 1 ? "多选" : "单选" }}
+          </van-tag>
+          <van-tag type="primary" color="#66CCFF" size="medium">
+            {{ `${voteData.optionChecked.length} / ${voteData.voteNumLimit}` }}
+          </van-tag>
+        </div>
+        <!-- 遍历选项 -->
+        <div>
+          <van-checkbox-group
+            v-for="item in voteData.option"
+            :key="item.id"
+            v-model="voteData.optionChecked"
+            :max="voteData.voteNumLimit"
+          >
+            <!-- 判断是否已经投票 -->
+            <!-- 未投票 -->
             <div
-              v-if="optionCheck(item.id)"
-              class="mt-4 h-42px bg-light-50 border rounded"
-              style="border-color: #1fa71f"
-              @click="handleClickOption(item.id)"
+              v-if="voteData.isVote === 0 && voteData.status === 0"
+              class="mt-4 border-gray-200 border p-10px bg-white rounded text-sm"
             >
+              <van-checkbox
+                :name="item.id"
+                checked-color="#dde1e3"
+                icon-size="16px"
+              >
+                {{ item.optionValue }}
+              </van-checkbox>
+            </div>
+            <!-- 已投票 -->
+            <div v-else>
+              <!-- 被选中的选项样式 -->
               <div
-                class="border-none h-40px leading-40px text-left flex"
-                :style="{ width: voteData.optionWidth[item.id - 1] }"
-                style="white-space: nowrap; background-color: #c8e5c9"
+                v-if="optionCheck(item.id)"
+                class="mt-4 h-42px bg-light-50 rounded flex items-center border"
+                style="border-color: #1fa71f"
+                @click="handleClickOption(item.id)"
               >
                 <div
-                  class="
+                  class="h-42px leading-42px text-left flex rounded checkedBorder border"
+                  :style="{ width: voteData.optionWidth[item.id - 1]}"
+                  style="white-space: nowrap; background-color: #c8e5c9;;"
+                  :class="voteData.optionWidth[item.id - 1]==='100%'?'':'checkedOption'"
+                >
+                  <div
+                    class="
                     text-dark-900
                     left-3
                     relative
-                    w-40px
                     leading-40px
                     text-sm
                   "
-                >
-                  {{ item.optionValue }}
-                </div>
-                <span
-                  class="
+                  >
+                    {{ item.optionValue }}
+                  </div>
+                  <span
+                    class="
                     absolute
                     right-50px
                     leading-40px
                     text-cool-gray-400 text-sm
                   "
-                >
-                  {{ item.poll + "票" }}
-                </span>
+                  >
+                    {{ item.poll + "票" }}
+                  </span>
+                </div>
               </div>
-            </div>
-            <!-- 没有选上但是有票数的选项 -->
-            <div
-              v-else-if="item.poll > 0 && !optionCheck(item.id)"
-              class="mt-4 border-true-gray-200 border rounded bg-white"
-              @click="handleClickOption(item.id)"
-            >
+              <!-- 没有选上但是有票数的选项 -->
               <div
-                class="
-                  border-none
-                  h-40px
+                v-else-if="item.poll > 0 && !optionCheck(item.id)"
+                class="mt-4 border-true-gray-200 border rounded bg-white h-42px flex items-center border"
+                @click="handleClickOption(item.id)"
+              >
+                <div
+                  class="
+                  border
+                  h-42px
                   bg-gray-300
                   leading-40px
                   text-left
                   flex
+                  rounded
+                  uncheckedBorder
                 "
-                :style="{ width: voteData.optionWidth[item.id - 1] }"
-                style="white-space: nowrap"
-              >
-                <!-- <van-icon name="checked" color="green" size="1.25em" class="relative left-10px  leading-40px" /> -->
-                <div
-                  class="
+                  :class="voteData.optionWidth[item.id - 1]==='100%'?'':'checkedOption'"
+                  :style="{ width: voteData.optionWidth[item.id - 1] }"
+                  style="white-space: nowrap"
+                >
+                  <!-- <van-icon name="checked" color="green" size="1.25em" class="relative left-10px  leading-40px" /> -->
+                  <div
+                    class="
                     text-dark-900
                     left-10px
                     relative
@@ -278,24 +312,24 @@ const isClick = debounce(() => {
                     leading-40px
                     text-sm
                   "
-                >
-                  {{ item.optionValue }}
-                </div>
-                <span
-                  class="
+                  >
+                    {{ item.optionValue }}
+                  </div>
+                  <span
+                    class="
                     absolute
                     right-50px
                     leading-40px
                     text-sm text-cool-gray-400
                   "
-                >
-                  {{ item.poll + "票" }}
-                </span>
+                  >
+                    {{ item.poll + "票" }}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div
-              v-else-if="item.poll === 0"
-              class="
+              <div
+                v-else-if="item.poll === 0"
+                class="
                 mt-4
                 border-true-gray-200 border
                 h-42px
@@ -303,53 +337,75 @@ const isClick = debounce(() => {
                 bg-light-50
                 rounded
               "
-              @click="handleClickOption(item.id)"
-            >
-              <span class="leading-40px m-10px text-sm">{{
-                item.optionValue
-              }}</span>
-              <span
-                class="
+                @click="handleClickOption(item.id)"
+              >
+                <span class="leading-40px m-10px text-sm">{{
+                  item.optionValue
+                }}</span>
+                <span
+                  class="
                   absolute
                   right-50px
                   leading-20px
-                  text-xs text-cool-gray-400
+                  text-sm text-cool-gray-400
                   pt-10px
                 "
-              >
-                {{ item.poll + "票" }}
-              </span>
+                >
+                  {{ item.poll + "票" }}
+                </span>
+              </div>
             </div>
-          </div>
-        </van-checkbox-group>
-      </div>
-      <div class="text-cool-gray-500">
-        <div class="text-xs mt-15px text-left">
-          {{ "截止时间：" + voteData.endTime }}
+          </van-checkbox-group>
         </div>
-        <van-button
-          type="primary"
-          size="large"
-          :color="voteData.isVote || voteData.status ? '#9DD49D' : '#1FA71F'"
-          class="my-10px rounded"
-          :disabled="voteData.isVote === 1 || voteData.status === 1"
-          @click="isClick()"
-        >
-          {{ voteData.text }}
-        </van-button>
+        <div class="text-cool-gray-500">
+          <div class="text-xs mt-15px text-left">
+            {{ "截止时间：" + voteData.endTime }}
+          </div>
+          <van-button
+            type="primary"
+            size="large"
+            :color="voteData.isVote || voteData.status ? '#9DD49D' : '#1FA71F'"
+            class="my-10px rounded"
+            :disabled="voteData.isVote === 1 || voteData.status === 1"
+            @click="isClick()"
+          >
+            {{ voteData.text }}
+          </van-button>
+        </div>
       </div>
-    </div>
+      <records-list
+        v-if="show==true&&voteData.anonymity===1"
+        :show="show"
+        :type="voteData.type"
+        :active-id="voteId"
+        :option-checked-value="optionCheckedValue"
+        @show-change="showChange()"
+      />
+    </van-pull-refresh>
   </div>
-  <records-list
-    v-if="!voteData.anonymity"
-    :show="show"
-    :type="voteData.type"
-    :active-id="voteId"
-    :option-checked-value="optionCheckedValue"
-    @show-change="showChange()"
-  />
 </template>
 
+<style scoped>
+.checkedOption{
+  border-bottom-right-radius:0px;
+  border-top-right-radius:0px
+}
+.uncheckedBorder{
+  border-top-style:solid ;
+  border-bottom-style:solid;
+  border-left-style:none ;
+  border-right-style:none;
+  border-color: rgba(229, 229, 229, var(--un-border-opacity));
+}
+
+.checkedBorder{
+  border-top-style:solid ;
+  border-bottom-style:solid;
+  border-left-style:none ;
+  border-right-style:none;
+  border-color:  #1fa71f;
+}
+</style>
 <route lang="yaml">
 meta:
   layout: default
