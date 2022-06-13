@@ -76,10 +76,21 @@ const drawData: DrawData = reactive({
     lastPoll: 0,
   }],
   text: computed(() => {
-    if (drawData.status === 0)
-      return drawData.isDrawing ? '已抽签' : '开始抽签'
-    else
+    if (drawData.status === 0) {
+      if (drawData.isDrawing) {
+        return '已抽签'
+      }
+      else {
+        if (drawData.drawingAlreadyNum === drawData.allPollNum)
+          return '已结束'
+
+        else
+          return '开始抽签'
+      }
+    }
+    else {
       return drawData.isDrawing ? '已抽签' : '已结束'
+    }
   }),
 })
 
@@ -263,7 +274,7 @@ const onRefresh = () => {
         </div>
       </div>
       <div class="flex justify-center">
-        <van-button type="primary" size="large" class="font-400" :disabled="drawData.status===1||drawData.isDrawing ===1" :color="drawData.status===1||drawData.isDrawing ===1?'#9DD49D':'#1FA71F'" @click="isClick()">
+        <van-button type="primary" size="large" class="font-400" :disabled="drawData.status===1||drawData.isDrawing ===1||drawData.allPollNum===drawData.drawingAlreadyNum" :color="drawData.status===1||drawData.isDrawing ===1||drawData.allPollNum===drawData.drawingAlreadyNum?'#9DD49D':'#1FA71F'" @click="isClick()">
           {{ drawData.text }}
         </van-button>
       </div>
