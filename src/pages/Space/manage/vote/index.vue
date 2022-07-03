@@ -157,7 +157,7 @@ const beginVote = async () => {
     voteOptions.value.forEach((item) => {
       voteMsg.voteOption.push(item.value)
     })
-    if(anonymity) voteMsg.anonymity = 1
+    if(anonymity.value) voteMsg.anonymity = 1
     else voteMsg.anonymity = 0
     if(voteType.value === '多选') {
       voteMsg.voteNumLimit = currentCount.value
@@ -173,7 +173,7 @@ const beginVote = async () => {
         })
       } else {
         Toast({
-          message: res.message
+          message: res.msg
         })
         voteBtn.value = true
       }
@@ -183,57 +183,58 @@ const beginVote = async () => {
 </script>
 <template>
   <div class="bg-gray-500/8 p-3 min-h-100vh">
-    <div class="bg-hex-fff rounded p-3">
+    <div>
       <van-form ref="voteForm">
-        <div class="border-b-1 border-hex-C9C9C9">
-          <span class="flex items-center">
-            <i
-              class="border border-hex-30B648 rounded-1/2 text-hex-30B648 text-sm w-2.2em h-2em"   
-              style="line-height: 2em"
-              @click="deleteOption(index)">
-              <van-icon name="records" />
-            </i>
+        <div class="bg-white text-left rounded px-3 pt-3">
+          <div class="border-b border-hex-ccc py-1 text-sm"><van-icon name="setting-o" /> 设置投票标题</div>
+          <span class="text-hex-646566 font-600">
             <van-field
-              class="text-lg" type="text"
+              type="text" class="text-18px"
               placeholder="投票标题"
               name="validatorMessage"
               :rules="[{ validator: validatorMessage}]"
               v-model="voteMsg.voteName" />
           </span>
         </div>
-        <div
-          class="border-b-1 border-hex-C9C9C9"
-          v-for="(item, index) in voteOptions"
-          :key="item"
-        >
-          <span class="flex items-center">
-            <i
-              class="bg-red-500 rounded-1/2 text-white text-xs w-2.2em h-2em"
-              style="line-height: 2em"
-              @click="deleteOption(index)">
-              <van-icon name="minus" />
-            </i>
-            <van-field
-              v-model="item.value"
-              :placeholder="`选项${index+1}`"
-              name="validatorMessage"
-              :rules="[{ validator: validatorMessage}]"
-            />
-          </span>
+        <div class="bg-white rounded mt-4 p-3">
+          <div class="border-b border-hex-ccc py-1 text-left text-sm"><van-icon name="setting-o" /> 设置投票选项</div>
+          <div
+            class="border-b-1 border-hex-C9C9C9"
+            v-for="(item, index) in voteOptions"
+            :key="item"
+          >
+            <span class="flex items-center">
+              <i
+                class="bg-red-500 rounded-1/2 text-white text-xs w-2.2em h-2em"
+                style="line-height: 2em"
+                @click="deleteOption(index)">
+                <van-icon name="minus" />
+              </i>
+              <van-field
+                v-model="item.value"
+                :placeholder="`选项${index+1}`"
+                name="validatorMessage"
+                :rules="[{ validator: validatorMessage}]"
+              />
+            </span>
+          </div>
+          <div class="border-b-1 border-hex-C9C9C9 py-2.5">
+            <span class="flex items-center" @click="addOption">
+              <i
+                class="bg-blue-500 rounded-1/2 text-white text-xs w-2em h-2em mr-3"
+                style="line-height: 2em">
+                <van-icon name="plus" />
+              </i>
+              添加选项
+            </span>
+          </div>
         </div>
       </van-form>
-      <div class="border-b-1 border-hex-C9C9C9 py-2.5">
-        <span class="flex items-center" @click="addOption">
-          <i
-            class="bg-blue-500 rounded-1/2 text-white text-xs w-2em h-2em mr-3"
-            style="line-height: 2em">
-            <van-icon name="plus" />
-          </i>
-          添加选项
-        </span>
-      </div>
     </div>
-    <div class="mt-4 bg-white text-sm p-3">
+    <div class="mt-4 bg-white text-sm p-3 rounded">
+      <div class="border-b border-hex-ccc text-left text-sm py-2">
+        <van-icon name="setting-o" /> 其他设置
+      </div>
       <div class="flex justify-between h-3em items-center border-b-1 border-hex-C9C9C9">
         <span>投票类型</span>
         <span @click="()=>{showTypePicker=true}">{{voteType}}<van-icon name="arrow" /></span>

@@ -87,6 +87,7 @@ onMounted(() => {
     voteData.endTime = res.data.endTime
     voteData.isVote = res.data.attend
     voteData.voteNumLimit = res.data.voteNumLimit
+    voteData.anonymity = res.data.anonymity
     props.endDate = voteData.endTime.split(' ')[0]
     props.endTime = `${voteData.endTime.split(' ')[1].split(':')[0]}:${voteData.endTime.split(' ')[1].split(':')[1]}`
     console.warn(props)
@@ -186,9 +187,10 @@ const isClick = debounce(() => {
         <van-tag type="primary" color="#28B648" size="medium" class="mr-3">
           {{ voteData.voteNumLimit > 1 ? "多选" : "单选" }}
         </van-tag>
-        <van-tag type="primary" color="#66CCFF" size="medium">
+        <van-tag type="primary" color="#66CCFF" size="medium" class="mr-3">
           {{ `${voteData.optionChecked.length} / ${voteData.voteNumLimit}` }}
         </van-tag>
+        <van-tag type="warning" size="medium" v-if="voteData.anonymity">匿名</van-tag>
       </div>
       <!-- 遍历选项 -->
       <div>

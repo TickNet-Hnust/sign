@@ -183,9 +183,11 @@ const handleOptionClick = (val: string) => {
       <van-tag size="medium" type="primary" :color="drawData.status?'#C9C9C9':'#66ccff'" class="mr-3">
         {{ drawData.status?'已结束':'进行中' }}
       </van-tag>
-      <van-tag size="medium" type="primary" color="#28b648">
+      <van-tag size="medium" type="primary" color="#28b648" class="mr-3">
         {{ "已抽" + drawData.drawingAlreadyNum + " / " + drawData.allPollNum }}
       </van-tag>
+      <van-tag type="warning" size="medium" v-if="drawData.anonymity">结果不可见</van-tag>
+      <van-tag type="warning" size="medium" v-if="!drawData.anonymity">结果可见</van-tag>
     </div>
     <!-- 隐藏选项 -->
     <div v-if="!drawData.anonymity">
