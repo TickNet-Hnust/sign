@@ -76,10 +76,21 @@ const drawData: DrawData = reactive({
     lastPoll: 0,
   }],
   text: computed(() => {
-    if (drawData.status === 0)
-      return drawData.isDrawing ? '已抽签' : '开始抽签'
-    else
+    if (drawData.status === 0) {
+      if (drawData.isDrawing) {
+        return '已抽签'
+      }
+      else {
+        if (drawData.drawingAlreadyNum === drawData.allPollNum)
+          return '已结束'
+
+        else
+          return '开始抽签'
+      }
+    }
+    else {
       return drawData.isDrawing ? '已抽签' : '已结束'
+    }
   }),
 })
 
@@ -124,6 +135,7 @@ onMounted(() => {
 
 const resultShow = ref(false) // 控制结果展示
 const isClick = debounce(() => {
+  console.warn('进行投票')
   addDrawRecord(drawId).then((res: any) => {
     if (res.code === 200) {
       eventHub.$emit('refreshList', 'draw')
@@ -145,8 +157,9 @@ const isClick = debounce(() => {
       })
     }
     else {
+      console.warn('抽签失败', res)
       Toast.fail({
-        message: '抽签失败，请重试',
+        message: res.msg,
       })
     }
   })
@@ -159,13 +172,49 @@ const active = 'background-color:#C8E5C9;border-color: #1FA71F;'// 被选中后�
 const clickedOptionValue = ref('')
 const show = ref(false)
 const showChange = function() {
-  show.value = !show.value
+  // eslint-disable-next-line no-empty
+  if (drawData.isDrawing === 1)
+    show.value = !show.value
 }
 const handleOptionClick = (val: string) => {
-  show.value = true
-  clickedOptionValue.value = val
+  if (drawData.isDrawing === 1) {
+    clickedOptionValue.value = val
+    show.value = true
+    console.warn(clickedOptionValue.value)
+  }
 }
 
+const refreshLoading = ref(false)
+
+const onRefresh = () => {
+  loading.value = true
+  console.warn('刷新')
+  getDraw(drawId).then((res) => {
+    console.warn(res)
+    drawData.anonymity = res.data.anonymity
+    props.visible = res.data.visible
+    drawData.status = res.data.status
+    drawData.isVisible = res.data.visible
+    drawData.isDrawing = res.data.attend
+    drawData.optionChecked = res.data.attend ? res.data.optionName : 0
+    for (let i = 0; i < res.data.optionContent.length; i++)
+      drawData.option[i].lastPoll = res.data.optionNum[i]
+
+    for (let i = 0; i < res.data.optionContent.length; i++) {
+      if (drawData.option[i].optionValue === res.data.optionName) {
+        drawData.optionChecked = i + 1
+        drawData.optionCheckedValue = drawData.option[i].optionValue
+      }
+    }
+    drawRecordCount(drawId).then((res) => {
+      for (let i = 0; i < res.data.length; i++)
+        drawData.option[i].allPoll = drawData.option[i].lastPoll + res.data[i]
+      loading.value = false
+      Toast.success('刷新成功')
+      refreshLoading.value = false
+    })
+  })
+}
 </script>
 
 <template>
@@ -176,66 +225,68 @@ const handleOptionClick = (val: string) => {
   </div>
   <!-- 加载数据 -->
   <div v-else class="bg-gray-500/8 w-screen h-screen p-3">
-    <div class="border-gray-200 border p-3 bg-white text-left rounded">
-      <div class="mb-3">
-        {{ drawData.question }}
+    <van-pull-refresh v-model="refreshLoading" @refresh="onRefresh">
+      <div class="border-gray-200 border p-3 bg-white text-left rounded">
+        <div class="mb-3">
+          {{ drawData.question }}
+        </div>
+        <van-tag size="medium" type="primary" :color="drawData.status?'#C9C9C9':'#66ccff'" class="mr-3">
+          {{ drawData.status?'已结束':'进行中' }}
+        </van-tag>
+        <van-tag size="medium" type="primary" color="#28b648" class="mr-3">
+          {{ "已抽" + drawData.drawingAlreadyNum + " / " + drawData.allPollNum }}
+        </van-tag>
+        <van-tag type="warning" size="medium" v-if="drawData.anonymity">结果不可见</van-tag>
+        <van-tag type="warning" size="medium" v-if="!drawData.anonymity">结果可见</van-tag>
       </div>
-      <van-tag size="medium" type="primary" :color="drawData.status?'#C9C9C9':'#66ccff'" class="mr-3">
-        {{ drawData.status?'已结束':'进行中' }}
-      </van-tag>
-      <van-tag size="medium" type="primary" color="#28b648" class="mr-3">
-        {{ "已抽" + drawData.drawingAlreadyNum + " / " + drawData.allPollNum }}
-      </van-tag>
-      <van-tag type="warning" size="medium" v-if="drawData.anonymity">结果不可见</van-tag>
-      <van-tag type="warning" size="medium" v-if="!drawData.anonymity">结果可见</van-tag>
-    </div>
-    <!-- 隐藏选项 -->
-    <div v-if="!drawData.anonymity">
-      <div v-for="item in drawData.option" :key="item.optionId">
-        <div class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="handleOptionClick(item.optionValue)">
-          <div v-if="drawData.optionChecked !== item.optionId">
-            <span>{{ item.optionValue }}</span>
-            <span class="float-right text-gray-500 ">&times;{{ item.lastPoll }}</span>
-          </div>
-          <div v-else-if="drawData.optionChecked === item.optionId">
-            <span>{{ item.optionValue }}</span>
-            <span class="float-right text-gray-500">已抽中该项</span>
+      <!-- 隐藏选项 -->
+      <div v-if="!drawData.anonymity">
+        <div v-for="item in drawData.option" :key="item.optionId">
+          <div class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="handleOptionClick(item.optionValue)">
+            <div v-if="drawData.optionChecked !== item.optionId">
+              <span>{{ item.optionValue }}</span>
+              <span class="float-right text-gray-500 ">&times;{{ item.lastPoll }}</span>
+            </div>
+            <div v-else-if="drawData.optionChecked === item.optionId">
+              <span>{{ item.optionValue }}</span>
+              <span class="float-right text-gray-500">已抽中该项</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div v-else>
-      <div v-for="item in drawData.option" :key="item.optionId">
-        <div v-if="drawData.isDrawing === 0" class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal">
-          <div>
-            <span>选项{{ item.optionId }}</span>
-            <span class="float-right text-gray-500">&times;{{ item.lastPoll }}</span>
+      <div v-else>
+        <div v-for="item in drawData.option" :key="item.optionId">
+          <div v-if="drawData.isDrawing === 0" class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal">
+            <div>
+              <span>选项{{ item.optionId }}</span>
+              <span class="float-right text-gray-500">&times;{{ item.lastPoll }}</span>
+            </div>
+          </div>
+          <div v-else-if="drawData.optionChecked === item.optionId" class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="handleOptionClick(item.optionValue)">
+            <div>
+              <span>{{ item.optionValue }}</span>
+              <span class="float-right text-gray-500">已抽中该项</span>
+            </div>
           </div>
         </div>
-        <div v-else-if="drawData.optionChecked === item.optionId" class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="handleOptionClick(item.optionValue)">
-          <div>
-            <span>{{ item.optionValue }}</span>
-            <span class="float-right text-gray-500">已抽中该项</span>
-          </div>
+      </div>
+      <div class="text-cool-gray-500">
+        <div class="text-xs my-3 text-left px-2">
+          {{ "截止时间：" + drawData.endTime }}
         </div>
       </div>
-    </div>
-    <div class="text-cool-gray-500">
-      <div class="text-xs my-3 text-left px-2">
-        {{ "截止时间：" + drawData.endTime }}
+      <div class="flex justify-center">
+        <van-button type="primary" size="large" class="font-400" :disabled="drawData.status===1||drawData.isDrawing ===1||drawData.allPollNum===drawData.drawingAlreadyNum" :color="drawData.status===1||drawData.isDrawing ===1||drawData.allPollNum===drawData.drawingAlreadyNum?'#9DD49D':'#1FA71F'" @click="isClick()">
+          {{ drawData.text }}
+        </van-button>
       </div>
-    </div>
-    <div class="flex justify-center">
-      <van-button type="primary" size="large" class="font-400" :disabled="drawData.status===1||drawData.isDrawing ===1" :color="drawData.status===1||drawData.isDrawing ===1?'#9DD49D':'#1FA71F'" @click="isClick()">
-        {{ drawData.text }}
-      </van-button>
-    </div>
-    <van-dialog v-model:show="resultShow" title="抽取结果" confirm-button-color="#0033CC">
-      <div class="my-1rem">
-        {{ drawData.optionCheckedValue }}
-      </div>
-    </van-dialog>
-    <records-list v-if="drawData.isVisible" :show="show" :type="drawData.type" :active-id="drawId" :option-checked-value="clickedOptionValue" @show-change="showChange()" />
+      <van-dialog v-model:show="resultShow" title="抽取结果" confirm-button-color="#0033CC">
+        <div class="my-1rem">
+          {{ drawData.optionCheckedValue }}
+        </div>
+      </van-dialog>
+      <records-list v-if="show&&drawData.isVisible===1&&drawData.isDrawing===1" :show="show" :type="drawData.type" :active-id="drawId" :option-checked-value="clickedOptionValue" @show-change="showChange()" />
+    </van-pull-refresh>
   </div>
 </template>
 
