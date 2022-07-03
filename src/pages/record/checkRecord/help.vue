@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { signByUser, signQRCode } from '~/api/record/index'
-import { Toast } from 'vant'
+import { signQRCode } from '~/api/record/index'
+// import { signByUser, signQRCode } from '~/api/record/index'
+// import { Toast } from 'vant'
 const stuMsg = reactive({
   stuNum: '',
   stuName: ''
@@ -9,30 +10,30 @@ const route = useRoute()
 const signId = route.query.id
 const spaceName = route.query.spaceName
 const QRUrl = ref('')
-const helpSign = () => {
-  const request = reactive({
-    signId: signId,
-    userId: stuMsg.stuNum,
-    userName: stuMsg.stuName
-  })
-  signByUser(request).then((res: any) => {
-    if(res.code === 200){
-      Toast.success({
-        message: '补录成功',
-        duration: 700
-      })
-      stuMsg.stuNum = '',
-      stuMsg.stuName = ''
-    } else {
-      Toast.fail({
-        message: res.msg,
-        duration: 700
-      })
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
-}
+// const helpSign = () => {
+//   const request = reactive({
+//     signId: signId,
+//     userId: stuMsg.stuNum,
+//     userName: stuMsg.stuName
+//   })
+//   signByUser(request).then((res: any) => {
+//     if(res.code === 200){
+//       Toast.success({
+//         message: '补录成功',
+//         duration: 700
+//       })
+//       stuMsg.stuNum = '',
+//       stuMsg.stuName = ''
+//     } else {
+//       Toast.fail({
+//         message: res.msg,
+//         duration: 700
+//       })
+//     }
+//   }).catch((err) => {
+//     console.log(err)
+//   })
+// }
 const QRRequest = reactive({
   signId: signId,
   path: ''
@@ -77,19 +78,14 @@ const changeTab = () => {
       "
     >
       <div >辅助签到用法：</div>
-      <div class="px-8" v-if="spaceName !== '无' ">
-        1.签到发起人可以通过直接补录未签到同学的信息来让其签到
-        <br />
-        2.签到发起人可以通过生成二维码让签到不成功的同学签到
-      </div>
-      <div class="px-8" v-if="spaceName === '无' ">
+      <div class="px-8">
         签到发起人可以通过生成二维码让签到不成功的同学签到
       </div>
     </div>
     <div class="m-t-4">
       <van-tabs color="rgb(0,51,255)" title-active-color="rgb(0,51,255)" @change="changeTab()" v-model:active="activeTab">
         <!-- 如果是非空间的签到则不展示学号姓名补录 -->
-        <van-tab v-if="spaceName !== '无' " title="直接补录" name="byName">
+        <!-- <van-tab v-if="spaceName !== '无' " title="直接补录" name="byName">
           <div class="text-left mt-6 border-1 p-4 border-gray-500/50 rounded bg-white">
             <van-cell-group border="false">
               <van-field
@@ -109,7 +105,7 @@ const changeTab = () => {
           <div class="mt-8">
             <van-button type="success" size="large" @click="helpSign()">补录</van-button>
           </div>
-        </van-tab>
+        </van-tab> -->
         <van-tab title="生成二维码" name="byCode">
           <div class="mt-6 border-1 p-4 border-gray-500/50 font-semibold rounded bg-white">
             辅助扫码签到

@@ -9,6 +9,8 @@
 import { signStuList } from '~/api/record/signRecord'
 import { drawStuList } from '~/api/record/drawRecord'
 import { voteStuList } from '~/api/record/voteRecord'
+import { signByUser } from '~/api/record/index'
+import { Toast } from 'vant'
 interface StuList {
   createUserId: String // 学号/工号
   createUserName: String // 用户名
@@ -24,8 +26,8 @@ const props = defineProps({
 // 已签到学生列表
 const clist:Array<StuList> = reactive([])
 // 控制van-list加载
-const loading = ref(false);
-const finished = ref(false);
+const loading = ref(false)
+const finished = ref(false)
 const refreshing = ref(false)
 const isEmpty = ref(true)
 const pageNum = ref(1)
@@ -50,6 +52,9 @@ const getStuList = () => {
         loading.value = false
         if(clist.length>0) {
           isEmpty.value = false
+        }
+        else {
+          isEmpty.value = true
         }
         if(clist.length >= res.total) {
           console.log('数据加载完毕')
@@ -117,24 +122,54 @@ const getStuList = () => {
     })
   }
 }
+const helpSign = (item: any) => {
+  // console.log(item)
+  const request = reactive({
+    signId: props.activityId,
+    userId: item.createUserId,
+    userName: item.createUserName
+  })
+  signByUser(request).then((res: any) => {
+    if(res.code === 200){
+      Toast.success({
+        message: '补录成功',
+        duration: 700
+      })
+      // 补录成功后重新请求数据
+      onRefresh()
+    } else {
+      Toast.fail({
+        message: res.msg,
+        duration: 700
+      })
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
+}
 // 初始化页面时请求一次数据（van-list的一个bug）
 onMounted(() => {
   getStuList()
 })
 const onLoad = () => {
+  isLoading.value = true
   setTimeout(() => {
     if(refreshing.value) {
       refreshing.value = false
     }
     getStuList()
+    isLoading.value = false
   }, 500);
 };
+const isLoading = ref(false)
 const onRefresh = () => {
-  finished.value = false
-  pageNum.value = 1
-  clist.length = 0
-  loading.value = true
-  onLoad()
+  if(!isLoading.value) {
+    finished.value = false
+    pageNum.value = 1
+    clist.length = 0
+    loading.value = true
+    onLoad()
+  }
 }
 // 将总数据传给父组件
 const emit = defineEmits(['getTotal'])
@@ -142,16 +177,15 @@ emit('getTotal', totalRecord)
 </script>
 
 <template>
-  <div class="text-right text-hex-999 mt-5 mr-3 mb-2">
-    <span class="bg-hex-10AA62 text-white px-2 py-1 rounded"  @click="onRefresh">
-      <van-icon name="replay" />刷新
-  </span>
-  </div>
-  <div class="bg-white border border-hex-D9DADB rounded p-3 border-t-2 border-t-hex-41B062">
-    <ul class="flex py-2 text-sm">
+  <div class="bg-white border border-hex-D9DADB rounded p-3 border-t-2 border-t-hex-41B062 mt-5">
+    <ul class="flex py-2 text-sm" style="position: relative">
       <span class="flex-1">学号/工号<van-icon name="sort" /></span>
       <span class="flex-1">姓名</span>
       <span class="flex-1" v-if="props.attend === '1' ">时间</span>
+      <span class="flex-1" v-if="props.attend !=='1' && props.action === 'sign' ">补录</span>
+      <span @click="onRefresh" style="position: absolute; top: -5px; right: -5px">
+        <van-icon name="replay" :size="18" />
+      </span>
     </ul>
     <van-list
       :immediate-check="false"
@@ -164,6 +198,10 @@ emit('getTotal', totalRecord)
         <span class="flex-1">{{ item.createUserId }}</span>
         <span class="flex-1">{{ item.createUserName }}</span>
         <span class="flex-1" v-if="props.attend === '1' ">{{ item.createTime }}</span>
+        <span class="flex-1" v-if="props.attend !=='1' && props.action === 'sign' ">
+          <span class="text-hex-28B648 border border-hex-28B648 px-1.5 py-0.3 text-13px rounded" @click="helpSign(item)">补录</span>
+          <!-- <van-button plain type="primary" color="rgb(40,182,72)" :size="15">补录</van-button> -->
+        </span>
       </ul>
     </van-list>
   </div>
