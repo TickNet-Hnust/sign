@@ -122,12 +122,20 @@ const getStuList = () => {
     })
   }
 }
-const helpSign = (item: any) => {
+const choStuName = ref('')
+const choStuId = ref('')
+const isShow = ref(false)
+const showDialog = (item: any) => {
+  isShow.value = true
+  choStuName.value = item.createUserName
+  choStuId.value = item.createUserId
+}
+const helpSign = () => {
   // console.log(item)
   const request = reactive({
     signId: props.activityId,
-    userId: item.createUserId,
-    userName: item.createUserName
+    userId: choStuId.value,
+    userName: choStuName.value
   })
   signByUser(request).then((res: any) => {
     if(res.code === 200){
@@ -146,6 +154,10 @@ const helpSign = (item: any) => {
   }).catch((err) => {
     console.log(err)
   })
+}
+const onCancel = () => {
+  choStuName.value = ''
+  choStuId.value = ''
 }
 // 初始化页面时请求一次数据（van-list的一个bug）
 onMounted(() => {
@@ -199,10 +211,13 @@ emit('getTotal', totalRecord)
         <span class="flex-1">{{ item.createUserName }}</span>
         <span class="flex-1" v-if="props.attend === '1' ">{{ item.createTime }}</span>
         <span class="flex-1" v-if="props.attend !=='1' && props.action === 'sign' ">
-          <span class="text-hex-28B648 border border-hex-28B648 px-1.5 py-0.3 text-13px rounded" @click="helpSign(item)">补录</span>
+          <span class="text-hex-28B648 border border-hex-28B648 px-1.5 py-0.3 text-13px rounded" @click="showDialog(item)">补录</span>
           <!-- <van-button plain type="primary" color="rgb(40,182,72)" :size="15">补录</van-button> -->
         </span>
       </ul>
     </van-list>
   </div>
+  <van-dialog v-model:show="isShow" title="补录" show-cancel-button @confirm="helpSign" @cancel="onCancel">
+    <div class="my-5">确定将 <span class="text-hex-059669">{{choStuName}}</span> 设置为已签到吗？</div>
+  </van-dialog>
 </template>

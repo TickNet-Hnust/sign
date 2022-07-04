@@ -11,7 +11,6 @@ interface DetailRecord{
   title: String //抽签标题
   optionsList: Array<String> // 选项列表
   optionsNum: Array<Number> // 选项票数列表
-  visible: Number // 是否为盲抽 0为盲抽
   isShow: Array<Boolean> // 是否展开某个选项列表
   currentNum: Array<Number> // 当前选中人数
 }
@@ -50,7 +49,6 @@ onMounted(() => {
       detailRecord.title = res.data.drawName
       detailRecord.optionsList = res.data.optionContent
       detailRecord.optionsNum = res.data.optionNum
-      detailRecord.visible = res.data.visible
       detailRecord.optionsList.forEach((item, index) => {
         detailRecord.isShow[index] = false
       })
@@ -115,7 +113,7 @@ onMounted(() => {
             <span class="text-sm">已抽签</span>
             <span class="bg-hex-30B648 rounded-lg text-white text-xs py-0.5 px-2 ml-2">{{drawCount}}人</span>
           </template>
-          <div class="mt-3" v-if="detailRecord.visible">
+          <!-- <div class="mt-3" v-if="detailRecord.visible">
             <div
               v-for="(item, index) in detailRecord.optionsList"
               :key="item"
@@ -145,8 +143,8 @@ onMounted(() => {
                 </stu-list>
               </div>
             </div>
-          </div>
-          <div v-if="!detailRecord.visible">
+          </div> -->
+          <div>
             <stu-list action="draw" :activityId="drawId" attend="1"></stu-list>
           </div>
         </van-tab>
