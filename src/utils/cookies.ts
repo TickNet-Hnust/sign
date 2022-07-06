@@ -18,7 +18,8 @@ export function getToken() {
 }
 // { expires: 7 }
 export function setToken(token: string) {
-  return Cookies.set(TokenKey, token)//设置cookie7天过期
+  // return Cookies.set(TokenKey, token)
+  return Cookies.set(TokenKey, token, { expires: 30 })//设置cookie30天过期
 }
 
 export function removeToken() {

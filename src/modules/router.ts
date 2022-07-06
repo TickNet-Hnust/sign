@@ -45,7 +45,8 @@ const signTest = () => {
   })
 }
 export const install: UserModule = ({ router }) => {
-  removeToken()
+  // 在每次点进应用时去除token 测试用
+  // removeToken()
   router.beforeEach((to, from, next) => {
     if(to.path === '/record/checkRecord/helpJumpPage') {
       const signId = String(to.query.signId)
