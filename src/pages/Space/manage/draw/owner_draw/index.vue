@@ -13,7 +13,7 @@ const { eventHub } = getCurrentInstance()?.proxy
 // 定义投票数据类型接口
 interface DrawData {
   type: string // 抽签或者投票
-  anonymity: number // 隐藏选项
+  // anonymity: number // 隐藏选项
   question: string
   allPollNum: number // 总票数
   drawingAlreadyNum: number // 已经抽签票数
@@ -47,7 +47,7 @@ const drawId = Number(route.query.id)
 
 const drawData: DrawData = reactive({
   type: '抽签',
-  anonymity: 0,
+  // anonymity: 0,
   question: '',
   status: 0,
   allPollNum: computed(() => {
@@ -100,7 +100,7 @@ onMounted(() => {
   getDraw(drawId).then((res) => {
     console.warn(res)
     drawData.question = res.data.drawName
-    drawData.anonymity = res.data.anonymity
+    // drawData.anonymity = res.data.anonymity
     drawData.createTime = res.data.createTime
     drawData.endTime = res.data.endTime
     props.endDate = drawData.endTime.split(' ')[0]
@@ -168,7 +168,7 @@ const isClick = debounce(() => {
 
 const modifyConfig = () => {
   getDraw(drawId).then((res) => {
-    drawData.anonymity = res.data.anonymity
+    // drawData.anonymity = res.data.anonymity
     drawData.endTime = res.data.endTime
     props.endDate = drawData.endTime.split(' ')[0]
     props.endTime = `${drawData.endTime.split(' ')[1].split(':')[0]}:${drawData.endTime.split(' ')[1].split(':')[1]}`
@@ -224,7 +224,7 @@ const onRefresh = () => {
   console.warn('刷新')
   getDraw(drawId).then((res) => {
     console.warn(res)
-    drawData.anonymity = res.data.anonymity
+    // drawData.anonymity = res.data.anonymity
     props.visible = res.data.visible
     drawData.status = res.data.status
     drawData.isVisible = res.data.visible
@@ -276,11 +276,11 @@ const onRefresh = () => {
             "已抽" + drawData.drawingAlreadyNum + " / " + drawData.allPollNum
           }}
         </van-tag>
-        <van-tag type="warning" size="medium" v-if="drawData.anonymity">结果不可见</van-tag>
-        <van-tag type="warning" size="medium" v-if="!drawData.anonymity">结果可见</van-tag>
+        <van-tag type="warning" size="medium" v-if="!drawData.visible">结果不可见</van-tag>
+        <van-tag type="warning" size="medium" v-if="drawData.visible">结果可见</van-tag>
       </div>
       <!-- 隐藏选项 -->
-      <div v-if="!drawData.anonymity">
+      <!-- <div v-if="!drawData.anonymity">
         <div v-for="item in drawData.option" :key="item.optionId">
           <div
             class="mt-4 text-left border p-2.5 text-sm rounded"
@@ -301,8 +301,9 @@ const onRefresh = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div v-else>
+      </div> -->
+      <!-- <div v-else> -->
+      <div>
         <div v-for="item in drawData.option" :key="item.optionId">
           <div
             v-if="drawData.isDrawing === 0"

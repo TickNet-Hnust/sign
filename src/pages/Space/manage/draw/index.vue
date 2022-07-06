@@ -9,7 +9,7 @@ const router = useRouter()
 interface Draw{
   drawName: string
   drawNum: number
-  anonymous: boolean
+  // anonymous: boolean
   visible: number
   describe: string
   duration: number
@@ -33,7 +33,7 @@ const defaultIndex = ref(0)
 const drawInitData: Draw = reactive({
   drawName: '',
   drawNum: 1,
-  anonymous: false,
+  // anonymous: false,
   visible: 0,
   describe: '',
   duration: 30,
@@ -110,7 +110,7 @@ const commitDrawInfo = debounce(() => {
     visible: drawInitData.visible,
     duration: drawInitData.duration,
     spaceId: route.query.id,
-    anonymity: drawInitData.anonymous ? 1 : 0,
+    // anonymity: drawInitData.anonymous ? 1 : 0,
     optionContent: [''],
     optionNum: [0],
   }
@@ -185,10 +185,10 @@ const commitDrawInfo = debounce(() => {
       </div>
     </div>
     <div class="bg-white rounded mt-3 p-3 text-sm">
-      <div class=" flex justify-between items-center border-b-1 border-hex-C9C9C9 py-1">
+      <!-- <div class=" flex justify-between items-center border-b-1 border-hex-C9C9C9 py-1">
         <span>隐藏选项</span>
         <span><van-switch v-model="drawInitData.anonymous" size="1.5em" /></span>
-      </div>
+      </div> -->
       <!-- <div class=" flex justify-between items-center border-b-1 border-hex-C9C9C9 py-3">
         <span> 每人可参与抽签次数 </span>
         <span>

@@ -12,7 +12,7 @@ const { eventHub } = getCurrentInstance()?.proxy
 // 定义投票数据类型接口
 interface DrawData {
   type: string // 抽签或者投票
-  anonymity: number // 隐藏选项
+  // anonymity: number // 隐藏选项
   question: string
   allPollNum: number // 总票数
   drawingAlreadyNum: number // 已经抽签票数
@@ -46,7 +46,7 @@ const drawId = Number(route.query.id)
 
 const drawData: DrawData = reactive({
   type: '抽签',
-  anonymity: 0,
+  // anonymity: 0,
   question: '',
   status: 0,
   allPollNum: computed(() => {
@@ -99,7 +99,7 @@ onMounted(() => {
   getDraw(drawId).then((res) => {
     console.warn(res)
     drawData.question = res.data.drawName
-    drawData.anonymity = res.data.anonymity
+    // drawData.anonymity = res.data.anonymity
     drawData.createTime = res.data.createTime
     drawData.endTime = res.data.endTime
     props.endDate = drawData.endTime.split(' ')[0]
@@ -191,7 +191,7 @@ const onRefresh = () => {
   console.warn('刷新')
   getDraw(drawId).then((res) => {
     console.warn(res)
-    drawData.anonymity = res.data.anonymity
+    // drawData.anonymity = res.data.anonymity
     props.visible = res.data.visible
     drawData.status = res.data.status
     drawData.isVisible = res.data.visible
@@ -236,11 +236,12 @@ const onRefresh = () => {
         <van-tag size="medium" type="primary" color="#28b648" class="mr-3">
           {{ "已抽" + drawData.drawingAlreadyNum + " / " + drawData.allPollNum }}
         </van-tag>
-        <van-tag type="warning" size="medium" v-if="drawData.anonymity">结果不可见</van-tag>
-        <van-tag type="warning" size="medium" v-if="!drawData.anonymity">结果可见</van-tag>
+        <van-tag type="warning" size="medium" v-if="!drawData.visible">结果不可见</van-tag>
+        <van-tag type="warning" size="medium" v-if="drawData.visible">结果可见</van-tag>
       </div>
       <!-- 隐藏选项 -->
-      <div v-if="!drawData.anonymity">
+      <!-- <div v-if="!drawData.anonymity"> -->
+      <div>
         <div v-for="item in drawData.option" :key="item.optionId">
           <div class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal" @click="handleOptionClick(item.optionValue)">
             <div v-if="drawData.optionChecked !== item.optionId">
@@ -254,7 +255,7 @@ const onRefresh = () => {
           </div>
         </div>
       </div>
-      <div v-else>
+      <!-- <div v-else>
         <div v-for="item in drawData.option" :key="item.optionId">
           <div v-if="drawData.isDrawing === 0" class="mt-4 text-left border p-2.5 text-sm rounded" :style="drawData.isDrawing&&item.optionId===drawData.optionChecked?active:normal">
             <div>
@@ -269,7 +270,7 @@ const onRefresh = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="text-cool-gray-500">
         <div class="text-xs my-3 text-left px-2">
           {{ "截止时间：" + drawData.endTime }}
