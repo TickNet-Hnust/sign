@@ -280,7 +280,7 @@ const onRefresh = () => {
         <van-tag type="warning" size="medium" v-if="drawData.visible">结果可见</van-tag>
       </div>
       <!-- 隐藏选项 -->
-      <!-- <div v-if="!drawData.anonymity">
+      <div>
         <div v-for="item in drawData.option" :key="item.optionId">
           <div
             class="mt-4 text-left border p-2.5 text-sm rounded"
@@ -301,9 +301,8 @@ const onRefresh = () => {
             </div>
           </div>
         </div>
-      </div> -->
-      <!-- <div v-else> -->
-      <div>
+      </div>
+      <!-- <div v-else>
         <div v-for="item in drawData.option" :key="item.optionId">
           <div
             v-if="drawData.isDrawing === 0"
@@ -335,7 +334,7 @@ const onRefresh = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="text-cool-gray-500">
         <div class="text-xs my-3 text-left px-2">
           {{ "截止时间：" + drawData.endTime }}
