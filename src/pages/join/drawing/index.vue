@@ -236,8 +236,8 @@ const onRefresh = () => {
         <van-tag size="medium" type="primary" color="#28b648" class="mr-3">
           {{ "已抽" + drawData.drawingAlreadyNum + " / " + drawData.allPollNum }}
         </van-tag>
-        <van-tag type="warning" size="medium" v-if="!drawData.visible">结果不可见</van-tag>
-        <van-tag type="warning" size="medium" v-if="drawData.visible">结果可见</van-tag>
+        <van-tag type="warning" size="medium" v-if="!drawData.isVisible">结果不可见</van-tag>
+        <van-tag type="warning" size="medium" v-if="drawData.isVisible">结果可见</van-tag>
       </div>
       <!-- 隐藏选项 -->
       <!-- <div v-if="!drawData.anonymity"> -->
