@@ -13,7 +13,7 @@ import { getToken, removeToken } from './cookies'
 // 创建axios实例
 const service = axios.create({
   // 请求路由
-  baseURL: 'http://49.123.0.26:8282',
+  baseURL: 'http://signff.ticknet.hnust.cn/api',
   // 请求超时时间
   timeout: 10000,
 })
