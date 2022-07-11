@@ -27,7 +27,7 @@ const helpSign = () => {
   setTimeout(() => {
     signByQRCode(request).then((res: any) => {
       if(res.code === 200) {
-        console.log('签到成功')
+        // console.log('签到成功')
         Toast.success({
           message: '签到成功',
           position: 'top'

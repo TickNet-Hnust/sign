@@ -57,7 +57,6 @@ const getStuList = () => {
           isEmpty.value = true
         }
         if(clist.length >= res.total) {
-          console.log('数据加载完毕')
           finished.value = true
         }
       }
@@ -85,7 +84,6 @@ const getStuList = () => {
           isEmpty.value = false
         }
         if(clist.length >= res.total) {
-          console.log('数据加载完毕')
           finished.value = true
         }
       }
@@ -113,7 +111,6 @@ const getStuList = () => {
           isEmpty.value = false
         }
         if(clist.length >= res.total) {
-          console.log('数据加载完毕')
           finished.value = true
         }
       }

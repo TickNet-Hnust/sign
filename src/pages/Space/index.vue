@@ -52,15 +52,11 @@ const getsignSpaceList = () => {
     if (res.code === 200) {
       showLoading.value = false
       spaceList.value = spaceList.value.concat(res.rows)
-      console.log(res);
-      
     }
 
     if (spaceList.value.length < res.total) {
       request.value.pageNum++
       getsignSpaceList()
-      console.log(res);
-      
     }
   })
 }
@@ -202,15 +198,11 @@ const onRefresh = () =>{
     if (res.code === 200) {
       showLoading.value = false
       spaceList.value = spaceList.value.concat(res.rows)
-      console.log(res);
-      
     }
 
     if (spaceList.value.length < res.total) {
       request.value.pageNum++
       getsignSpaceList()
-      console.log(res);
-      
     }
   })
     Toast('刷新成功');

@@ -43,7 +43,7 @@ const getQRCode = () => {
   const currentHref = window.location.href
   const index = currentHref.indexOf("/help")
   QRRequest.path = currentHref.substr(0,index) + '/helpJumpPage'
-  console.log(QRRequest)
+  // console.log(QRRequest)
   signQRCode(QRRequest).then((res: any) => {
     if(res.code === 200) {
       QRUrl.value = res.data.url

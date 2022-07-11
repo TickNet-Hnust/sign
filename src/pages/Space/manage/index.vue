@@ -161,7 +161,6 @@ const updateSpaceName = () => {
 // 负责人解散空间
 const deleteSpace = () => {
   deleteSignSpace(deleteData).then((res) => {
-    console.log(deleteData)
     if (res.code === 200) {
       Notify({ type: 'primary', message: '解散成功' })
       router.replace({

@@ -41,7 +41,6 @@ const getList = () => {
       pageCnt.value++
       loading.value = false
       if (list.length >= res.total) {
-        console.log('数据加载完毕')
         finished.value = true
       }
     }

@@ -15,7 +15,6 @@ const showLoading = ref(true)
 onMounted( () => {
   window.scrollTo(0,0)
   detailSignRecord(signId).then((res: any) => {
-    console.log(res)
     if(res.code === 200) {
       detailMsg.value = res.data
     }

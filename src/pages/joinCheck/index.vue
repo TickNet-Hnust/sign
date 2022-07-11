@@ -70,9 +70,9 @@ const joinCheck = () => {
     signRecordRequestData.longitude = longitude.value
     signRecordRequestData.latitude = latitude.value
     signRecordRequestData.signCode = inputValue.value
-    console.log(signRecordRequestData,'签到请求传去的数据')
+    //console.log(signRecordRequestData,'签到请求传去的数据')
     signRecordByCode(signRecordRequestData).then((res)=>{
-      console.log(res,'签到请求传来的数据')
+      //console.log(res,'签到请求传来的数据')
       let {msg,code} = res
       if(code!==200){
         Toast({

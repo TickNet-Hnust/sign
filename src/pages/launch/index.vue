@@ -86,16 +86,16 @@ let canSee = ref(1)
 let requestDurationTime = ref(10)
 //获取query中的spaceId
 const spaceId  = typeof route.query.spaceId === 'undefined' ? 0 : +route.query.spaceId
-console.log(spaceId,'spaceId')
+//console.log(spaceId,'spaceId')
 //发起签到方法
 const launchLoading = ref(false) //发起签到后的延迟
 const  launchSign = function(){
   launchLoading.value = true
   locationLoading.value = true
-  console.log(canSee.value,'签到列表是否可见')
-  console.log(inputName.value,'签到名')
-  console.log(durationTime.value,'活动时长字符串')
-  console.log(requestDurationTime.value,'活动实际请求发送的时长')
+  // console.log(canSee.value,'签到列表是否可见')
+  // console.log(inputName.value,'签到名')
+  // console.log(durationTime.value,'活动时长字符串')
+  // console.log(requestDurationTime.value,'活动实际请求发送的时长')
   //赋值请求数据
   signRequestData.longitude = longitude.value
   signRequestData.latitude = latitude.value
@@ -103,9 +103,9 @@ const  launchSign = function(){
   signRequestData.duration = requestDurationTime.value
   signRequestData.visible = canSee.value
   signRequestData.spaceId = spaceId
-  console.log(signRequestData,'发起签到接口请求的数据')
+  // console.log(signRequestData,'发起签到接口请求的数据')
   sign(signRequestData).then(res=>{
-    console.log(res,'发起签到接口返回的res')
+    // console.log(res,'发起签到接口返回的res')
     if(res.code===401){
         Notify({
           message: '身份验证失效!',
@@ -131,7 +131,7 @@ const  launchSign = function(){
         signResponseData.signName = res.data.signName
         signResponseData.spaceName = res.data.spaceName
         signResponseData.status = res.data.status
-        console.log(signResponseData,'发起签到接口返回的数据')
+        // console.log(signResponseData,'发起签到接口返回的数据')
         Notify({
           message: `${signRequestData.duration}分钟后自动结束签到`,
           color: '#fff',
@@ -193,7 +193,7 @@ const onConfirm = (currentValue: any) => {
     if(currentValue[i].charAt(0) !=='0' )
     durationTime.value += currentValue[i]
   }
-  console.log(currentValue,'时间数据')
+  // console.log(currentValue,'时间数据')
   //将天小时全部转换为分钟
   let dayCnt = currentValue[0][0] === '0' ? 0 : currentValue[0][0]
   let hourCnt = currentValue[1][0] === '0' ? 0 : currentValue[1][0]
@@ -204,15 +204,15 @@ const onConfirm = (currentValue: any) => {
   if(currentValue[2][0] !== '0' && currentValue[2][1]!='分') {
     minCnt = minCnt+currentValue[2][1]
   }
-  console.log(dayCnt,hourCnt,minCnt)
+  // console.log(dayCnt,hourCnt,minCnt)
   let dayToMin = dayCnt*1440
   let hourToMin = hourCnt*60
   let Min = minCnt
   let res = Number(dayToMin) + Number(hourToMin) + Number(Min)
-  console.log(dayToMin,'天转换的分钟数')
-  console.log(hourToMin,'小时转换的分钟数')
-  console.log(Min,'分钟数')
-  console.log(res,'总分钟数')
+  // console.log(dayToMin,'天转换的分钟数')
+  // console.log(hourToMin,'小时转换的分钟数')
+  // console.log(Min,'分钟数')
+  // console.log(res,'总分钟数')
   requestDurationTime.value = res
   popShow.value = false
 }

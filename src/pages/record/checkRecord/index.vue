@@ -85,7 +85,6 @@ onMounted(() => {
 })
 // 获取子组件传过来的值
 const getTotal = (total: any) => {
-  console.log('etw')
   totalRecord.value = total
 }
 // 编辑签到名

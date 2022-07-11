@@ -82,7 +82,6 @@ const onTimeConfirm = (currentValue: any) => {
     if(currentValue[i].charAt(0) !=='0' )
     durationTime.value += currentValue[i]
   }
-  console.log(currentValue,'时间数据')
   //将天小时全部转换为分钟
   let dayCnt = currentValue[0][0] === '0' ? 0 : currentValue[0][0]
   let hourCnt = currentValue[1][0] === '0' ? 0 : currentValue[1][0]
@@ -98,10 +97,10 @@ const onTimeConfirm = (currentValue: any) => {
   let hourToMin = hourCnt*60
   let Min = minCnt
   let res = Number(dayToMin) + Number(hourToMin) + Number(Min)
-  console.log(dayToMin,'天转换的分钟数')
-  console.log(hourToMin,'小时转换的分钟数')
-  console.log(Min,'分钟数')
-  console.log(res,'总分钟数')
+  // console.log(dayToMin,'天转换的分钟数')
+  // console.log(hourToMin,'小时转换的分钟数')
+  // console.log(Min,'分钟数')
+  // console.log(res,'总分钟数')
   if(res !== 0) {
     voteMsg.duration = res
     showTimePicker.value = false
