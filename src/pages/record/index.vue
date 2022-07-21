@@ -57,7 +57,7 @@ onUnmounted(()=> {
       </span>
     </div>
     <div class="record_list mt-2">
-      <van-tabs color="rgb(40,182,72)" v-model:active="activeName" @change="changeTab">
+      <van-tabs color="rgb(40,182,72)" v-model:active="activeName" @change="changeTab" swipeable>
         <van-tab title="签到" name="sign">
           <sign-list ref="signlist" admin="1"></sign-list>
         </van-tab>
